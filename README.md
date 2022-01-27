@@ -1,1 +1,1 @@
-# Differential gene expression in non-diabetic and diabetic individuals with different sensitivity to insulin
+# Differential gene expression in healthy and diabetic individuals with different sensitivity to insulin
