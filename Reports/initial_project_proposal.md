@@ -2,7 +2,7 @@
 
 | Name | Department/Program | Expertise/Interests |GitHub ID | 
 | ------------- | ------------- | ------------- | ------------- |
-| Ekpereka Amutaigwe |  | |  `@eamutaigwe` |
+| Ekpereka Amutaigwe | GSAT |Protein-DNA interactions, epigenetics, transcriptomics |  `@eamutaigwe` |
 | Credo Casmil |  GSAT  | Vaccine engineering, multiomics, immunology  | `@casmil1` |
 | Dollina Dodani |  Bioinformatics  | Metagenomics, Transcriptomics, Machine learning | `@dollinad` |
 | Aditi Nagaraj Nallan |  Bioinformatics   |  Multiomics, Metabolic modelling  | `@aditi48n` |
