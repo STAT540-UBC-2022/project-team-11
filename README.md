@@ -16,5 +16,5 @@ The contents of the repository are as follows:
 
 * **src**: Folder containing our source code (Currently empty)
 
-* **README.md**- You are currently viewing this file.
+* **README.md**- A guide through the github repository. You are currently viewing this file.
 
