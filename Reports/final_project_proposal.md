@@ -10,10 +10,10 @@
 
 | Name | Background | Degree | Affiliations | Job Assignment | Projected Contributions |
 | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
-| Ekpereka Amutaigwe | Medical Microbiology | M.Sc. | Genome Science and Technology | Hoodless Lab, Terry Fox Lab, BC Cancer Research Center | Gene ontology and machine learning  |
+| Ekpereka Amutaigwe | Medical Microbiology | M.Sc. | GSAT, Hoodless Lab, Terry Fox Lab, BC Cancer Research Center | Gene ontology and machine learning | 25%  |
 | Credo Casmil |  |  |  |  |  |
-| Dollina Dodani | Computer Science; Molecular biology and biochemistry |  | Bioinformatics | OVCARE, Vancouver General Hospital |  |
-| Aditi Nagaraj Nallan | B.Sc in Biotechnology, Zoology, Chemistry  |  Masters  | Bioinformatics  |  LSI, Steven Hallam lab |  Data download, DE analysis in R |
+| Dollina Dodani | Computer Science; Molecular biology and biochemistry |  | Bioinformatics,  OVCARE, Vancouver General Hospital | Machine Learning and Data Cleaning | 25% |
+| Aditi Nagaraj Nallan | B.Sc in Biotechnology, Zoology, Chemistry  |  Masters  | Bioinformatics, LSI, Steven Hallam lab | Data download, DE analysis in R |  25% |
 
 ## Specific questions and Methodology
 In order to achieve the final goals of our project, we aim to answer:
