@@ -5,5 +5,5 @@
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 | Ekpereka Amutaigwe |  | | |  |  |
 | Credo Casmil |  |  |  |  |
-| Dollina Dodani | Computer Science; Molecular biology and biochemistry | Bioinformatics | OVCARE, Vancouver General Hospital |  |
+| Dollina Dodani | Computer Science; Molecular biology and biochemistry | Bioinformatics | OVCARE, Vancouver General Hospital, UBC |  |
 | Aditi Nagaraj Nallan |   |   |  |  |  |
