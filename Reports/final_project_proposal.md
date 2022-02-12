@@ -10,7 +10,7 @@
 
 | Name | Background | Degree | Affiliations | Job Assignment | Projected Contributions |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| Ekpereka Amutaigwe |  | | |  |  |
+| Ekpereka Amutaigwe | Medical Microbiology | M.Sc. | Genome Science and Technology | Gene ontology and machine learning |  |
 | Credo Casmil |  |  |  |  |  |
 | Dollina Dodani | Computer Science; Molecular biology and biochemistry |  | Bioinformatics | OVCARE, Vancouver General Hospital |  |
 | Aditi Nagaraj Nallan | B.Sc in Biotechnology, Zoology, Chemistry  |  Masters  | Bioinformatics  |  LSI, Steven Hallam lab |  Data download, DE analysis in R |
