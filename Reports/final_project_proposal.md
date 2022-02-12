@@ -27,7 +27,7 @@ In order to achieve the final goals of our project, we aim to answer:
  
 **2) Are the significantly differentially expressed genes directly connected to immune response?**
 
-We would first identify the genes that are associated with immune functions in humans by carrying out a literature review and using databases such as KEGG and this will be followed by comparing these genes to our list of DE genes obtained from step 1.
+We would first identify the genes that are associated with immune functions in humans by carrying out a literature review and using databases such as GREAT and DAVID and this will be followed by comparing these genes to our list of DE genes obtained from step 1.
 
 **3) Could we leverage the information from the genes that are differentially expressed to predict the level of immune response in infected individuals, given their viral load, age, and sex?**
 
