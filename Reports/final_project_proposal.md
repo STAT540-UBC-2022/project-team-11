@@ -2,9 +2,9 @@
 
 ## Motivation and background
 
-SARS-CoV-2, a novel coronavirus, has rapidly spread worldwide and has a wide range of clinical manifestations among different population groups. After induction in the host, the pathogen exploits the host's antiviral responses with viral load, and transmissibility peaked at symptom onset [1, 2]. Age and sex play a role in shaping clinical outcomes. In particular, older individuals and males tend to be more susceptible. Lieberman et al. first described the dataset used in this project. Their study aimed to use RNA sequencing profiles from nasopharyngeal (NB) swabs to examine host response gene expression across infected status, viral load, age and sex in a time-dependent manner.  
+SARS-CoV-2, a novel coronavirus, has rapidly spread worldwide and has a wide range of clinical manifestations among different population groups. After induction in the host, the pathogen exploits the host's antiviral responses with viral load, and transmissibility peaked at symptom onset [1, 2]. Age and sex play a role in shaping clinical outcomes. In particular, older individuals and males tend to be more susceptible. Lieberman et al. [3] first described the dataset used in this project. Their study aimed to use RNA sequencing profiles from nasopharyngeal (NB) swabs to examine host response gene expression across infected status, viral load, age and sex in a longitudinal data set (time-dependent manner).  
 
-We aim to extend the original research by exploring the interactive effects of age and sex on gene expression profiles. Specifically, we want to examine any statistical difference in gene expression profiles among SARS-CoV-2 infected patients based on age and sex. Additionally, we would like to leverage these differences in machine learning models to predict the strength of host immune response and disease outcome over time.
+We aim to extend the original research by exploring the interactive effects of age and sex on gene expression profiles. Specifically, we want to examine any statistical difference in gene expression profiles among SARS-CoV-2 infected patients based on age and sex. Additionally, we would like to leverage these differences in machine learning models to predict the strength of host immune response and disease outcome over time. While several studies have used machine learning techniques to predict the onset [4] and mortality risk [5] of COVID-19, few have extended such models to estimate a natural immune response in the host using RNA-Seq longitudinal data.
 
 ## Division of labour 
 
@@ -59,7 +59,9 @@ We initially proposed studying Type II diabetes (T2D) in three groups of patient
 
 [3] Blanco-Melo D, Nilsson-Payant BE, Liu W-C, Uhl S, Hoagland D, Møller R, et al. Imbalanced Host Response to SARS-CoV-2 Drives Development of COVID-19. Cell. 2020. 28;181(5):1036–1045.e9. 10.1016/j.cell.2020.04.026
 
-[4] Zou L, Ruan F, Huang M, Liang L, Huang H, Hong Z, et al. SARS-CoV-2 Viral Load in Upper Respiratory Specimens of Infected Patients. N Engl J Med. 2020. March 19;382(12):1177–9. 10.1056/NEJMc2001737 
+[4] Zoabi, Yazeed, Shira Deri-Rozov, and Noam Shomron. "Machine learning-based prediction of COVID-19 diagnosis based on symptoms." npj digital medicine 4.1 (2021): 1-5.
 
-[5] Huang DW, Sherman BT, Lempicki RA. Systematic and integrative analysis of large gene lists using DAVID Bioinformatics Resources. Nature Protoc. 2009;4(1):44-57.
+[5] Mahdavi, Mahdi, et al. "A machine learning based exploration of COVID-19 mortality risk." Plos one 16.7 (2021): e0252384.
+
+[6] Huang DW, Sherman BT, Lempicki RA. Systematic and integrative analysis of large gene lists using DAVID Bioinformatics Resources. Nature Protoc. 2009;4(1):44-57.
 
