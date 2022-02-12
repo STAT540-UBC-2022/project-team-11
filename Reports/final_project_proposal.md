@@ -1,9 +1,30 @@
-# Host transcriptional response to SARS-Cov2 by sex and age. 
+# Host transcriptional response to SARS-Cov2 by sex and age.
 
+## Motivation and Background
+
+
+
+**Observations**: SARS-CoV-2, a novel coronavirus has rapidly spread around the world and has shown a wide range of clinical manifestations among different population groups. It has been previously shown that the entry of SARS-CoV-2 into the host cells depends on its binding to angiotensin-converting enzyme 2 (ACE2) receptors [1]. It is further induced upon exposure to interferon which suggests that SARS-CoV-2 exploits the host's antiviral responses [2]. Based on these findings it has been hypothesized that SARS-CoV-2 employs mechanisms similar to the infection of bronchial epithelial cells at low multiplicity of infection (MOI) which does not result in extensive transcription of interferon-stimulated genes at 24 hours post infection [3]. An important consequence of this is that the viral load and transmissibility peaks at the time of symptom onset [4]. It has also been shown that age and sex play a role is shaping the clinical outcomes. Older individuals and males tend to be more susceptible. The current study that forms the basis of our project delineates the host gene expression profiles based on viral load in a time dependent manner while accounting for sex and age but does not show how the interactive effects of sex and age shape the gene expression profiles. Additionally there is a lack of understanding of how these expression profiles can be used to predict disease outcomes over time. 
+
+**Research Question**: Is there a difference in gene expression profiles among SARS-CoV-2 infected patients based on age and sex? Can these differences be leveraged in machine learning models to predict strength of host immune response and disease outcome over time? 
+
+## Division of Labour 
 
 | Name | Background | Degree | Affiliations | Job Assignment | Projected Contributions |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 | Ekpereka Amutaigwe |  | | |  |  |
-| Credo Casmil |  |  |  |  |
-| Dollina Dodani | Computer Science; Molecular biology and biochemistry | Bioinformatics | OVCARE, Vancouver General Hospital, UBC |  |
-| Aditi Nagaraj Nallan |   |   |  |  |  |
+| Credo Casmil |  |  |  |  |  |
+| Dollina Dodani | Computer Science; Molecular biology and biochemistry |  | Bioinformatics | OVCARE, Vancouver General Hospital |  |
+| Aditi Nagaraj Nallan | B.Sc in Biotechnology, Zoology, Chemistry  |  Masters  | Bioinformatics  |  LSI, Steven Hallam lab |  Data download, DE analysis in R |
+
+
+**References**:
+
+[1] Hoffmann M, Kleine-Weber H, Schroeder S, Krüger N, Herrler T, Erichsen S, et al. SARS-CoV-2 Cell Entry Depends on ACE2 and TMPRSS2 and Is Blocked by a Clinically Proven Protease Inhibitor. Cell. 2020. April 16;181(2):271–280.e8. 10.1016/j.cell.2020.02.052
+
+[2] Hou YJ, Okuda K, Edwards CE, Martinez DR, Asakura T, Dinnon KH, et al. SARS-CoV-2 Reverse Genetics Reveals a Variable Infection Gradient in the Respiratory Tract. Cell. 2020. May;S0092867420306759.
+
+[3] Blanco-Melo D, Nilsson-Payant BE, Liu W-C, Uhl S, Hoagland D, Møller R, et al. Imbalanced Host Response to SARS-CoV-2 Drives Development of COVID-19. Cell. 2020. 28;181(5):1036–1045.e9. 10.1016/j.cell.2020.04.026
+
+[4] Zou L, Ruan F, Huang M, Liang L, Huang H, Hong Z, et al. SARS-CoV-2 Viral Load in Upper Respiratory Specimens of Infected Patients. N Engl J Med. 2020. March 19;382(12):1177–9. 10.1056/NEJMc2001737 
+
