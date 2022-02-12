@@ -27,8 +27,8 @@ In order to achieve the final goals of our project, we aim to answer:
  
 **2) Are the significantly differentially expressed genes directly connected to immune response?**
 
-We would first identify the genes that are connected to immune responses in humans (by doing a literature review and using databases such as KEGG) then we would use Limma to analyze if these genes, in particular, are differentially expressed
- 
+We would first identify the genes that are associated with immune functions in humans by carrying out a literature review and using databases such as KEGG and this will be followed by comparing these genes to our list of DE genes obtained from step 1.
+
 **3) Could we leverage the information from the genes that are differentially expressed to predict the level of immune response in infected individuals, given their viral load, age, and sex?**
 
 To answer this question, we would develop a machine learning model to classify patients based on the differentially expressed genes and associated metadata. Briefly, we hope to first use dimensionality reduction techniques such as Principal Component Analysis (PCA), we would then apply a supervised learning model (Support Vector Machines) to classify patients. 
