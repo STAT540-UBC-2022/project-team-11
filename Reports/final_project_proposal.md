@@ -33,6 +33,10 @@ We would first identify the genes that are associated with immune functions in h
 
 To answer this question, we would develop a machine learning model to classify patients based on the differentially expressed genes and associated metadata. Briefly, we hope to first use dimensionality reduction techniques such as Principal Component Analysis (PCA), we would then apply a supervised learning model (Support Vector Machines) to classify patients. 
 
+## Reason for switch from inital proposal
+
+Our original proposal was based on analyzing Type II diabetes (T2D) in three groups of patients (healthy, insulin-sensitive, and insulin-resistant). While we had access to raw reads (in .fastq format), we were unable to download the prepossessed data or raw counts (in an expression matrix format). We therefore moved to the currently proposed data set that was easily accessible in the desired format and would allow us to ask similar statistical questions that we initially proposed. 
+
 **References**:
 
 [1] Hoffmann M, Kleine-Weber H, Schroeder S, Krüger N, Herrler T, Erichsen S, et al. SARS-CoV-2 Cell Entry Depends on ACE2 and TMPRSS2 and Is Blocked by a Clinically Proven Protease Inhibitor. Cell. 2020. April 16;181(2):271–280.e8. 10.1016/j.cell.2020.02.052
@@ -42,4 +46,5 @@ To answer this question, we would develop a machine learning model to classify p
 [3] Blanco-Melo D, Nilsson-Payant BE, Liu W-C, Uhl S, Hoagland D, Møller R, et al. Imbalanced Host Response to SARS-CoV-2 Drives Development of COVID-19. Cell. 2020. 28;181(5):1036–1045.e9. 10.1016/j.cell.2020.04.026
 
 [4] Zou L, Ruan F, Huang M, Liang L, Huang H, Hong Z, et al. SARS-CoV-2 Viral Load in Upper Respiratory Specimens of Infected Patients. N Engl J Med. 2020. March 19;382(12):1177–9. 10.1056/NEJMc2001737 
+
 
