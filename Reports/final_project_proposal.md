@@ -6,7 +6,7 @@ SARS-CoV-2, a novel coronavirus, has rapidly spread worldwide and has a wide ran
 
 We aim to extend the original research by exploring the interactive effects of age and sex on gene expression profiles. Specifically, we want to examine any statistical difference in gene expression profiles among SARS-CoV-2 infected patients based on age and sex. Additionally, we would like to leverage these differences in machine learning models to predict the strength of host immune response and disease outcome over time. While several studies have used machine learning techniques to predict the onset [4] and mortality risk [5] of COVID-19, few have extended such models to estimate a natural immune response in the host using RNA-Seq longitudinal data. This will support medical researchers to develop new antiviral dosage guidelines based on individualized host immune responses predicted by the model.
 
-Our hypothesis based on literature [1] is 
+Our hypotheses based on literature [1] are:
 1) The expression of interferon-responsive genes (specially ACE2) increase as a function of viral load.
 2) Transcripts for B cell-specific proteins and neutrophil chemokines were elevated in patients with lower viral load.
 3) There a reduced expression of the Th1 chemokines in older individuals and males suggesting deficiencies in trafficking and/or function of cytotoxic T cells and natural killer (NK) cells.
