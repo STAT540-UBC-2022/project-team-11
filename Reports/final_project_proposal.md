@@ -24,7 +24,7 @@ We will work with the raw counts that were generated as follows by the researche
 
 The count matrices will be supplemented with phenotypic and meta data from the GSE152075 expression set. Though the GSE file can be obtained, the assayData contains 0 features (exprs) hence the use of the raw counts.
 
-A subdirectory named [`Datasets`](Reports/Datasets) has been added. This contains the count matrices and phenoData. It contains the following:
+A subdirectory named [`Datasets`](https://github.com/STAT540-UBC-2022/project-team-11/blob/0b21f084fa3444f8be3dfb5451ca7f589859b6ab/Reports/Datasets/) has been added. This contains the count matrices and phenoData. It contains the following:
 1. The `GSE152075_raw_counts_GEO.txt` which was obtained as a supplemental file contains 37784 rows and 484 columns. The rows represent individual gene counts while the columns represent each sample.
 2. The `PhenoData` was obtained from the GSE152075. It has 484 rows and 43 columns that describe the metadata of the study and the following can be obtained from it:
     - It shows that total RNA was isolated from nasopharyngeal (NP) swabs using the Roche MagNAPure or Qiagen BioRobot.
