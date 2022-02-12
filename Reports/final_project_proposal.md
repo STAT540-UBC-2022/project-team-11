@@ -5,5 +5,5 @@
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 | Ekpereka Amutaigwe |  | | |  |  |
 | Credo Casmil |  |  |  |  |
-| Dollina Dodani |  |  |  |  |
+| Dollina Dodani | Computer Science; Molecular biology and biochemistry | Bioinformatics |  |  |
 | Aditi Nagaraj Nallan |   |   |  |  |  |
