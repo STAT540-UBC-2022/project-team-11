@@ -37,7 +37,7 @@ To answer this question, we would develop a machine learning model to classify p
 
 Our original proposal was based on analyzing Type II diabetes (T2D) in three groups of patients (healthy, insulin-sensitive, and insulin-resistant). While we had access to raw reads (in .fastq format), we were unable to download the prepossessed data or raw counts (in an expression matrix format). We therefore moved to the currently proposed data set that was easily accessible in the desired format and would allow us to ask similar statistical questions that we initially proposed. 
 
-**References**:
+## References
 
 [1] Hoffmann M, Kleine-Weber H, Schroeder S, Krüger N, Herrler T, Erichsen S, et al. SARS-CoV-2 Cell Entry Depends on ACE2 and TMPRSS2 and Is Blocked by a Clinically Proven Protease Inhibitor. Cell. 2020. April 16;181(2):271–280.e8. 10.1016/j.cell.2020.02.052
 
