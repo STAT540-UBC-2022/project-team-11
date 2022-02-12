@@ -27,7 +27,7 @@ In order to achieve the final goals of our project, we aim to answer:
  
 **2) Are the significantly differentially expressed genes directly connected to immune response?**
 
-We would first identify the genes that are associated with immune functions in humans by carrying out a literature review and using databases such as GREAT and DAVID and this will be followed by comparing these genes to our list of DE genes obtained from step 1.
+We would first identify the genes that are associated with immune functions in humans by carrying out a literature review and using databases such as DAVID [5] and this will be followed by comparing these genes to our list of DE genes obtained from step 1.
 
 **3) Could we leverage the information from the genes that are differentially expressed to predict the level of immune response in infected individuals, given their viral load, age, and sex?**
 
@@ -46,5 +46,7 @@ Our original proposal was based on analyzing Type II diabetes (T2D) in three gro
 [3] Blanco-Melo D, Nilsson-Payant BE, Liu W-C, Uhl S, Hoagland D, Møller R, et al. Imbalanced Host Response to SARS-CoV-2 Drives Development of COVID-19. Cell. 2020. 28;181(5):1036–1045.e9. 10.1016/j.cell.2020.04.026
 
 [4] Zou L, Ruan F, Huang M, Liang L, Huang H, Hong Z, et al. SARS-CoV-2 Viral Load in Upper Respiratory Specimens of Infected Patients. N Engl J Med. 2020. March 19;382(12):1177–9. 10.1056/NEJMc2001737 
+
+[5] Huang DW, Sherman BT, Lempicki RA. Systematic and integrative analysis of large gene lists using DAVID Bioinformatics Resources. Nature Protoc. 2009;4(1):44-57.
 
 
