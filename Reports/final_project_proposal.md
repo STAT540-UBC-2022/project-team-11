@@ -6,6 +6,11 @@ SARS-CoV-2, a novel coronavirus, has rapidly spread worldwide and has a wide ran
 
 We aim to extend the original research by exploring the interactive effects of age and sex on gene expression profiles. Specifically, we want to examine any statistical difference in gene expression profiles among SARS-CoV-2 infected patients based on age and sex. Additionally, we would like to leverage these differences in machine learning models to predict the strength of host immune response and disease outcome over time. While several studies have used machine learning techniques to predict the onset [4] and mortality risk [5] of COVID-19, few have extended such models to estimate a natural immune response in the host using RNA-Seq longitudinal data. This will support medical researchers to develop new antiviral dosage guidelines based on individualized host immune responses predicted by the model.
 
+Our hypothesis based on literature [1] is 
+1) Does the expression of interferon-responsive genes (specially ACE2) increase as a function of viral load?
+2) Do transcripts for B cell-specific proteins and neutrophil chemokines were elevated in patients with lower viral load? 
+3) Is there a reduced expression of the Th1 chemokines in older individuals? 
+
 ## Division of labour 
 
 | Name | Background | Degree | Affiliations | Job Assignment | Projected Contributions |
@@ -57,7 +62,7 @@ We initially proposed studying Type II diabetes (T2D) in three groups of patient
 
 [2] Hou YJ, Okuda K, Edwards CE, Martinez DR, Asakura T, Dinnon KH, et al. SARS-CoV-2 Reverse Genetics Reveals a Variable Infection Gradient in the Respiratory Tract. Cell. 2020. May; S0092867420306759.
 
-[3] Blanco-Melo D, Nilsson-Payant BE, Liu W-C, Uhl S, Hoagland D, Møller R, et al. Imbalanced Host Response to SARS-CoV-2 Drives Development of COVID-19. Cell. 2020. 28;181(5):1036–1045.e9. 10.1016/j.cell.2020.04.026
+[3] Lieberman, Nicole AP, et al. "In vivo antiviral host transcriptional response to SARS-CoV-2 by viral load, sex, and age." PLoS biology 18.9 (2020): e3000849.
 
 [4] Zoabi, Yazeed, Shira Deri-Rozov, and Noam Shomron. "Machine learning-based prediction of COVID-19 diagnosis based on symptoms." npj digital medicine 4.1 (2021): 1-5.
 
