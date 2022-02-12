@@ -17,6 +17,7 @@
 
 # Datasets
 We will work with the raw counts that were generated as follows by the researchers:
+
 (i) RNA sequencing using the Illumina NextSeq 500 platform.
 (ii) Single end reads were adapter and quality trimmed by Trimmomatic v0.39.
 (iii) Alignement to Ensembl v96 human transcriptome by Kallisto v0.46.
@@ -27,8 +28,8 @@ The count matrices will be supplemented with phenotypic and meta data from the G
 A subdirectory named `Datasets` has been added. This contains the count matrices and phenoData. It contains the following:
 1. The `GSE152075_raw_counts_GEO.txt` which was obtained as a supplemental file contains 37784 rows and 484 columns. The rows represent individual gene counts while the columns represent each sample.
 2. The `PhenoData` was obtained from the GSE152075. It has 484 rows and 43 columns that describe the metadata of the study and the following can be obtained from it:
-  - It shows that total RNA was isolated from nasopharyngeal swabs using the Roche MagNAPure or Qiagen BioRobot.
-  - Researchers determined if host-specific gene expression differences   were correlated to SARS-CoV-2 infection status, host age, sex, and viral load in NP swabs from 430 SARS-CoV-2-infected individuals and 54 negative controls.
+    - It shows that total RNA was isolated from nasopharyngeal swabs using the Roche MagNAPure or Qiagen BioRobot.
+    - Researchers determined if host-specific gene expression differences   were correlated to SARS-CoV-2 infection status, host age, sex, and viral load in NP swabs from 430 SARS-CoV-2-infected individuals and 54 negative controls.
 
 ## Specific questions and Methodology
 In order to achieve the final goals of our project, we aim to answer:
