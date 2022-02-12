@@ -11,9 +11,24 @@
 | Name | Background | Degree | Affiliations | Job Assignment | Projected Contributions |
 | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
 | Ekpereka Amutaigwe | Medical Microbiology | M.Sc. | GSAT, Hoodless Lab, Terry Fox Lab, BC Cancer Research Center | Gene Ontology and Machine learning | 25%  |
-| Credo Casmil |  |  |  |  |  |
+| Credo Casmil | Biochemistry | GSAT | Michael Smith Labs | QC of data, DE analysis |  |
 | Dollina Dodani | Computer Science; Molecular biology and biochemistry |  | Bioinformatics,  OVCARE, Vancouver General Hospital | Machine Learning and Data Cleaning | 25% |
 | Aditi Nagaraj Nallan | B.Sc in Biotechnology, Zoology, Chemistry  |  Masters  | Bioinformatics, LSI, Steven Hallam lab | Data download, DE analysis in R |  25% |
+
+# Datasets
+We will work with the raw counts that were generated as follows by the researchers:
+(i) RNA sequencing using the Illumina NextSeq 500 platform.
+(ii) Single end reads were adapter and quality trimmed by Trimmomatic v0.39.
+(iii) Alignement to Ensembl v96 human transcriptome by Kallisto v0.46.
+(iv) Gene level annotations by Biomart.
+
+The count matrices will be supplemented with phenotypic and meta data from the GSE152075 expression set. Though the GSE file can be obtained, the assayData contains 0 features (exprs) hence the use of the raw counts.
+
+A subdirectory named `Datasets` has been added. This contains the count matrices and phenoData. It contains the following:
+1. The `GSE152075_raw_counts_GEO.txt` which was obtained as a supplemental file contains 37784 rows and 484 columns. The rows represent individual gene counts while the columns represent each sample.
+2. The `PhenoData` was obtained from the GSE152075. It has 484 rows and 43 columns that describe the metadata of the study and the following can be obtained from it:
+  - It shows that total RNA was isolated from nasopharyngeal swabs using the Roche MagNAPure or Qiagen BioRobot.
+  - Researchers determined if host-specific gene expression differences   were correlated to SARS-CoV-2 infection status, host age, sex, and viral load in NP swabs from 430 SARS-CoV-2-infected individuals and 54 negative controls.
 
 ## Specific questions and Methodology
 In order to achieve the final goals of our project, we aim to answer:
