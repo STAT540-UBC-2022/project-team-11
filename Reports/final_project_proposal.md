@@ -12,7 +12,7 @@ We aim to extend the original research by exploring the interactive effects of a
 | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
 | Ekpereka Amutaigwe | Medical Microbiology | M.Sc. | GSAT, Hoodless Lab, Terry Fox Lab, BC Cancer Research Center | Gene Ontology and Machine learning | 25%  |
 | Credo Casmil | Biochemistry | M.Sc. | GSAT, Blakney Lab, Michael Smith Labs | QC of data, DE analysis | 25% |
-| Dollina Dodani | Computer Science; Molecular biology and biochemistry | M.Sc. | Bioinformatics,  OVCARE, Vancouver General Hospital | Machine Learning and Data Cleaning | 25% |
+| Dollina Dodani | Computer Science; Molecular biology and biochemistry | M.Sc. | Bioinformatics,  OVCARE, Vancouver General Hospital, Talhouk Lab | Machine Learning and Data Cleaning | 25% |
 | Aditi Nagaraj Nallan | B.Sc in Biotechnology, Zoology, Chemistry  |  M.Sc.  | Bioinformatics, LSI, Steven Hallam lab | Data download, DE analysis in R |  25% |
 
 ## Datasets
