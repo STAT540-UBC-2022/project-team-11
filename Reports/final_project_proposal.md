@@ -11,7 +11,7 @@
 | Name | Background | Degree | Affiliations | Job Assignment | Projected Contributions |
 | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
 | Ekpereka Amutaigwe | Medical Microbiology | M.Sc. | GSAT, Hoodless Lab, Terry Fox Lab, BC Cancer Research Center | Gene Ontology and Machine learning | 25%  |
-| Credo Casmil | Biochemistry | GSAT | Michael Smith Labs | QC of data, DE analysis |  |
+| Credo Casmil | Biochemistry | GSAT | Michael Smith Labs | QC of data, DE analysis | 25% |
 | Dollina Dodani | Computer Science; Molecular biology and biochemistry |  | Bioinformatics,  OVCARE, Vancouver General Hospital | Machine Learning and Data Cleaning | 25% |
 | Aditi Nagaraj Nallan | B.Sc in Biotechnology, Zoology, Chemistry  |  Masters  | Bioinformatics, LSI, Steven Hallam lab | Data download, DE analysis in R |  25% |
 
