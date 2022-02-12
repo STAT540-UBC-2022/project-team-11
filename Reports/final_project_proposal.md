@@ -20,10 +20,11 @@ In order to achieve the final goals of our project, we aim to answer:
 
 **1) What genes are significantly differentially expressed between the two groups (healthy and infected) while accounting for factors such as age, sex?**
 
-  Computational and statistical methods used:<br/>
-    - Reading data into R using the GEOquery package<br/>
-    - Exploratory data analysis and sanity checks using Tidyverse tools<br/>
-    - Leveraging DESeq2 model to infer differential gene expression<br/>
+  Computational and statistical methods used:
+  
+  * Reading data into R using the GEOquery package
+  * Exploratory data analysis and sanity checks using Tidyverse tools
+  * Leveraging DESeq2 model to infer differential gene expression
  
 **2) Are the significantly differentially expressed genes directly connected to immune response?**
 
