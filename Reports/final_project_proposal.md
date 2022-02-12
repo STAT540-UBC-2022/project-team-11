@@ -2,13 +2,11 @@
 
 ## Motivation and Background
 
-
-
 **Observations**: SARS-CoV-2, a novel coronavirus has rapidly spread around the world and has shown a wide range of clinical manifestations among different population groups. It has been previously shown that the entry of SARS-CoV-2 into the host cells depends on its binding to angiotensin-converting enzyme 2 (ACE2) receptors [1]. It is further induced upon exposure to interferon which suggests that SARS-CoV-2 exploits the host's antiviral responses [2]. Based on these findings it has been hypothesized that SARS-CoV-2 employs mechanisms similar to the infection of bronchial epithelial cells at low multiplicity of infection (MOI) which does not result in extensive transcription of interferon-stimulated genes at 24 hours post infection [3]. An important consequence of this is that the viral load and transmissibility peaks at the time of symptom onset [4]. It has also been shown that age and sex play a role is shaping the clinical outcomes. Older individuals and males tend to be more susceptible. The current study that forms the basis of our project delineates the host gene expression profiles based on viral load in a time dependent manner while accounting for sex and age but does not show how the interactive effects of sex and age shape the gene expression profiles. Additionally there is a lack of understanding of how these expression profiles can be used to predict disease outcomes over time. 
 
 **Research Question**: Is there a difference in gene expression profiles among SARS-CoV-2 infected patients based on age and sex? Can these differences be leveraged in machine learning models to predict strength of host immune response and disease outcome over time? 
 
-## Division of Labour 
+# Division of Labour 
 
 | Name | Background | Degree | Affiliations | Job Assignment | Projected Contributions |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
@@ -17,6 +15,23 @@
 | Dollina Dodani | Computer Science; Molecular biology and biochemistry |  | Bioinformatics | OVCARE, Vancouver General Hospital |  |
 | Aditi Nagaraj Nallan | B.Sc in Biotechnology, Zoology, Chemistry  |  Masters  | Bioinformatics  |  LSI, Steven Hallam lab |  Data download, DE analysis in R |
 
+## Specific questions and Methodology
+In order to achieve the final goals of our project, we aim to answer:
+
+**1) What genes are significantly differentially expressed between the two groups (healthy and infected) while accounting for factors such as age, sex?**
+
+  Computational and statistical methods used:<br/>
+    - Reading data into R using the GEOquery package<br/>
+    - Exploratory data analysis and sanity checks using Tidyverse tools<br/>
+    - Leveraging DESeq2 model to infer differential gene expression<br/>
+ 
+**2) Are the significantly differentially expressed genes directly connected to immune response?**
+
+We would first identify the genes that are connected to immune responses in humans (by doing a literature review and using databases such as KEGG) then we would use Limma to analyze if these genes, in particular, are differentially expressed
+ 
+**3) Could we leverage the information from the genes that are differentially expressed to predict the level of immune response in infected individuals, given their viral load, age, and sex?**
+
+To answer this question, we would develop a machine learning model to classify patients based on the differentially expressed genes and associated metadata. Briefly, we hope to first use dimensionality reduction techniques such as Principal Component Analysis (PCA), we would then apply a supervised learning model (Support Vector Machines) to classify patients. 
 
 **References**:
 
