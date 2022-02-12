@@ -9,7 +9,7 @@ We aim to extend the original research by exploring the interactive effects of a
 Our hypothesis based on literature [1] is 
 1) Does the expression of interferon-responsive genes (specially ACE2) increase as a function of viral load?
 2) Do transcripts for B cell-specific proteins and neutrophil chemokines were elevated in patients with lower viral load? 
-3) Is there a reduced expression of the Th1 chemokines in older individuals? 
+3) Is there a reduced expression of the Th1 chemokines in older individuals and males suggesting deficiencies in trafficking and/or function of cytotoxic T cells and natural killer (NK) cells? 
 
 ## Division of labour 
 
