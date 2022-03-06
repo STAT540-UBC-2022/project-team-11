@@ -1,0 +1,37 @@
+
+Load packages
+```{r message=FALSE,warning=FALSE}
+library("tidyverse")
+library("GEOquery")
+library("limma")
+library("DESeq2")
+library("edgeR")
+```
+
+
+```{r}
+eset <- getGEO("GSE152075", getGPL = FALSE)[[1]]
+getGEOSuppFiles("GSE152075")
+raw_counts <- read.csv("GSE152075/GSE152075_raw_counts_GEO.txt", sep = "")
+count_mat <- as.matrix(raw_counts,row.names="gene_id")
+```
+
+```{r}
+pdata <- eset@phenoData@data %>% as_tibble()
+pdata_mod <- pdata %>%
+  select(title, `age:ch1`, characteristics_ch1.3, characteristics_ch1.4, `sars-cov-2 positivity:ch1`) %>%
+  mutate(Age = `age:ch1`, Gender = characteristics_ch1.3, Batch = characteristics_ch1.4, sarstest = `sars-cov-2 positivity:ch1`)
+```
+
+```{r}
+dge <- DGEList(counts = count_mat, samples = pdata_mod, group = pdata_mod$sarstest)
+dim(dge)
+apply(dge$counts, 2, sum) # total gene counts per sample
+
+keep <- rowSums(cpm(dge)>100) >= 50
+dge_mod <- dge[keep,]
+dim(dge_mod)
+
+dge$samples$lib.size <- colSums(dge$counts) # Reset library sizes
+```
+
