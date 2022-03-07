@@ -1,11 +1,11 @@
 
 Load packages
 ```{r message=FALSE,warning=FALSE}
-library("tidyverse")
-library("GEOquery")
-library("limma")
-library("DESeq2")
-library("edgeR")
+suppressPackageStartupMessages(library("tidyverse"))
+suppressPackageStartupMessages(library("GEOquery"))
+suppressPackageStartupMessages(library("limma"))
+suppressPackageStartupMessages(library("DESeq2"))
+suppressPackageStartupMessages(library("edgeR"))
 ```
 
 
@@ -20,11 +20,30 @@ count_mat <- as.matrix(raw_counts,row.names="gene_id")
 pdata <- eset@phenoData@data %>% as_tibble()
 pdata_mod <- pdata %>%
   select(title, `age:ch1`, characteristics_ch1.3, characteristics_ch1.4, `sars-cov-2 positivity:ch1`) %>%
-  mutate(Age = `age:ch1`, Gender = characteristics_ch1.3, Batch = characteristics_ch1.4, sarstest = `sars-cov-2 positivity:ch1`)
+  subset(`age:ch1` != "Unknown") %>%
+  transform(`age:ch1` = as.numeric(`age:ch1`))
+
+colnames(pdata_mod) = c("Title", "Age", "Gender", "Batch", "Sars_test")
+pdata_mod[is.na(pdata_mod)] <- 90
+
+pdata_mod = pdata_mod %>%
+  mutate(Age_category =  case_when(
+    Age < 18 ~ "Child",
+    Age >= 18 & Age < 35 ~ "Young Adult",
+    Age >= 35 & Age < 65  ~ "Adult",
+    TRUE ~ "Senior"
+  ))
+
+data = pdata %>%
+       select(title, `age:ch1`) %>% 
+       subset(`age:ch1` == "Unknown")
+
+drop <- data$title
+count_mat_final  = count_mat[,!colnames(count_mat) %in% drop]
 ```
 
 ```{r}
-dge <- DGEList(counts = count_mat, samples = pdata_mod, group = pdata_mod$sarstest)
+dge <- DGEList(counts = count_mat_final, samples = pdata_mod, group = pdata_mod$sarstest)
 dim(dge)
 apply(dge$counts, 2, sum) # total gene counts per sample
 
