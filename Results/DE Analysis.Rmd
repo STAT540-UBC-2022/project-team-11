@@ -15,7 +15,7 @@ suppressPackageStartupMessages(library("ggrepel"))
 ```
 
 
-```{r}
+```{r, warning=FALSE, message=FALSE, results='hide'}
 eset <- getGEO("GSE152075", getGPL = FALSE)[[1]]
 getGEOSuppFiles("GSE152075")
 raw_counts <- read.csv("GSE152075/GSE152075_raw_counts_GEO.txt", sep = "")
@@ -107,6 +107,7 @@ plotMA(res2, alpha = 0.05)
 full_results1 <- as.data.frame(res1)
 full_results1 <- cbind(Genes = rownames(full_results1), full_results1)
 rownames(full_results1) <- NULL
+full_results1 <- full_results1[order(full_results1$pvalue), ]
 
 p_cutoff <- 0.05
 fc_cutoff <- 1
@@ -132,6 +133,7 @@ genes_of_interest <- test_sig %>%
 full_results2 <- as.data.frame(res2)
 full_results2 <- cbind(Genes = rownames(full_results2), full_results2)
 rownames(full_results2) <- NULL
+full_results2 <- full_results2[order(full_results2$pvalue), ]
 
 p_cutoff <- 0.05
 fc_cutoff <- 1

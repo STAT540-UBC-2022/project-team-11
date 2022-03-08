@@ -14,38 +14,7 @@ suppressPackageStartupMessages(library("ggrepel"))
 
 ``` r
 eset <- getGEO("GSE152075", getGPL = FALSE)[[1]]
-```
-
-    ## Found 1 file(s)
-
-    ## GSE152075_series_matrix.txt.gz
-
-``` r
 getGEOSuppFiles("GSE152075")
-```
-
-    ##                                                                                                                  size
-    ## /Users/credo/Desktop/GSAT 540/Group Project/project-team-11/Results/GSE152075/GSE152075_raw_counts_GEO.txt.gz 7121083
-    ##                                                                                                               isdir
-    ## /Users/credo/Desktop/GSAT 540/Group Project/project-team-11/Results/GSE152075/GSE152075_raw_counts_GEO.txt.gz FALSE
-    ##                                                                                                               mode
-    ## /Users/credo/Desktop/GSAT 540/Group Project/project-team-11/Results/GSE152075/GSE152075_raw_counts_GEO.txt.gz  644
-    ##                                                                                                                             mtime
-    ## /Users/credo/Desktop/GSAT 540/Group Project/project-team-11/Results/GSE152075/GSE152075_raw_counts_GEO.txt.gz 2022-03-08 07:18:24
-    ##                                                                                                                             ctime
-    ## /Users/credo/Desktop/GSAT 540/Group Project/project-team-11/Results/GSE152075/GSE152075_raw_counts_GEO.txt.gz 2022-03-08 07:18:24
-    ##                                                                                                                             atime
-    ## /Users/credo/Desktop/GSAT 540/Group Project/project-team-11/Results/GSE152075/GSE152075_raw_counts_GEO.txt.gz 2022-03-08 06:59:27
-    ##                                                                                                               uid
-    ## /Users/credo/Desktop/GSAT 540/Group Project/project-team-11/Results/GSE152075/GSE152075_raw_counts_GEO.txt.gz 501
-    ##                                                                                                               gid
-    ## /Users/credo/Desktop/GSAT 540/Group Project/project-team-11/Results/GSE152075/GSE152075_raw_counts_GEO.txt.gz  20
-    ##                                                                                                               uname
-    ## /Users/credo/Desktop/GSAT 540/Group Project/project-team-11/Results/GSE152075/GSE152075_raw_counts_GEO.txt.gz credo
-    ##                                                                                                               grname
-    ## /Users/credo/Desktop/GSAT 540/Group Project/project-team-11/Results/GSE152075/GSE152075_raw_counts_GEO.txt.gz  staff
-
-``` r
 raw_counts <- read.csv("GSE152075/GSE152075_raw_counts_GEO.txt", sep = "")
 count_mat <- as.matrix(raw_counts,row.names="gene_id")
 ```
@@ -261,6 +230,7 @@ plotMA(res2, alpha = 0.05)
 full_results1 <- as.data.frame(res1)
 full_results1 <- cbind(Genes = rownames(full_results1), full_results1)
 rownames(full_results1) <- NULL
+full_results1 <- full_results1[order(full_results1$pvalue), ]
 
 p_cutoff <- 0.05
 fc_cutoff <- 1
@@ -291,6 +261,7 @@ genes_of_interest <- test_sig %>%
 full_results2 <- as.data.frame(res2)
 full_results2 <- cbind(Genes = rownames(full_results2), full_results2)
 rownames(full_results2) <- NULL
+full_results2 <- full_results2[order(full_results2$pvalue), ]
 
 p_cutoff <- 0.05
 fc_cutoff <- 1
