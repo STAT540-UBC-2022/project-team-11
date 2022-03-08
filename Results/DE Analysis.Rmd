@@ -6,6 +6,7 @@ suppressPackageStartupMessages(library("GEOquery"))
 suppressPackageStartupMessages(library("limma"))
 suppressPackageStartupMessages(library("DESeq2"))
 suppressPackageStartupMessages(library("edgeR"))
+suppressPackageStartupMessages(library("pheatmap"))
 ```
 
 
@@ -52,5 +53,100 @@ dge_mod <- dge[keep,]
 dim(dge_mod)
 
 dge$samples$lib.size <- colSums(dge$counts) # Reset library sizes
+```
+
+```{r}
+#Calculating TMM normalization factors and directly adding them to the DGEList
+dge_norm = calcNormFactors(dge_mod, method = "TMM")
+
+cpm = cpm(dge_norm, log = FALSE, normalized.lib.sizes = TRUE)
+log2cpm = log2(cpm + 1)
+
+#Transforming object from wide to long format for plotting 
+set.seed(1)
+ran_samp <- subset(log2cpm[,150:170])
+
+longExpr = ran_samp %>% 
+           as.data.frame() %>% 
+           rownames_to_column("gene") %>%
+           pivot_longer(cols = !gene,
+                        values_to = "Expression",
+                        names_to = "sample_ID")
+
+longExpr  %>% 
+  ggplot(aes(x = Expression, color = sample_ID)) +
+  geom_density() +
+  labs( x = "Expression", y = "Density", title = "Density plot showing distribution of gene expression across all samples")
+
+longExpr %>% 
+  ggplot(aes(x = sample_ID, y = Expression)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))  +
+  labs( x = "Sample ID", y = "Gene Expression", title = "Box plot showing distribution of gene expression across all samples")
+```
+
+```{r}
+#Calculate correlation using log2 transformed CPM values from earlier
+cormat = round(cor(ran_samp), 2)
+
+#Plot heatmap
+pheatmap(cormat, border_color = NA, cluster_rows = TRUE, cellheight=9, cellwidth = 9)
+```
+
+```{r}
+#Setting up model matrix
+designMatrix = model.matrix(~Sars_test + Batch, data = colData(sumexp))
+
+#Calculation of variance weights and generation of mean-variance trend plot
+de_model = voom(dge_norm, design = designMatrix, plot = TRUE)
+```
+
+```{r}
+dge_disp <- estimateDisp(dge_norm, designMatrix, robust = TRUE)
+range(dge_disp$prior.df)
+plotBCV(dge_disp,  cex=0.5)
+
+
+#Model fitting
+#model_fit = lmFit(de_model, designMatrix)
+#model_fit = eBayes(model_fit)
+```
+
+```{r}
+lfit <- glmFit(dge_disp, designMatrix)
+
+topTags(glmLRT(lfit, coef = "Sars_testpos"))$table %>% signif(3)
+```
+
+```{r}
+sumexp <- SummarizedExperiment(assays = SimpleList(counts = as.matrix(count_mat_final)), 
+                             colData = DataFrame(pdata_mod))
+
+assays(sumexp)$cpm <- cpm(count_mat_final, log = FALSE, normalized.lib.sizes = FALSE)
+sumexp
+```
+
+```{r}
+keep <- which(rowSums(assays(sumexp)$cpm > 100) >= 50)
+sumexp <- sumexp[keep,]
+
+assays(sumexp)$log2cpm <- log2(assays(sumexp)$cpm + 1)
+sumexp
+
+```
+
+```{r}
+dds <- DESeqDataSet(sumexp, designMatrix)
+dds
+
+dds <- estimateSizeFactors(dds)
+# double check that samples are in the same order in both edger and deseq objects
+identical(colnames(dge_disp), colnames(dds))
+```
+
+```{r}
+dds <- DESeq(dds)
+resultsNames(dds)
+plotMA(dds, alpha = 0.05)
 ```
 
