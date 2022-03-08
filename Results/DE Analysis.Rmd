@@ -23,6 +23,12 @@ count_mat <- as.matrix(raw_counts,row.names="gene_id")
 ```
 
 ```{r}
+pdata_clean = pdata %>%
+  select(title, `age:ch1`, characteristics_ch1.3, characteristics_ch1.4, `sars-cov-2 positivity:ch1`)
+
+colnames(pdata_clean) = c("Title", "Age", "Gender", "Batch", "Sars_test")
+
+
 pdata <- eset@phenoData@data %>% as_tibble()
 pdata_mod <- pdata %>%
   select(title, `age:ch1`, characteristics_ch1.3, characteristics_ch1.4, `sars-cov-2 positivity:ch1`) %>%
@@ -50,10 +56,10 @@ count_mat_final  = count_mat[,!colnames(count_mat) %in% drop]
 
 # Using Deseq
 ```{r}
-sumexp <- SummarizedExperiment(assays = SimpleList(counts = as.matrix(count_mat_final)), 
-                             colData = DataFrame(pdata_mod))
+sumexp <- SummarizedExperiment(assays = SimpleList(counts = as.matrix(count_mat)), 
+                             colData = DataFrame(pdata_clean))
 
-assays(sumexp)$cpm <- cpm(count_mat_final, log = FALSE, normalized.lib.sizes = FALSE)
+assays(sumexp)$cpm <- cpm(count_mat, log = FALSE, normalized.lib.sizes = FALSE)
 sumexp
 ```
 
@@ -157,7 +163,7 @@ genes_of_interest2 <- test_sig2 %>%
 # Using EdgeR
 
 ```{r}
-dge <- DGEList(counts = count_mat_final, samples = pdata_mod, group = pdata_mod$sarstest)
+dge <- DGEList(counts = count_mat, samples = pdata_clean, group = pdata_clean$Sars_test)
 dim(dge)
 apply(dge$counts, 2, sum) # total gene counts per sample
 
