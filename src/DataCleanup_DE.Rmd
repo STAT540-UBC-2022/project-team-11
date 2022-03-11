@@ -1,6 +1,6 @@
 ---
-title: "Data Cleaning and initial DE analysis"
-author: "Credo Casmil, Aditi Nagaraj Nallan, Ekpereka Amutaigwe and Dollina Dodani"
+title: "Data Cleaning and Initial DE Analysis"
+author: "Credo Casmil, Aditi Nagaraj Nallan, Ekpereka Amutaigwe and Dollina Dodani"  
 date: '2022-03-10'
 output: github_document
 ---
@@ -181,12 +181,18 @@ de2_summary
 # Convert rownames to column
 lrt2_upreg_mod <- lrt2_filter_upreg %>% 
                   rownames_to_column("gene")
+lrt2_downreg_mod <- lrt2_filter_downreg %>% 
+                   rownames_to_column("gene")
 
-# Filter data to retain only the upregulated genes
+# Merge up-regulated and down-regulated gene data frames
+lrt2_upreg_downreg <- rbind(lrt2_upreg_mod, lrt2_downreg_mod)
+nrow(lrt2_upreg_downreg)
+
+# Filter data to retain only the up-regulated genes
 log2cpm_dat <-  log2cpm %>% 
                 as.data.frame() %>% 
                 rownames_to_column("gene") %>% 
-                filter(gene %in% lrt2_upreg_mod$gene) %>% 
+                filter(gene %in% lrt2_upreg_downreg$gene) %>% 
   # Change data to a long form
                 pivot_longer(cols = !gene,
                              values_to = "Expression",
@@ -195,7 +201,7 @@ log2cpm_dat <-  log2cpm %>%
 # Rename column to join by
 pdata_clean <- dplyr::rename(pdata_clean, sample_ID = Title)
 
-# Join expression and metadata datasets
+# Join expression and metadata data sets
 DEG_new <- log2cpm_dat %>% 
            left_join(pdata_clean, 
                      by = "sample_ID") 
@@ -206,7 +212,7 @@ DEG_new_trans <- pivot_wider(DEG_new,
                              names_from = gene, 
                              values_from = Expression)
 
-# Use to drop missing values incase there's any before PCA
+# Use to drop missing values in case there's any before PCA
 DEG_new_trans2 <- DEG_new_trans %>% 
                   drop_na() 
 
@@ -220,19 +226,23 @@ summary(pca_DEG_new_trans2)
 # What are the components of the PCA result
 str(pca_DEG_new_trans2)
 
-# Visualize the PCA result by gender
+# Visualize PCA result by gender
 ggbiplot(pca_DEG_new_trans2, 
          ellipse = TRUE, 
-         var.axes = FALSE, 
+         var.axes = FALSE,
+         obs.scale = 1,
+         var.scale = 1,
          groups = DEG_new_trans2$Gender) +
-  ggtitle("PCA of SARS_Cov2 gene expression by gender") +
+  ggtitle("PCA of SARS-Cov2 gene expression by gender") +
   theme_bw()
   
 # Visualize PCA result by infection status
 ggbiplot(pca_DEG_new_trans2, 
-         ellipse = TRUE, 
+         ellipse = TRUE,
+         obs.scale = 1,
+         var.scale = 1,
          groups = DEG_new_trans2$Sars_test) + 
-  ggtitle("PCA of SARS_Cov2 gene expression by infection status") +
+  ggtitle("PCA of SARS-Cov2 gene expression by infection status") +
   theme_bw()
 
 ```
@@ -241,13 +251,13 @@ ggbiplot(pca_DEG_new_trans2,
 # Determine total variance explained by each principal component
 variance_expl <- pca_DEG_new_trans2$sdev^2 / sum(pca_DEG_new_trans2$sdev^2)
 
-# create an elbow plot
-qplot(c(1:44), variance_expl) +
+# create scree plot
+qplot(c(1:65), variance_expl) +
   geom_line() +
   xlab("Principal Component") +
   ylab("Variance explained") +
-  ggtitle("Elbow Plot of Principal Components") +
-  ylim(0, 1) +
+  ggtitle("Scree Plot of Principal Components") +
+  ylim(0, 0.75) +
   theme_bw()
 ```
 
