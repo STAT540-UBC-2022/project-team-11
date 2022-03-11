@@ -16,6 +16,8 @@ suppressPackageStartupMessages(library(statmod))
 suppressPackageStartupMessages(library(ggrepel))
 suppressPackageStartupMessages(library(ggbiplot))
 suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(caTools)) ## used for splitting the data into training and validation sets 
+suppressPackageStartupMessages(library(caret)) ## used for confusion matrix, accuracy, sensitivity, and specificity
 ```
 
 ``` r
@@ -403,6 +405,99 @@ qplot(c(1:65), variance_expl) +
 ```
 
 ![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+# Logistic regression classifier
+
+We aim to build a logistic regression model to predict if a patient is
+infected with COVID-19 given their RNA-seq data. Our initial analysis
+(above) returns a set of 64 (confirm number) genes that were
+differentially expressed given the infection status. While it would be
+ideal to use all 64 genes to perform the classification, such a task
+would be not only computationally heavy but also have a lot of noise.
+This noise could arise because it is possible that some of the DEGs are
+correlated and produce similar signals, hence misleading our
+interpretation. In order to prevent this, we performed PCA on the DEGs
+(above). From the above Scree/Elbow plot, it is evident that the first
+four PCs explain \~66% of the variance in the dataset. In our regression
+model, we therefore, only use 4 PCs.
+
+``` r
+## We first subset the PCA data so that we only have the first 4 columns (PCs) to work with 
+PCA_data_subset <- as.data.frame(pca_DEG_new_trans2$x[, c(1, 2, 3, 4)])
+
+## Our dataset has "pos" or 'neg" for the status. Such labels are incompatible with logistic regression which requires labels to be 1 or 0. 
+
+labels_list <-gsub("pos", 1, DEG_new_trans2$Sars_test)
+labels_list <-gsub("neg", 0, labels_list)
+
+## Next, we assign the class labels to our subsetted data (Infected vs Uninfected). We will call this column status
+PCA_data_subset$status <- as.numeric(labels_list)
+
+## Splitting our dataset (PCA_data_subset) into a training and validation set. We will use a split of 80:20. That means, 80% of our original data will be used for training and 20% for validating our model. 
+set.seed(123) ## Setting seed so we get the same split every time we run this code block
+split = sample.split(PCA_data_subset$status, SplitRatio = 0.80) #This function will return a boolean vector. It indicates if the sample belongs to the training set (TRUE) or validation set (FALSE)
+
+training_set = subset(PCA_data_subset, split == TRUE) ## Filter to get rows where split is TRUE
+test_set = subset(PCA_data_subset, split == FALSE) ## Filter to get rows where split is FALSE
+
+## Training the classifier. Note to self: still need to think if family=binomial is the best option.
+classifier = glm(formula = status ~ .,family = binomial, data = training_set)
+
+## Sanity check! Look at coefficients - only PC3 is significant? 
+summary(classifier) 
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = status ~ ., family = binomial, data = training_set)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -3.2400   0.0153   0.0444   0.1247   1.7203  
+    ## 
+    ## Coefficients:
+    ##              Estimate Std. Error z value Pr(>|z|)    
+    ## (Intercept)  5.494284   0.808921   6.792  1.1e-11 ***
+    ## PC1          0.377337   0.057810   6.527  6.7e-11 ***
+    ## PC2          0.005893   0.082860   0.071  0.94330    
+    ## PC3         -0.446119   0.125287  -3.561  0.00037 ***
+    ## PC4         -0.245889   0.106045  -2.319  0.02041 *  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 269.996  on 386  degrees of freedom
+    ## Residual deviance:  69.572  on 382  degrees of freedom
+    ## AIC: 79.572
+    ## 
+    ## Number of Fisher Scoring iterations: 8
+
+``` r
+## Prediction on the validation set
+prob_pred = predict(classifier, type = 'response', newdata = test_set[-5]) ## Will return a vector of predicted probablities of belong to infected (1) vs uninfected (0)
+
+## Since this is a classification problem, we do not want probablities but instead either 1 or 0.
+y_pred = ifelse(prob_pred > 0.5, 1, 0) ## Will round the probabilities to 1 or 0
+
+## Checking how accurate our model is
+cm = table(test_set[, 5], y_pred) ## Will return a confusion matrix. We notice that 1 COVID 19 patients were misclassfied as healthy and 3 healthy patients were misclassified as diseased.
+cm
+```
+
+    ##    y_pred
+    ##      0  1
+    ##   0  8  3
+    ##   1  1 85
+
+``` r
+## will now calculate Accuracy, Sensitivity and Specificity 
+con_mat = confusionMatrix(cm, positive = "1")
+c(con_mat$overall["Accuracy"], con_mat$byClass["Sensitivity"], con_mat$byClass["Specificity"])
+```
+
+    ##    Accuracy Sensitivity Specificity 
+    ##   0.9587629   0.9659091   0.8888889
 
 References <https://www.datacamp.com/community/tutorials/pca-analysis-r>
 <https://www.statology.org/scree-plot-r/>
