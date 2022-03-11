@@ -1,4 +1,4 @@
-Data Cleaning and initial DE analysis
+Data Cleaning and Initial DE Analysis
 ================
 Credo Casmil, Aditi Nagaraj Nallan, Ekpereka Amutaigwe and Dollina
 Dodani
@@ -252,12 +252,22 @@ de2_summary
 # Convert rownames to column
 lrt2_upreg_mod <- lrt2_filter_upreg %>% 
                   rownames_to_column("gene")
+lrt2_downreg_mod <- lrt2_filter_downreg %>% 
+                   rownames_to_column("gene")
 
-# Filter data to retain only the upregulated genes
+# Merge up-regulated and down-regulated gene data frames
+lrt2_upreg_downreg <- rbind(lrt2_upreg_mod, lrt2_downreg_mod)
+nrow(lrt2_upreg_downreg)
+```
+
+    ## [1] 66
+
+``` r
+# Filter data to retain only the up-regulated genes
 log2cpm_dat <-  log2cpm %>% 
                 as.data.frame() %>% 
                 rownames_to_column("gene") %>% 
-                filter(gene %in% lrt2_upreg_mod$gene) %>% 
+                filter(gene %in% lrt2_upreg_downreg$gene) %>% 
   # Change data to a long form
                 pivot_longer(cols = !gene,
                              values_to = "Expression",
@@ -266,7 +276,7 @@ log2cpm_dat <-  log2cpm %>%
 # Rename column to join by
 pdata_clean <- dplyr::rename(pdata_clean, sample_ID = Title)
 
-# Join expression and metadata datasets
+# Join expression and metadata data sets
 DEG_new <- log2cpm_dat %>% 
            left_join(pdata_clean, 
                      by = "sample_ID") 
@@ -277,7 +287,7 @@ DEG_new_trans <- pivot_wider(DEG_new,
                              names_from = gene, 
                              values_from = Expression)
 
-# Use to drop missing values incase there's any before PCA
+# Use to drop missing values in case there's any before PCA
 DEG_new_trans2 <- DEG_new_trans %>% 
                   drop_na() 
 
@@ -290,34 +300,46 @@ summary(pca_DEG_new_trans2)
 ```
 
     ## Importance of components:
-    ##                           PC1    PC2     PC3     PC4     PC5     PC6     PC7
-    ## Standard deviation     8.4766 3.8123 2.72281 2.20963 1.71975 1.64250 1.58904
-    ## Proportion of Variance 0.5314 0.1075 0.05483 0.03611 0.02187 0.01995 0.01867
-    ## Cumulative Proportion  0.5314 0.6389 0.69368 0.72979 0.75166 0.77161 0.79029
-    ##                            PC8     PC9   PC10    PC11    PC12   PC13    PC14
-    ## Standard deviation     1.38595 1.32163 1.2846 1.26467 1.20597 1.1917 1.10633
-    ## Proportion of Variance 0.01421 0.01292 0.0122 0.01183 0.01076 0.0105 0.00905
-    ## Cumulative Proportion  0.80449 0.81741 0.8296 0.84144 0.85220 0.8627 0.87175
-    ##                           PC15    PC16    PC17   PC18    PC19    PC20    PC21
-    ## Standard deviation     1.07343 1.03128 1.01882 1.0000 0.97823 0.95343 0.93600
-    ## Proportion of Variance 0.00852 0.00787 0.00768 0.0074 0.00708 0.00672 0.00648
-    ## Cumulative Proportion  0.88027 0.88814 0.89581 0.9032 0.91028 0.91701 0.92349
-    ##                           PC22    PC23    PC24   PC25    PC26    PC27    PC28
-    ## Standard deviation     0.89360 0.87567 0.84877 0.8385 0.80795 0.79137 0.77922
-    ## Proportion of Variance 0.00591 0.00567 0.00533 0.0052 0.00483 0.00463 0.00449
-    ## Cumulative Proportion  0.92939 0.93506 0.94039 0.9456 0.95042 0.95505 0.95954
-    ##                           PC29    PC30    PC31    PC32    PC33    PC34    PC35
-    ## Standard deviation     0.76670 0.73707 0.71068 0.66445 0.63508 0.59826 0.59407
-    ## Proportion of Variance 0.00435 0.00402 0.00374 0.00327 0.00298 0.00265 0.00261
-    ## Cumulative Proportion  0.96389 0.96790 0.97164 0.97490 0.97789 0.98053 0.98314
-    ##                           PC36    PC37    PC38    PC39    PC40    PC41   PC42
-    ## Standard deviation     0.58516 0.55085 0.54100 0.53512 0.50332 0.48730 0.4511
-    ## Proportion of Variance 0.00253 0.00224 0.00216 0.00212 0.00187 0.00176 0.0015
-    ## Cumulative Proportion  0.98567 0.98792 0.99008 0.99220 0.99407 0.99583 0.9973
-    ##                          PC43    PC44
-    ## Standard deviation     0.4351 0.41358
-    ## Proportion of Variance 0.0014 0.00126
-    ## Cumulative Proportion  0.9987 1.00000
+    ##                           PC1    PC2     PC3     PC4     PC5     PC6    PC7
+    ## Standard deviation     8.8450 5.3090 3.80088 3.52921 2.71909 2.51337 1.9498
+    ## Proportion of Variance 0.3868 0.1394 0.07143 0.06158 0.03655 0.03123 0.0188
+    ## Cumulative Proportion  0.3868 0.5262 0.59757 0.65915 0.69570 0.72694 0.7457
+    ##                            PC8     PC9    PC10    PC11    PC12    PC13    PC14
+    ## Standard deviation     1.82645 1.69888 1.55422 1.50729 1.42810 1.36273 1.35431
+    ## Proportion of Variance 0.01649 0.01427 0.01194 0.01123 0.01008 0.00918 0.00907
+    ## Cumulative Proportion  0.76222 0.77649 0.78844 0.79967 0.80975 0.81893 0.82800
+    ##                           PC15    PC16    PC17    PC18    PC19    PC20    PC21
+    ## Standard deviation     1.31991 1.27618 1.25326 1.22094 1.21343 1.17671 1.12944
+    ## Proportion of Variance 0.00861 0.00805 0.00777 0.00737 0.00728 0.00685 0.00631
+    ## Cumulative Proportion  0.83662 0.84467 0.85243 0.85980 0.86708 0.87393 0.88024
+    ##                           PC22    PC23    PC24    PC25    PC26    PC27    PC28
+    ## Standard deviation     1.12715 1.06177 1.04624 1.02875 0.99819 0.98147 0.97051
+    ## Proportion of Variance 0.00628 0.00557 0.00541 0.00523 0.00493 0.00476 0.00466
+    ## Cumulative Proportion  0.88652 0.89209 0.89750 0.90273 0.90766 0.91242 0.91708
+    ##                           PC29    PC30    PC31   PC32    PC33    PC34    PC35
+    ## Standard deviation     0.95305 0.92362 0.92268 0.8884 0.86859 0.83396 0.81892
+    ## Proportion of Variance 0.00449 0.00422 0.00421 0.0039 0.00373 0.00344 0.00332
+    ## Cumulative Proportion  0.92157 0.92579 0.93000 0.9339 0.93763 0.94107 0.94438
+    ##                           PC36    PC37    PC38   PC39    PC40    PC41    PC42
+    ## Standard deviation     0.80232 0.79543 0.78169 0.7784 0.76940 0.76019 0.72846
+    ## Proportion of Variance 0.00318 0.00313 0.00302 0.0030 0.00293 0.00286 0.00262
+    ## Cumulative Proportion  0.94757 0.95069 0.95371 0.9567 0.95964 0.96249 0.96512
+    ##                           PC43    PC44    PC45    PC46    PC47    PC48   PC49
+    ## Standard deviation     0.72143 0.70052 0.68780 0.67695 0.66404 0.63771 0.6198
+    ## Proportion of Variance 0.00257 0.00243 0.00234 0.00227 0.00218 0.00201 0.0019
+    ## Cumulative Proportion  0.96769 0.97012 0.97246 0.97472 0.97690 0.97891 0.9808
+    ##                           PC50   PC51    PC52    PC53   PC54    PC55    PC56
+    ## Standard deviation     0.60544 0.5690 0.56303 0.54470 0.5329 0.52244 0.50773
+    ## Proportion of Variance 0.00181 0.0016 0.00157 0.00147 0.0014 0.00135 0.00127
+    ## Cumulative Proportion  0.98262 0.9842 0.98579 0.98726 0.9887 0.99001 0.99129
+    ##                           PC57   PC58    PC59    PC60    PC61    PC62    PC63
+    ## Standard deviation     0.49805 0.4918 0.48667 0.45327 0.43314 0.43008 0.40549
+    ## Proportion of Variance 0.00123 0.0012 0.00117 0.00102 0.00093 0.00091 0.00081
+    ## Cumulative Proportion  0.99251 0.9937 0.99488 0.99590 0.99682 0.99774 0.99855
+    ##                           PC64    PC65
+    ## Standard deviation     0.39932 0.36573
+    ## Proportion of Variance 0.00079 0.00066
+    ## Cumulative Proportion  0.99934 1.00000
 
 ``` r
 # What are the components of the PCA result
@@ -325,27 +347,29 @@ str(pca_DEG_new_trans2)
 ```
 
     ## List of 5
-    ##  $ sdev    : num [1:44] 8.48 3.81 2.72 2.21 1.72 ...
-    ##  $ rotation: num [1:44, 1:44] -0.244 -0.162 -0.186 -0.138 -0.17 ...
+    ##  $ sdev    : num [1:65] 8.85 5.31 3.8 3.53 2.72 ...
+    ##  $ rotation: num [1:65, 1:65] 0.00109 -0.01608 0.16612 0.22642 0.14833 ...
     ##   ..- attr(*, "dimnames")=List of 2
-    ##   .. ..$ : chr [1:44] "CXCL10" "CXCL9" "DDX58" "DDX60" ...
-    ##   .. ..$ : chr [1:44] "PC1" "PC2" "PC3" "PC4" ...
-    ##  $ center  : Named num [1:44] 4.25 3.93 5.17 4.63 5.36 ...
-    ##   ..- attr(*, "names")= chr [1:44] "CXCL10" "CXCL9" "DDX58" "DDX60" ...
+    ##   .. ..$ : chr [1:65] "CBX5" "CCNI" "CMPK2" "CXCL10" ...
+    ##   .. ..$ : chr [1:65] "PC1" "PC2" "PC3" "PC4" ...
+    ##  $ center  : Named num [1:65] 4.95 5.51 4.64 4.25 3.93 ...
+    ##   ..- attr(*, "names")= chr [1:65] "CBX5" "CCNI" "CMPK2" "CXCL10" ...
     ##  $ scale   : logi FALSE
-    ##  $ x       : num [1:484, 1:44] -6.31 -9.52 5.08 -6.87 -3.02 ...
+    ##  $ x       : num [1:484, 1:65] 5.82 9.35 -6.09 7.94 2.27 ...
     ##   ..- attr(*, "dimnames")=List of 2
     ##   .. ..$ : NULL
-    ##   .. ..$ : chr [1:44] "PC1" "PC2" "PC3" "PC4" ...
+    ##   .. ..$ : chr [1:65] "PC1" "PC2" "PC3" "PC4" ...
     ##  - attr(*, "class")= chr "prcomp"
 
 ``` r
-# Visualize the PCA result by gender
+# Visualize PCA result by gender
 ggbiplot(pca_DEG_new_trans2, 
          ellipse = TRUE, 
-         var.axes = FALSE, 
+         var.axes = FALSE,
+         obs.scale = 1,
+         var.scale = 1,
          groups = DEG_new_trans2$Gender) +
-  ggtitle("PCA of SARS_Cov2 gene expression by gender") +
+  ggtitle("PCA of SARS-Cov2 gene expression by gender") +
   theme_bw()
 ```
 
@@ -354,9 +378,11 @@ ggbiplot(pca_DEG_new_trans2,
 ``` r
 # Visualize PCA result by infection status
 ggbiplot(pca_DEG_new_trans2, 
-         ellipse = TRUE, 
+         ellipse = TRUE,
+         obs.scale = 1,
+         var.scale = 1,
          groups = DEG_new_trans2$Sars_test) + 
-  ggtitle("PCA of SARS_Cov2 gene expression by infection status") +
+  ggtitle("PCA of SARS-Cov2 gene expression by infection status") +
   theme_bw()
 ```
 
@@ -366,13 +392,13 @@ ggbiplot(pca_DEG_new_trans2,
 # Determine total variance explained by each principal component
 variance_expl <- pca_DEG_new_trans2$sdev^2 / sum(pca_DEG_new_trans2$sdev^2)
 
-# create an elbow plot
-qplot(c(1:44), variance_expl) +
+# create scree plot
+qplot(c(1:65), variance_expl) +
   geom_line() +
   xlab("Principal Component") +
   ylab("Variance explained") +
-  ggtitle("Elbow Plot of Principal Components") +
-  ylim(0, 1) +
+  ggtitle("Scree Plot of Principal Components") +
+  ylim(0, 0.75) +
   theme_bw()
 ```
 
