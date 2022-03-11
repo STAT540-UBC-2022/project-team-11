@@ -403,3 +403,6 @@ qplot(c(1:65), variance_expl) +
 ```
 
 ![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+References <https://www.datacamp.com/community/tutorials/pca-analysis-r>
+<https://www.statology.org/scree-plot-r/>
