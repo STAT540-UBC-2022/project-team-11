@@ -261,3 +261,6 @@ qplot(c(1:65), variance_expl) +
   theme_bw()
 ```
 
+References
+https://www.datacamp.com/community/tutorials/pca-analysis-r
+https://www.statology.org/scree-plot-r/
