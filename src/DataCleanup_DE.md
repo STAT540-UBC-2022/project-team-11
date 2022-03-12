@@ -21,6 +21,11 @@ suppressPackageStartupMessages(library(caret)) ## used for confusion matrix, acc
 ```
 
 ``` r
+## Setting work directory to save plots 
+setwd(getwd())
+```
+
+``` r
 eset <- getGEO("GSE152075", getGPL = FALSE)[[1]]
 getGEOSuppFiles("GSE152075")
 
@@ -37,6 +42,9 @@ pdata <- eset@phenoData@data %>% as_tibble()
 pdata_clean = pdata %>%
   select(title, `age:ch1`, characteristics_ch1.3, characteristics_ch1.4, `sars-cov-2 positivity:ch1`)
 colnames(pdata_clean) = c("Title", "Age", "Gender", "Batch", "Sars_test")
+
+pdata_clean$Gender = sapply(strsplit(pdata_clean$Gender, split=':', fixed=TRUE), function(x) (x[2]))
+pdata_clean$Batch = sapply(strsplit(pdata_clean$Batch, split=':', fixed=TRUE), function(x) (x[2]))
 
 #Modify the cleaned data set as per further DE analysis
 pdata_mod <- pdata_clean %>%
@@ -94,17 +102,20 @@ dim(dge_mod)
     ## [1] 699 484
 
 ``` r
-dge$samples$lib.size <- colSums(dge$counts) # Reset library sizes
+# Reset library sizes
+dge$samples$lib.size <- colSums(dge$counts) 
 ```
 
 ``` r
 #Calculating TMM normalization factors and directly adding them to the DGEList
 dge_norm = calcNormFactors(dge_mod, method = "TMM")
 
+#cpm and log transformation after adding a pseudo-count
 cpm = cpm(dge_norm, log = FALSE, normalized.lib.sizes = TRUE)
 log2cpm = log2(cpm + 1)
 
-#Transforming object from wide to long format for plotting after randomly subsetting the data
+#Transforming object from wide to long format for plotting after randomly sub-setting the data
+#ran_samp <- log2cpm[, sample(ncol(log2cpm), 20)]
 ran_samp <- subset(log2cpm[,150:170])
 
 longExpr = ran_samp %>% 
@@ -121,7 +132,14 @@ longExpr  %>%
   labs( x = "Expression", y = "Density", title = "Density plot showing distribution of gene expression across 20 random samples")
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+dev.print(device = jpeg, filename = "../Results/Plots/density.jpg", width = 480, height = 300)
+```
+
+    ## quartz_off_screen 
+    ##                 2
 
 ``` r
 #Box plot for a random subset of data for ease of visualization 
@@ -132,7 +150,14 @@ longExpr %>%
   labs( x = "Sample ID", y = "Gene Expression", title = "Box plot showing distribution of gene expression across 20 random samples")
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+
+``` r
+dev.print(device = jpeg, filename = "../Results/Plots/box_plot.jpg", width = 480, height = 300)
+```
+
+    ## quartz_off_screen 
+    ##                 2
 
 ``` r
 #Calculate correlation using log2 transformed random subset CPM values from earlier
@@ -142,29 +167,37 @@ cormat = round(cor(ran_samp), 2)
 pheatmap(cormat, border_color = NA, cluster_rows = TRUE, cellheight=9, cellwidth = 9)
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+dev.print(device = jpeg, filename = "../Results/Plots/heatmap.jpg", width = 480, height = 300)
+```
+
+    ## quartz_off_screen 
+    ##                 2
 
 ``` r
 #Setting up model matrix: Batch corrected and Batch not corrected
-designMatrix1 = model.matrix(~Sars_test , data = dge_norm$samples)
-designMatrix2 = model.matrix(~Sars_test + Batch , data = dge_norm$samples)
+designMatrix1 = model.matrix(~Sars_test , data = dge_norm$samples) # without batch
+designMatrix2 = model.matrix(~Sars_test + Batch , data = dge_norm$samples) # with batch
 ```
 
 ``` r
 #Calculation of variance weights and generation of mean-variance trend plot
-de_model1 = voom(dge_norm, design = designMatrix1, plot = TRUE)
+de_model1 = voom(dge_norm, design = designMatrix1, plot = TRUE) # without batch
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
-de_model2 = voom(dge_norm, design = designMatrix2, plot = TRUE)
+de_model2 = voom(dge_norm, design = designMatrix2, plot = TRUE) # with batch
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
 
 ``` r
-dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE)
+#Estimating dispersion parameters for each tag
+dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE) #without batch
 range(dge_disp1$prior.df)
 ```
 
@@ -174,10 +207,10 @@ range(dge_disp1$prior.df)
 plotBCV(dge_disp1,  cex=0.5)
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
-dge_disp2 <- estimateDisp(dge_norm, designMatrix2, robust = TRUE)
+dge_disp2 <- estimateDisp(dge_norm, designMatrix2, robust = TRUE) # with batch
 range(dge_disp2$prior.df)
 ```
 
@@ -187,7 +220,7 @@ range(dge_disp2$prior.df)
 plotBCV(dge_disp2,  cex=0.5)
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-11-2.png)<!-- -->
 
 ``` r
 lfit1 <- glmFit(dge_disp1, designMatrix1)
@@ -218,7 +251,7 @@ de1tags1 <- rownames(dge_disp1)[as.logical(de1)]
 plotSmear(lrt1, de.tags=de1tags1)
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ``` r
 de1_summary <- summary(de1)
@@ -236,7 +269,7 @@ de1tags2 <- rownames(dge_disp2)[as.logical(de2)]
 plotSmear(lrt2, de.tags=de1tags2)
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
 
 ``` r
 de2_summary <- summary(de2)
@@ -276,16 +309,16 @@ log2cpm_dat <-  log2cpm %>%
                              names_to = "sample_ID")
 
 # Rename column to join by
-pdata_clean <- dplyr::rename(pdata_clean, sample_ID = Title)
+log2cpm_dat <- dplyr::rename(log2cpm_dat, Title = sample_ID)
 
 # Join expression and metadata data sets
 DEG_new <- log2cpm_dat %>% 
            left_join(pdata_clean, 
-                     by = "sample_ID") 
+                     by = "Title") 
 
 # Transform data back to a wide format
 DEG_new_trans <- pivot_wider(DEG_new, 
-                             id_cols = c(sample_ID, Age, Gender, Batch, Sars_test), 
+                             id_cols = c(Title, Age, Gender, Batch, Sars_test), 
                              names_from = gene, 
                              values_from = Expression)
 
@@ -375,7 +408,7 @@ ggbiplot(pca_DEG_new_trans2,
   theme_bw()
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
 # Visualize PCA result by infection status
@@ -388,7 +421,14 @@ ggbiplot(pca_DEG_new_trans2,
   theme_bw()
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-14-2.png)<!-- -->
+
+``` r
+dev.print(device = jpeg, filename = "../Results/Plots/pca.jpg", width = 480, height = 300)
+```
+
+    ## quartz_off_screen 
+    ##                 2
 
 ``` r
 # Determine total variance explained by each principal component
@@ -404,22 +444,16 @@ qplot(c(1:65), variance_expl) +
   theme_bw()
 ```
 
-![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](DataCleanup_DE_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+``` r
+dev.print(device = jpeg, filename = "../Results/Plots/elbow.jpg", width = 480, height = 300)
+```
+
+    ## quartz_off_screen 
+    ##                 2
 
 # Logistic regression classifier
-
-We aim to build a logistic regression model to predict if a patient is
-infected with COVID-19 given their RNA-seq data. Our initial analysis
-(above) returns a set of 64 (confirm number) genes that were
-differentially expressed given the infection status. While it would be
-ideal to use all 64 genes to perform the classification, such a task
-would be not only computationally heavy but also have a lot of noise.
-This noise could arise because it is possible that some of the DEGs are
-correlated and produce similar signals, hence misleading our
-interpretation. In order to prevent this, we performed PCA on the DEGs
-(above). From the above Scree/Elbow plot, it is evident that the first
-four PCs explain \~66% of the variance in the dataset. In our regression
-model, we therefore, only use 4 PCs.
 
 ``` r
 ## We first subset the PCA data so that we only have the first 4 columns (PCs) to work with 

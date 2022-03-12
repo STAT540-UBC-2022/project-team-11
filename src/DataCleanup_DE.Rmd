@@ -117,12 +117,16 @@ longExpr  %>%
   geom_density() +
   labs( x = "Expression", y = "Density", title = "Density plot showing distribution of gene expression across 20 random samples")
 
+dev.print(device = jpeg, filename = "../Results/Plots/density.jpg", width = 480, height = 300)
+
 #Box plot for a random subset of data for ease of visualization 
 longExpr %>% 
   ggplot(aes(x = sample_ID, y = Expression)) +
   geom_boxplot() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))  +
   labs( x = "Sample ID", y = "Gene Expression", title = "Box plot showing distribution of gene expression across 20 random samples")
+
+dev.print(device = jpeg, filename = "../Results/Plots/box_plot.jpg", width = 480, height = 300)
 ```
 
 ```{r}
@@ -131,6 +135,8 @@ cormat = round(cor(ran_samp), 2)
 
 #Plot heatmap
 pheatmap(cormat, border_color = NA, cluster_rows = TRUE, cellheight=9, cellwidth = 9)
+
+dev.print(device = jpeg, filename = "../Results/Plots/heatmap.jpg", width = 480, height = 300)
 ```
 
 ```{r}
