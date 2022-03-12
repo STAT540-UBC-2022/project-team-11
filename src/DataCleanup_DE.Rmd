@@ -40,6 +40,9 @@ pdata_clean = pdata %>%
   select(title, `age:ch1`, characteristics_ch1.3, characteristics_ch1.4, `sars-cov-2 positivity:ch1`)
 colnames(pdata_clean) = c("Title", "Age", "Gender", "Batch", "Sars_test")
 
+pdata_clean$Gender = sapply(strsplit(pdata_clean$Gender, split=':', fixed=TRUE), function(x) (x[2]))
+pdata_clean$Batch = sapply(strsplit(pdata_clean$Batch, split=':', fixed=TRUE), function(x) (x[2]))
+
 #Modify the cleaned data set as per further DE analysis
 pdata_mod <- pdata_clean %>%
   subset(Age != "Unknown") %>%
