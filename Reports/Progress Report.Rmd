@@ -1,24 +1,14 @@
-# WHAT HAS CHANGED BASED ON THE FINAL PROPOSAL (2 PT.)
-Did your dataset change? If so, why?
-Have you decided to do a different analysis than what was mentioned in your proposal? If so, Why?
-Are there any changes in task assignments of group members?
-# WHAT IS THE PROGRESS OF THE ANALYSES (4 PTS.)
-Since your initial proposal, you should have decided more concretely on what methods to use for each step of your analyses, and employed some of those methods.
-Briefly and concisely explain your methodology and progress for the aims you have investigated so far. Which parts were modified and which parts remained the same?
-What R packages or other tools are you using for your analyses? You do not need to provide your scripts in your report.
-Provide the links to any markdown reports within your repo to refer to the relevant analysis.
-Provide references.
-# RESULTS (2 PTS.)
-What are your primary results?
-Were you able to answer your hypothesis? Did you have any positive results? If no, postulate a discussion as to why that may be. Provide plots and/or tables to present your results.
-List some challenges that you have encountered or anticipate. How will you address them?
+---
+output: github_document
+---
+# Progress Report
 
-# Deviation from the final proposal.
+## Deviation from the final proposal.
 As described in our final proposal, we are still using the supplemental file `GSE152075_raw_counts_GEO.txt` and `PhenoData` from the `GSE152075`as a source of the raw counts and metadata, respectively. 
 Analysis of the aforementioned data sets for differential gene expression, we initially proposed to leverage DESeq2. However, we have opted for EdgeR because the authors of the paper used DESeq2 and based on the premise that no statistical modelling can fully capture all biological phenomena, we wanted to see if a different  pipeline of analysis would be comparable to what was originally found.
 All group members contributed to the current progress of our project as described in the final proposal. 
 
-# Progress of Analyses
+## Progress of Analyses
 The following steps describe the methodology used so far in out analyses:
 1. Preliminary data exploration was done using `dplyr` functions. Using `ggplot2 `and `pheatmap` packages, boxplots and heatmaps were generated.
 2. Using functions from the `EdgeR` package, data a `DGEList` was created amd the count data was normalized using the "TMM" method. 
@@ -29,8 +19,19 @@ The following steps describe the methodology used so far in out analyses:
 Based on the above steps, aims 1 and 3 of our final proposal were partially answered. For aim 1, we have characterized the differentially expressed genes based on the infection status, i.e. positive vs negative. As for aim 3, the infection status was predicted after sub-setting our PCA data into training and validation sets.
 Other than the switch from DESeq2 to EdgeR for expression analyses, our goals as stipulated in our final proposal remain the same.
 
-# Results
+## Results
+Differential gene expression was observed between individuals with negative and positive COVID infection status. 45 genes were up-regulated while 21 were down-regulated when sequencing batch was accounted for. When compared to what the authors of the paper found, we can determine that we have positive results though we have ~20 less genes than they got. This discrepancy can be attributed to the genes that we dropped based on our high CPM and sample thresholds.
+The following is a table showing the upregulated genes:
+```{r,echo=FALSE}
+upreg <- read.delim("~/Desktop/GSAT 540/Group/project-team-11/Results/DE_Upregulated.tsv")
+head(knitr::kable(upreg), 10)
+```
 
+The following is a table showing the downregulated genes:
+```{r,echo=FALSE}
+dnreg <- read.delim("~/Desktop/GSAT 540/Group/project-team-11/Results/DE_Downregulated.tsv")
+head(knitr::kable(dnreg), 10)
+```
 
 
 
