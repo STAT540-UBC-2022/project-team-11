@@ -1,20 +1,24 @@
 ---
-title: "Data Cleaning and initial DE analysis"
-author: "Credo Casmil and Aditi Nagaraj Nallan"
-date: '2022-03-09'
+title: "Data Cleaning and Initial DE Analysis"
+author: "Credo Casmil, Aditi Nagaraj Nallan, Ekpereka Amutaigwe and Dollina Dodani"  
+date: '2022-03-10'
 output: github_document
 ---
 
 # Load packages
 
 ```{r message=FALSE,warning=FALSE}
-suppressPackageStartupMessages(library("tidyverse"))
-suppressPackageStartupMessages(library("GEOquery"))
-suppressPackageStartupMessages(library("limma"))
-suppressPackageStartupMessages(library("edgeR"))
-suppressPackageStartupMessages(library("pheatmap"))
-suppressPackageStartupMessages(library("statmod"))
-suppressPackageStartupMessages(library("ggrepel"))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(GEOquery))
+suppressPackageStartupMessages(library(limma))
+suppressPackageStartupMessages(library(edgeR))
+suppressPackageStartupMessages(library(pheatmap))
+suppressPackageStartupMessages(library(statmod))
+suppressPackageStartupMessages(library(ggrepel))
+suppressPackageStartupMessages(library(ggbiplot))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(caTools)) ## used for splitting the data into training and validation sets 
+suppressPackageStartupMessages(library(caret)) ## used for confusion matrix, accuracy, sensitivity, and specificity
 ```
 
 
@@ -35,6 +39,9 @@ pdata <- eset@phenoData@data %>% as_tibble()
 pdata_clean = pdata %>%
   select(title, `age:ch1`, characteristics_ch1.3, characteristics_ch1.4, `sars-cov-2 positivity:ch1`)
 colnames(pdata_clean) = c("Title", "Age", "Gender", "Batch", "Sars_test")
+
+pdata_clean$Gender = sapply(strsplit(pdata_clean$Gender, split=':', fixed=TRUE), function(x) (x[2]))
+pdata_clean$Batch = sapply(strsplit(pdata_clean$Batch, split=':', fixed=TRUE), function(x) (x[2]))
 
 #Modify the cleaned data set as per further DE analysis
 pdata_mod <- pdata_clean %>%
@@ -66,25 +73,31 @@ count_mat_final  = count_mat[,!colnames(count_mat) %in% drop]
 #Creating DGE List 
 dge <- DGEList(counts = count_mat, samples = pdata_clean, group = pdata_clean$Sars_test)
 dim(dge)
-apply(dge$counts, 2, sum) # total gene counts per sample
+head(apply(dge$counts, 2, sum)) # total gene counts per sample
 
 #removing lowly expressed genes
 keep_edge <- rowSums(cpm(dge)>100) >= 50
 dge_mod <- dge[keep_edge,]
 dim(dge_mod)
 
-dge$samples$lib.size <- colSums(dge$counts) # Reset library sizes
 ```
+
+```{r, results='hide'}
+# Reset library sizes
+dge$samples$lib.size <- colSums(dge$counts) 
+```
+
 
 ```{r}
 #Calculating TMM normalization factors and directly adding them to the DGEList
 dge_norm = calcNormFactors(dge_mod, method = "TMM")
 
+#cpm and log transformation after adding a pseudo-count
 cpm = cpm(dge_norm, log = FALSE, normalized.lib.sizes = TRUE)
 log2cpm = log2(cpm + 1)
 
-#Transforming object from wide to long format for plotting after randomly subsetting the data
-ran_samp <- subset(log2cpm[,150:170])
+#Transforming object from wide to long format for plotting after randomly sub-setting the data
+ran_samp <- log2cpm[, sample(ncol(log2cpm), 20)]
 
 longExpr = ran_samp %>% 
            as.data.frame() %>% 
@@ -117,54 +130,191 @@ pheatmap(cormat, border_color = NA, cluster_rows = TRUE, cellheight=9, cellwidth
 
 ```{r}
 #Setting up model matrix: Batch corrected and Batch not corrected
-designMatrix1 = model.matrix(~Sars_test , data = dge_norm$samples)
-designMatrix2 = model.matrix(~Sars_test + Batch , data = dge_norm$samples)
+designMatrix1 = model.matrix(~Sars_test , data = dge_norm$samples) # without batch
+designMatrix2 = model.matrix(~Sars_test + Batch , data = dge_norm$samples) # with batch
 ```
 
 ```{r}
 #Calculation of variance weights and generation of mean-variance trend plot
-de_model1 = voom(dge_norm, design = designMatrix1, plot = TRUE)
-de_model2 = voom(dge_norm, design = designMatrix2, plot = TRUE)
+de_model1 = voom(dge_norm, design = designMatrix1, plot = TRUE) # without batch
+de_model2 = voom(dge_norm, design = designMatrix2, plot = TRUE) # with batch
 ```
 
 ```{r}
-dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE)
+#Estimating dispersion parameters for each tag
+dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE) #without batch
 range(dge_disp1$prior.df)
 plotBCV(dge_disp1,  cex=0.5)
 
-dge_disp2 <- estimateDisp(dge_norm, designMatrix2, robust = TRUE)
+dge_disp2 <- estimateDisp(dge_norm, designMatrix2, robust = TRUE) # with batch
 range(dge_disp2$prior.df)
 plotBCV(dge_disp2,  cex=0.5)
 ```
-
-
 ```{r}
+
 lfit1 <- glmFit(dge_disp1, designMatrix1)
 lrt1 <- glmLRT(lfit1, coef = "Sars_testpos")
 toptags1 <- topTags(lrt1)$table %>% signif(3)
 
 lfit2 <- glmFit(dge_disp2, designMatrix2)
 lrt2 <- glmLRT(lfit2, coef = "Sars_testpos")
+toptags2 <- topTags(lrt2)$table %>% signif(3)
 
 #Filtering for up and downregulated genes
 lrt2_filter_upreg <- filter(lrt2$table, PValue < 0.05, logFC >1)
 dim(lrt2_filter_upreg)
 lrt2_filter_downreg <- filter(lrt2$table, PValue < 0.05, logFC < -1)
 dim(lrt2_filter_downreg)
-toptags2 <- topTags(lrt2)$table %>% signif(3)
+
 ```
 
 ```{r}
 de1 <- decideTestsDGE(lrt1, adjust.method="BH", p.value = 0.05)
 de1tags1 <- rownames(dge_disp1)[as.logical(de1)]
 plotSmear(lrt1, de.tags=de1tags1)
-#abline(h = c(-1, 1), col = "blue")
-summary(de1)
+de1_summary <- summary(de1)
+de1_summary
 
 de2 <- decideTestsDGE(lrt2, adjust.method="BH", p.value = 0.05)
 de1tags2 <- rownames(dge_disp2)[as.logical(de2)]
 plotSmear(lrt2, de.tags=de1tags2)
-#abline(h = c(-1, 1), col = "blue")
-summary(de2)
+de2_summary <- summary(de2)
+de2_summary
 ```
 
+# Principal Component Analysis
+
+```{r}
+# Convert rownames to column
+lrt2_upreg_mod <- lrt2_filter_upreg %>% 
+                  rownames_to_column("gene")
+lrt2_downreg_mod <- lrt2_filter_downreg %>% 
+                   rownames_to_column("gene")
+
+# Merge up-regulated and down-regulated gene data frames
+lrt2_upreg_downreg <- rbind(lrt2_upreg_mod, lrt2_downreg_mod)
+nrow(lrt2_upreg_downreg)
+
+# Filter data to retain only the up-regulated genes
+log2cpm_dat <-  log2cpm %>% 
+                as.data.frame() %>% 
+                rownames_to_column("gene") %>% 
+                filter(gene %in% lrt2_upreg_downreg$gene) %>% 
+  # Change data to a long form
+                pivot_longer(cols = !gene,
+                             values_to = "Expression",
+                             names_to = "sample_ID")
+
+# Rename column to join by
+pdata_clean <- dplyr::rename(pdata_clean, sample_ID = Title)
+
+# Join expression and metadata data sets
+DEG_new <- log2cpm_dat %>% 
+           left_join(pdata_clean, 
+                     by = "sample_ID") 
+
+# Transform data back to a wide format
+DEG_new_trans <- pivot_wider(DEG_new, 
+                             id_cols = c(sample_ID, Age, Gender, Batch, Sars_test), 
+                             names_from = gene, 
+                             values_from = Expression)
+
+# Use to drop missing values in case there's any before PCA
+DEG_new_trans2 <- DEG_new_trans %>% 
+                  drop_na() 
+
+# Perform PCA
+pca_DEG_new_trans2 <- prcomp(DEG_new_trans2[,-c(1, 2, 3, 4, 5, 6), 
+                                            center = TRUE, 
+                                            scale = TRUE])
+# See what PCA result looks like
+summary(pca_DEG_new_trans2)
+
+# What are the components of the PCA result
+str(pca_DEG_new_trans2)
+
+# Visualize PCA result by gender
+ggbiplot(pca_DEG_new_trans2, 
+         ellipse = TRUE, 
+         var.axes = FALSE,
+         obs.scale = 1,
+         var.scale = 1,
+         groups = DEG_new_trans2$Gender) +
+  ggtitle("PCA of SARS-Cov2 gene expression by gender") +
+  theme_bw()
+  
+# Visualize PCA result by infection status
+ggbiplot(pca_DEG_new_trans2, 
+         ellipse = TRUE,
+         obs.scale = 1,
+         var.scale = 1,
+         groups = DEG_new_trans2$Sars_test) + 
+  ggtitle("PCA of SARS-Cov2 gene expression by infection status") +
+  theme_bw()
+
+```
+
+```{r}
+# Determine total variance explained by each principal component
+variance_expl <- pca_DEG_new_trans2$sdev^2 / sum(pca_DEG_new_trans2$sdev^2)
+
+# create scree plot
+qplot(c(1:65), variance_expl) +
+  geom_line() +
+  xlab("Principal Component") +
+  ylab("Variance explained") +
+  ggtitle("Scree Plot of Principal Components") +
+  ylim(0, 0.75) +
+  theme_bw()
+```
+
+# Logistic regression classifier 
+
+We aim to build a logistic regression model to predict if a patient is infected with COVID-19 given their RNA-seq data. Our initial analysis (above) returns a set of 64 (confirm number) genes that were differentially expressed given the infection status. While it would be ideal to use all 64 genes to perform the classification, such a task would be not only computationally heavy but also have a lot of noise. This noise could arise because it is possible that some of the DEGs are correlated and produce similar signals, hence misleading our interpretation. In order to prevent this, we performed PCA on the DEGs (above). From the above Scree/Elbow plot, it is evident that the first four PCs explain ~66% of the variance in the dataset. In our regression model, we therefore, only use 4 PCs. 
+
+```{r}
+## We first subset the PCA data so that we only have the first 4 columns (PCs) to work with 
+PCA_data_subset <- as.data.frame(pca_DEG_new_trans2$x[, c(1, 2, 3, 4)])
+
+## Our dataset has "pos" or 'neg" for the status. Such labels are incompatible with logistic regression which requires labels to be 1 or 0. 
+
+labels_list <-gsub("pos", 1, DEG_new_trans2$Sars_test)
+labels_list <-gsub("neg", 0, labels_list)
+
+## Next, we assign the class labels to our subsetted data (Infected vs Uninfected). We will call this column status
+PCA_data_subset$status <- as.numeric(labels_list)
+
+## Splitting our dataset (PCA_data_subset) into a training and validation set. We will use a split of 80:20. That means, 80% of our original data will be used for training and 20% for validating our model. 
+set.seed(123) ## Setting seed so we get the same split every time we run this code block
+split = sample.split(PCA_data_subset$status, SplitRatio = 0.80) #This function will return a boolean vector. It indicates if the sample belongs to the training set (TRUE) or validation set (FALSE)
+
+training_set = subset(PCA_data_subset, split == TRUE) ## Filter to get rows where split is TRUE
+test_set = subset(PCA_data_subset, split == FALSE) ## Filter to get rows where split is FALSE
+
+## Training the classifier. Note to self: still need to think if family=binomial is the best option.
+classifier = glm(formula = status ~ .,family = binomial, data = training_set)
+
+## Sanity check! Look at coefficients - only PC3 is significant? 
+summary(classifier) 
+
+## Prediction on the validation set
+prob_pred = predict(classifier, type = 'response', newdata = test_set[-5]) ## Will return a vector of predicted probablities of belong to infected (1) vs uninfected (0)
+
+## Since this is a classification problem, we do not want probablities but instead either 1 or 0.
+y_pred = ifelse(prob_pred > 0.5, 1, 0) ## Will round the probabilities to 1 or 0
+
+## Checking how accurate our model is
+cm = table(test_set[, 5], y_pred) ## Will return a confusion matrix. We notice that 1 COVID 19 patients were misclassfied as healthy and 3 healthy patients were misclassified as diseased.
+cm
+
+## will now calculate Accuracy, Sensitivity and Specificity 
+con_mat = confusionMatrix(cm, positive = "1")
+c(con_mat$overall["Accuracy"], con_mat$byClass["Sensitivity"], con_mat$byClass["Specificity"])
+
+```
+
+
+
+References
+https://www.datacamp.com/community/tutorials/pca-analysis-r
+https://www.statology.org/scree-plot-r/
