@@ -23,9 +23,15 @@ The following steps describe the methodology used so far in out analyses:
 1. Preliminary data exploration was done using `dplyr` functions. Using `ggplot2 `and `pheatmap` packages, boxplots and heatmaps were generated.
 2. Using functions from the `EdgeR` package, data a `DGEList` was created amd the count data was normalized using the "TMM" method. 
 3. The `decideTestsDGE()` function was used to calculate differentially expressed genes. 
-4. From the list of up-regulated and down-regulated genes obtained from step 4, principal component analyses was performed using functions from the `stat` package.
+4. From the list of up-regulated and down-regulated genes obtained from step 4, principal component analyses (PCA) was performed using functions from the `stat` package.
 5. A logistic regression model was generated to predict infection status based on RNAseq data.
 
-Based on the above steps, aims 1 and 3 of our final proposal were partially answered.
+Based on the above steps, aims 1 and 3 of our final proposal were partially answered. For aim 1, we have characterized the differentially expressed genes based on the infection status, i.e. positive vs negative. As for aim 3, the infection status was predicted after sub-setting our PCA data into training and validation sets.
+Other than the switch from DESeq2 to EdgeR for expression analyses, our goals as stipulated in our final proposal remain the same.
+
+# Results
+
+
+
 
  
