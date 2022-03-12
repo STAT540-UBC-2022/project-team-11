@@ -30,7 +30,7 @@ our methods and the results section.
 
 Are there any changes in task assignments of group members?
 
-**Answer:**The task assignments of all group members remain the same.
+**Answer:** The task assignments of all group members remain the same.
 All group members have contributed to the current progress of our
 project as described in the final proposal.
 
@@ -70,14 +70,25 @@ What R packages or other tools are you using for your analyses? You do
 not need to provide your scripts in your report.
 
 **Answer:** The R packages we used for our preliminary analysis include:
-\* `GEOquery` : Retrieve our data from NCBI GEO. \* `tidyverse` : Data
-exploration and modifications. \* `ggplot` : Plotting our data at
-various stages to visualize trends in our data. \* `edgeR` :
-Differential gene expression analysis. \* `pheatmap` : Building a
-heatmap to check correlation between our samples. \* `stats`: For PCA
-and glm \* `caTools`: For splitting data into training and validation
-sets (for classification model) \* `caret`: Building a confusion matrix,
-calculating accuracy, sensitivity, and specificity
+\* `GEOquery` : Retrieve our data from NCBI GEO.
+
+-   `tidyverse` : Data exploration and modifications.
+
+-   `ggplot` : Plotting our data at various stages to visualize trends
+    in our data.
+
+-   `edgeR` : Differential gene expression analysis.
+
+-   `pheatmap` : Building a heatmap to check correlation between our
+    samples.
+
+-   `stats`: For PCA and glm
+
+-   `caTools`: For splitting data into training and validation sets (for
+    classification model)
+
+-   `caret`: Building a confusion matrix, calculating accuracy,
+    sensitivity, and specificity
 
 Provide the links to any markdown reports within your repo to refer to
 the relevant analysis.
@@ -94,8 +105,9 @@ folder.
 Provide references.
 
 **Answer:** \*
-<https://www.datacamp.com/community/tutorials/pca-analysis-r> \*
-<https://www.statology.org/scree-plot-r/>
+<https://www.datacamp.com/community/tutorials/pca-analysis-r>
+
+-   <https://www.statology.org/scree-plot-r/>
 
 -   **RNASeq Analysis** :
 
@@ -143,9 +155,19 @@ The following is a table showing the downregulated genes:
     ##  [9] "|PCSK1N  | -3.299301| 7.753679|  6.870801| 0.0087615|"
     ## [10] "|PIGR    | -1.045433| 7.024179| 10.235317| 0.0013778|"
 
-For our downstream analyses, we proposed to predict 
-- If a patient has COVID-19, given their RNA-Seq 
-- The strength of immune response using associated metadata, if a patient has COVID-19
+Apart from this, we also made box plots, density plots and heatmaps to
+analyse the trends existing within our dataset. The plots are shown
+below:
+
+![Box plot.](../Results/Plots/box_plot.jpg)
+
+![Density plot.](../Results/Plots/density.jpg)
+
+![Heatmap.](../Results/Plots/heatmap.jpg)
+
+For our downstream analyses, we proposed to predict - If a patient has
+COVID-19 given their RNA-Seq - The strength of immune response using
+associated metadata, if a patient has COVID-19
 
 We aim to build a logistic regression model to predict if a patient is
 infected with COVID-19 given their RNA-seq data. Our initial DEG
@@ -164,7 +186,7 @@ to prevent this, we performed PCA on the DEGs.
 From the above scatter plot (PC2 vs PC1), we notice that healthy
 patients are well separated from COVID-19 positive patients. This
 motivated us to use PCA components as our variables in the classifier
-model. Through a Scree/Elbow plot, we decided to use the first four PCs
+model. We used a Scree/Elbow plot, we decided to use the first four PCs
 that explain \~66% of the variance in the dataset. After the four
 components, we noticed that not much of information is extracted by the
 other components.
@@ -177,8 +199,8 @@ plots and/or tables to present your results.
 far, we have concluded that we have a set of 66 DEGs given the infection
 status. We have also formulated a model that predicts the infected
 status, given the set of DEGs. Our model had an accuracy of 95.9% with
-three healthy patients misclassified as diseased and 1 infected patient
-incorrectly classified as healthy.
+three healthy patients misclassified as healthy and 1 infected patient
+incorrectly classified as diseased.
 
 List some challenges that you have encountered or anticipate. How will
 you address them?
@@ -187,6 +209,6 @@ you address them?
 will be problems in predicting the natural immune response in infected
 patients. This is because immune response is generated in diverse ways
 in the population. We would first have to identify genes that contribute
-to this response in humans (using the DAVID/goseq database) and then find a
+to this response in humans (using the DAVID database) and then find a
 way to categorize what a “strong” response would comprise of in
 quantitative terms.

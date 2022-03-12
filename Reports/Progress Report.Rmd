@@ -18,7 +18,7 @@ Have you decided to do a different analysis than what was mentioned in your prop
 
 Are there any changes in task assignments of group members?
 
-**Answer:**The task assignments of all group members remain the same. All group members have contributed to the current progress of our project as described in the final proposal. 
+**Answer:** The task assignments of all group members remain the same. All group members have contributed to the current progress of our project as described in the final proposal. 
 
 
 # WHAT IS THE PROGRESS OF THE ANALYSES (4 PTS.)
@@ -28,7 +28,6 @@ Briefly and concisely explain your methodology and progress for the aims you hav
 
 **Answer:** So far in our project, we have obtained the count data and meta data from the paper and Gene Expression Omnibus (GEO). We cleaned up the metadata to include only columns of interest. We created a DGEList for differential expression analysis. Following this we removed lowly expressed genes, normalized the counts data based on TMM normalization and made boxplots, density plots and heatmaps to observe the trends within our dataset. We then calculated and filtered out the differentially expressed genes. 
 
-
 We built a model to predict the infected status of a patient given their RNA-Seq data. We used PCA analysis (prcomp function from stats package) to reduce the dimensionality if our identified DEGs (66) to 4 components. Using the derived 4 PCs, we used a logistic regression model (glm function from stats package) to perform the classification. 
 
 Based on the aforementioned information, aims 1 and 3 of our final proposal were carried out and partially answered. For aim 1, we have characterized the differentially expressed genes based on the infection status, i.e. positive vs negative as step 1. As for aim 3, the infection status was predicted after sub-setting our PCA data into training and validation sets.Other than the switch from DESeq2 to EdgeR for expression analyses, our goals as stipulated in our final proposal remain the same.
@@ -37,12 +36,19 @@ What R packages or other tools are you using for your analyses? You do not need 
 
 **Answer:** The R packages we used for our preliminary analysis include:
 * `GEOquery` : Retrieve our data from NCBI GEO. 
+
 * `tidyverse` : Data exploration and modifications.
+
 * `ggplot` : Plotting our data at various stages to visualize trends in our data.
+
 * `edgeR` : Differential gene expression analysis.
+
 * `pheatmap` : Building a heatmap to check correlation between our samples. 
+
 * `stats`: For PCA and glm 
+
 * `caTools`: For splitting data into training and validation sets (for classification model)
+
 * `caret`: Building a confusion matrix, calculating accuracy, sensitivity, and specificity 
 
 Provide the links to any markdown reports within your repo to refer to the relevant analysis.
@@ -55,6 +61,7 @@ Provide references.
 
 **Answer:** 
 * https://www.datacamp.com/community/tutorials/pca-analysis-r
+
 * https://www.statology.org/scree-plot-r/
 
 * **RNASeq Analysis** : 
@@ -77,6 +84,14 @@ The following is a table showing the downregulated genes:
 dnreg <- read.delim("../Results/DE_Downregulated.tsv")
 head(knitr::kable(dnreg), 10)
 ```
+
+Apart from this, we also made box plots, density plots and heatmaps to analyse the trends existing within our dataset. The plots are shown below: 
+
+![Box plot.](../Results/Plots/box_plot.jpg)
+
+![Density plot.](../Results/Plots/density.jpg)
+
+![Heatmap.](../Results/Plots/heatmap.jpg)
 
 For our downstream analyses, we proposed to predict 
 - If a patient has COVID-19 given their RNA-Seq 
