@@ -89,6 +89,8 @@ not need to provide your scripts in your report.
 
 -   `caret`: Building a confusion matrix, calculating accuracy,
     sensitivity, and specificity
+    
+-   `ggbiplot ` for PCA analysis
 
 Provide the links to any markdown reports within your repo to refer to
 the relevant analysis.
