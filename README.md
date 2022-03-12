@@ -15,7 +15,7 @@ The contents of the repository are as follows:
     * [Progress Report](Reports/Progress-Report.md)
     
 
-* **src**: Folder containing our source code (Currently empty)
+* **src**: Folder containing our source code
 
 * **README.md**- A guide through the github repository. You are currently viewing this file.
 
