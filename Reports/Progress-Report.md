@@ -187,6 +187,6 @@ you address them?
 will be problems in predicting the natural immune response in infected
 patients. This is because immune response is generated in diverse ways
 in the population. We would first have to identify genes that contribute
-to this response in humans (using the DAVID database) and then find a
+to this response in humans (using the DAVID/goseq database) and then find a
 way to categorize what a “strong” response would comprise of in
 quantitative terms.
