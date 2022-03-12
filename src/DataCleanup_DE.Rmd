@@ -80,7 +80,8 @@ dim(dge_mod)
 ```
 
 ```{r, results='hide'}
-dge$samples$lib.size <- colSums(dge$counts) # Reset library sizes
+# Reset library sizes
+dge$samples$lib.size <- colSums(dge$counts) 
 ```
 
 
@@ -88,11 +89,12 @@ dge$samples$lib.size <- colSums(dge$counts) # Reset library sizes
 #Calculating TMM normalization factors and directly adding them to the DGEList
 dge_norm = calcNormFactors(dge_mod, method = "TMM")
 
+#cpm and log transformation after adding a pseudo-count
 cpm = cpm(dge_norm, log = FALSE, normalized.lib.sizes = TRUE)
 log2cpm = log2(cpm + 1)
 
-#Transforming object from wide to long format for plotting after randomly subsetting the data
-ran_samp <- subset(log2cpm[,150:170])
+#Transforming object from wide to long format for plotting after randomly sub-setting the data
+ran_samp <- log2cpm[, sample(ncol(log2cpm), 20)]
 
 longExpr = ran_samp %>% 
            as.data.frame() %>% 
@@ -125,28 +127,28 @@ pheatmap(cormat, border_color = NA, cluster_rows = TRUE, cellheight=9, cellwidth
 
 ```{r}
 #Setting up model matrix: Batch corrected and Batch not corrected
-designMatrix1 = model.matrix(~Sars_test , data = dge_norm$samples)
-designMatrix2 = model.matrix(~Sars_test + Batch , data = dge_norm$samples)
+designMatrix1 = model.matrix(~Sars_test , data = dge_norm$samples) # without batch
+designMatrix2 = model.matrix(~Sars_test + Batch , data = dge_norm$samples) # with batch
 ```
 
 ```{r}
 #Calculation of variance weights and generation of mean-variance trend plot
-de_model1 = voom(dge_norm, design = designMatrix1, plot = TRUE)
-de_model2 = voom(dge_norm, design = designMatrix2, plot = TRUE)
+de_model1 = voom(dge_norm, design = designMatrix1, plot = TRUE) # without batch
+de_model2 = voom(dge_norm, design = designMatrix2, plot = TRUE) # with batch
 ```
 
 ```{r}
-dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE)
+#Estimating dispersion parameters for each tag
+dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE) #without batch
 range(dge_disp1$prior.df)
 plotBCV(dge_disp1,  cex=0.5)
 
-dge_disp2 <- estimateDisp(dge_norm, designMatrix2, robust = TRUE)
+dge_disp2 <- estimateDisp(dge_norm, designMatrix2, robust = TRUE) # with batch
 range(dge_disp2$prior.df)
 plotBCV(dge_disp2,  cex=0.5)
 ```
-
-
 ```{r}
+
 lfit1 <- glmFit(dge_disp1, designMatrix1)
 lrt1 <- glmLRT(lfit1, coef = "Sars_testpos")
 toptags1 <- topTags(lrt1)$table %>% signif(3)
