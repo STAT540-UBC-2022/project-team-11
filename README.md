@@ -12,6 +12,7 @@ The contents of the repository are as follows:
 * **Reports**: Folder containing the project proposal and progress report deliverables
     * [Initial Proposal](Reports/initial_project_proposal.md)
     * [Final Proposal](Reports/final_project_proposal.md)
+    * [Progress Report](Reports/Progress-Report.md)
     
 
 * **src**: Folder containing our source code (Currently empty)
