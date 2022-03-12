@@ -7,7 +7,7 @@ The contents of the repository are as follows:
 
 * **Presentations**: Folder containing presentation slides file (Currently empty)
 
-* **Results**: Folder containing the results, summary figures and/or reports of our analysis (Currently empty)
+* **Results**: Folder containing the results, summary figures and/or reports of our analysis 
 
 * **Reports**: Folder containing the project proposal and progress report deliverables
     * [Initial Proposal](Reports/initial_project_proposal.md)
