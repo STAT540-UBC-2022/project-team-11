@@ -1,35 +1,65 @@
 # WHAT HAS CHANGED BASED ON THE FINAL PROPOSAL (2 PT.)
 Did your dataset change? If so, why?
+
+**Answer:** Our dataset has not changed since the submission of our final proposal. We are working on a SARS-CoV-2 study that is outlined in this [paper](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3000849). As described in our final proposal, we are still using the supplemental file `GSE152075_raw_counts_GEO.txt` and `PhenoData` from the `GSE152075`as a source of the raw counts and metadata, respectively.
+
 Have you decided to do a different analysis than what was mentioned in your proposal? If so, Why?
+
+**Answer:** The overall analysis has not changed but we have decided to make minor modifications to our approach one such so far was that we initially proposed to leverage DESeq2, however, we have opted for EdgeR because the authors of the paper have used DESeq2 and based on the premise that no statistical modelling can fully capture all biological phenomena, we wanted to see if a different  pipeline of analysis would be comparable to what was originally found. Further details are outlined in our methods and the results section. 
+
 Are there any changes in task assignments of group members?
+
+**Answer:**The task assignments of all group members remain the same. All group members have contributed to the current progress of our project as described in the final proposal. 
+
+
 # WHAT IS THE PROGRESS OF THE ANALYSES (4 PTS.)
 Since your initial proposal, you should have decided more concretely on what methods to use for each step of your analyses, and employed some of those methods.
 Briefly and concisely explain your methodology and progress for the aims you have investigated so far. Which parts were modified and which parts remained the same?
+
+**Answer:** So far in our project, we have obtained the count data and meta data from the paper and Gene Expression Omnibus (GEO). We cleaned up the metadata to include only columns of interest. We created a DGEList for differential expression analysis. Following this we removed lowly expressed genes, normalized the counts data based on TMM normalization and made boxplots, density plots and heatmaps to observe the trends within our dataset. We then calculated and filtered out the differentially expressed genes. 
+
 What R packages or other tools are you using for your analyses? You do not need to provide your scripts in your report.
+
+**Answer:** The R packages we used for our preliminary analysis include:
+* `GEOquery` : Retrieve our data from NCBI GEO. 
+* `tidyverse` : Data exploration and modifications.
+* `ggplot` : Plotting our data at various stages to visualize trends in our data.
+* `edgeR` : Differential gene expression analysis.
+* `pheatmap` : Building a heatmap to check correlation between our samples. 
+
 Provide the links to any markdown reports within your repo to refer to the relevant analysis.
+
+**Answer:** All of our code and analysis included within this progress report can be found in the `src` folder on our github repository. Click [here](https://github.com/STAT540-UBC-2022/project-team-11/blob/main/src/DataCleanup_DE.Rmd) to view our code. The file containing our code is called `DataCleanup_DE.Rmd`.
+
 Provide references.
+
+**Answer:** 
+
+* **RNASeq Analysis** : 
+
+The resources available on [github](https://github.com/STAT540-UBC/resources) and shared by the teaching team as part of the STAT 540 course were used to guide our DE analysis. Apart from this we used the data manipulation [tutorial](https://dplyr.tidyverse.org) from Tidyverse for the data cleanup stage. 
+
+
+**Additional:** Based on the aforementioned information, Aims 1 and 3 of our final proposal were carried out and partially answered. For aim 1, we have characterized the differentially expressed genes based on the infection status, i.e. positive vs negative as step 1. As for aim 3, the infection status was predicted after sub-setting our PCA data into training and validation sets.Other than the switch from DESeq2 to EdgeR for expression analyses, our goals as stipulated in our final proposal remain the same.
+
+
 # RESULTS (2 PTS.)
 What are your primary results?
+
+**Answer:** 
+
 Were you able to answer your hypothesis? Did you have any positive results? If no, postulate a discussion as to why that may be. Provide plots and/or tables to present your results.
+
+**Answer:** 
+
 List some challenges that you have encountered or anticipate. How will you address them?
 
-# Deviation from the final proposal.
-As described in our final proposal, we are still using the supplemental file `GSE152075_raw_counts_GEO.txt` and `PhenoData` from the `GSE152075`as a source of the raw counts and metadata, respectively. 
-Analysis of the aforementioned data sets for differential gene expression, we initially proposed to leverage DESeq2. However, we have opted for EdgeR because the authors of the paper used DESeq2 and based on the premise that no statistical modelling can fully capture all biological phenomena, we wanted to see if a different  pipeline of analysis would be comparable to what was originally found.
-All group members contributed to the current progress of our project as described in the final proposal. 
+**Answer:**
 
-# Progress of Analyses
-The following steps describe the methodology used so far in out analyses:
-1. Preliminary data exploration was done using `dplyr` functions. Using `ggplot2 `and `pheatmap` packages, boxplots and heatmaps were generated.
-2. Using functions from the `EdgeR` package, data a `DGEList` was created amd the count data was normalized using the "TMM" method. 
-3. The `decideTestsDGE()` function was used to calculate differentially expressed genes. 
-4. From the list of up-regulated and down-regulated genes obtained from step 4, principal component analyses (PCA) was performed using functions from the `stat` package.
-5. A logistic regression model was generated to predict infection status based on RNAseq data.
 
-Based on the above steps, aims 1 and 3 of our final proposal were partially answered. For aim 1, we have characterized the differentially expressed genes based on the infection status, i.e. positive vs negative. As for aim 3, the infection status was predicted after sub-setting our PCA data into training and validation sets.
-Other than the switch from DESeq2 to EdgeR for expression analyses, our goals as stipulated in our final proposal remain the same.
 
-# Results
+
+
 
 
 
