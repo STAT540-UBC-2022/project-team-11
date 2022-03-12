@@ -177,8 +177,8 @@ plots and/or tables to present your results.
 far, we have concluded that we have a set of 66 DEGs given the infection
 status. We have also formulated a model that predicts the infected
 status, given the set of DEGs. Our model had an accuracy of 95.9% with
-three healthy patients misclassified as healthy and 1 infected patient
-incorrectly classified as diseased.
+three healthy patients misclassified as diseased and 1 infected patient
+incorrectly classified as healthy.
 
 List some challenges that you have encountered or anticipate. How will
 you address them?
