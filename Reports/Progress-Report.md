@@ -164,7 +164,7 @@ to prevent this, we performed PCA on the DEGs.
 From the above scatter plot (PC2 vs PC1), we notice that healthy
 patients are well separated from COVID-19 positive patients. This
 motivated us to use PCA components as our variables in the classifier
-model. We used a Scree/Elbow plot, we decided to use the first four PCs
+model. Through a Scree/Elbow plot, we decided to use the first four PCs
 that explain \~66% of the variance in the dataset. After the four
 components, we noticed that not much of information is extracted by the
 other components.
