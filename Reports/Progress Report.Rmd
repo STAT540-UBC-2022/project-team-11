@@ -9,7 +9,8 @@ Analysis of the aforementioned data sets for differential gene expression, we in
 All group members contributed to the current progress of our project as described in the final proposal. 
 
 ## Progress of Analyses
-The following steps describe the methodology used so far in out analyses:
+The following steps describe the methodology used so far in our analyses:
+
 1. Preliminary data exploration was done using `dplyr` functions. Using `ggplot2 `and `pheatmap` packages, boxplots and heatmaps were generated.
 2. Using functions from the `EdgeR` package, data a `DGEList` was created amd the count data was normalized using the "TMM" method. 
 3. The `decideTestsDGE()` function was used to calculate differentially expressed genes. 
