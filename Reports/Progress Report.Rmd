@@ -20,6 +20,11 @@ Briefly and concisely explain your methodology and progress for the aims you hav
 
 **Answer:** So far in our project, we have obtained the count data and meta data from the paper and Gene Expression Omnibus (GEO). We cleaned up the metadata to include only columns of interest. We created a DGEList for differential expression analysis. Following this we removed lowly expressed genes, normalized the counts data based on TMM normalization and made boxplots, density plots and heatmaps to observe the trends within our dataset. We then calculated and filtered out the differentially expressed genes. 
 
+
+We built a model to predict the infected status of a patient given their RNA-Seq data. We used PCA analysis (prcomp function from stats package) to reduce the dimensionality if our identified DEGs (66) to 4 components. Using the derived 4 PCs, we used a logistic regression model (glm function from stats package) to perform the classification. 
+
+Based on the aforementioned information, aims 1 and 3 of our final proposal were carried out and partially answered. For aim 1, we have characterized the differentially expressed genes based on the infection status, i.e. positive vs negative as step 1. As for aim 3, the infection status was predicted after sub-setting our PCA data into training and validation sets.Other than the switch from DESeq2 to EdgeR for expression analyses, our goals as stipulated in our final proposal remain the same.
+
 What R packages or other tools are you using for your analyses? You do not need to provide your scripts in your report.
 
 **Answer:** The R packages we used for our preliminary analysis include:
@@ -28,22 +33,25 @@ What R packages or other tools are you using for your analyses? You do not need 
 * `ggplot` : Plotting our data at various stages to visualize trends in our data.
 * `edgeR` : Differential gene expression analysis.
 * `pheatmap` : Building a heatmap to check correlation between our samples. 
+* `stats`: For PCA and glm 
+* `caTools`: For splitting data into training and validation sets (for classification model)
+* `caret`: Building a confusion matrix, calculating accuracy, sensitivity, and specificity 
 
 Provide the links to any markdown reports within your repo to refer to the relevant analysis.
 
 **Answer:** All of our code and analysis included within this progress report can be found in the `src` folder on our github repository. Click [here](https://github.com/STAT540-UBC-2022/project-team-11/blob/main/src/DataCleanup_DE.Rmd) to view our code. The file containing our code is called `DataCleanup_DE.Rmd`.
 
+The plots generated in our analysis could be found `Results/Plots` folder.
+
 Provide references.
 
 **Answer:** 
+* https://www.datacamp.com/community/tutorials/pca-analysis-r
+* https://www.statology.org/scree-plot-r/
 
 * **RNASeq Analysis** : 
 
 The resources available on [github](https://github.com/STAT540-UBC/resources) and shared by the teaching team as part of the STAT 540 course were used to guide our DE analysis. Apart from this we used the data manipulation [tutorial](https://dplyr.tidyverse.org) from Tidyverse for the data cleanup stage. 
-
-
-**Additional:** Based on the aforementioned information, Aims 1 and 3 of our final proposal were carried out and partially answered. For aim 1, we have characterized the differentially expressed genes based on the infection status, i.e. positive vs negative as step 1. As for aim 3, the infection status was predicted after sub-setting our PCA data into training and validation sets.Other than the switch from DESeq2 to EdgeR for expression analyses, our goals as stipulated in our final proposal remain the same.
-
 
 # RESULTS (2 PTS.)
 
@@ -62,13 +70,25 @@ dnreg <- read.delim("~/Desktop/GSAT 540/Group/project-team-11/Results/DE_Downreg
 head(knitr::kable(dnreg), 10)
 ```
 
+For our downstream analyses, we proposed to predict 
+- If a patient has COVID-19 given their RNA-Seq 
+- The strength of immune response using associated metadata, if a patient has COVID-19
+
+We aim to build a logistic regression model to predict if a patient is infected with COVID-19 given their RNA-seq data. Our initial DEG analysis returns a set of 66  genes that were differentially expressed given the infection status. While it would be ideal to use all 66 genes to perform the classification, such a task would be not only computationally heavy but also have a lot of noise. This noise could arise because it is possible that some of the DEGs are correlated and produce similar signals, hence misleading our interpretation. In order to prevent this, we performed PCA on the DEGs. 
+
+![PCA plot.](../Results/Plots/pca.jpg)
+
+![Elbow plot.](../Results/Plots/elbow.jpg)
+
+From the above scatter plot (PC2 vs PC1), we notice that healthy patients are well separated from COVID-19 positive patients. This motivated us to use PCA components as our variables in the classifier model. We used a Scree/Elbow plot, we decided to use the first four PCs that explain ~66% of the variance in the dataset. After the four components, we noticed that not much of information is extracted by the other components. 
+
 Were you able to answer your hypothesis? Did you have any positive results? If no, postulate a discussion as to why that may be. Provide plots and/or tables to present your results.
 
-**Answer:** 
+**Answer:** We were able to answer our listed hypotheses partially. So far, we have concluded that we have a set of 66 DEGs given the infection status. We have also formulated a model that predicts the infected status, given the set of DEGs. Our model had an accuracy of 95.9% with three healthy patients misclassified as healthy and 1 infected patient incorrectly classified as diseased.
 
 List some challenges that you have encountered or anticipate. How will you address them?
 
-**Answer:**
+**Answer:** For the ML portion of our project, we anticipate that there will be problems in predicting the natural immune response in infected patients. This is because immune response is generated in diverse ways in the population. We would first have to identify genes that contribute to this response in humans (using the DAVID database) and then find a way to categorize what a "strong" response would comprise of in quantitative terms.
 
 
 

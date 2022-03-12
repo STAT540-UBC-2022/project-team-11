@@ -21,6 +21,10 @@ suppressPackageStartupMessages(library(caTools)) ## used for splitting the data 
 suppressPackageStartupMessages(library(caret)) ## used for confusion matrix, accuracy, sensitivity, and specificity
 ```
 
+```{r}
+## Setting work directory to save plots 
+setwd(getwd())
+```
 
 ```{r, warning=FALSE, message=FALSE, results='hide'}
 eset <- getGEO("GSE152075", getGPL = FALSE)[[1]]
@@ -207,16 +211,16 @@ log2cpm_dat <-  log2cpm %>%
                              names_to = "sample_ID")
 
 # Rename column to join by
-pdata_clean <- dplyr::rename(pdata_clean, sample_ID = Title)
+log2cpm_dat <- dplyr::rename(log2cpm_dat, Title = sample_ID)
 
 # Join expression and metadata data sets
 DEG_new <- log2cpm_dat %>% 
            left_join(pdata_clean, 
-                     by = "sample_ID") 
+                     by = "Title") 
 
 # Transform data back to a wide format
 DEG_new_trans <- pivot_wider(DEG_new, 
-                             id_cols = c(sample_ID, Age, Gender, Batch, Sars_test), 
+                             id_cols = c(Title, Age, Gender, Batch, Sars_test), 
                              names_from = gene, 
                              values_from = Expression)
 
@@ -253,6 +257,8 @@ ggbiplot(pca_DEG_new_trans2,
   ggtitle("PCA of SARS-Cov2 gene expression by infection status") +
   theme_bw()
 
+dev.print(device = jpeg, filename = "../Results/Plots/pca.jpg", width = 480, height = 300)
+
 ```
 
 ```{r}
@@ -267,11 +273,14 @@ qplot(c(1:65), variance_expl) +
   ggtitle("Scree Plot of Principal Components") +
   ylim(0, 0.75) +
   theme_bw()
+
+dev.print(device = jpeg, filename = "../Results/Plots/elbow.jpg", width = 480, height = 300)
+
 ```
 
 # Logistic regression classifier 
 
-We aim to build a logistic regression model to predict if a patient is infected with COVID-19 given their RNA-seq data. Our initial analysis (above) returns a set of 64 (confirm number) genes that were differentially expressed given the infection status. While it would be ideal to use all 64 genes to perform the classification, such a task would be not only computationally heavy but also have a lot of noise. This noise could arise because it is possible that some of the DEGs are correlated and produce similar signals, hence misleading our interpretation. In order to prevent this, we performed PCA on the DEGs (above). From the above Scree/Elbow plot, it is evident that the first four PCs explain ~66% of the variance in the dataset. In our regression model, we therefore, only use 4 PCs. 
+
 
 ```{r}
 ## We first subset the PCA data so that we only have the first 4 columns (PCs) to work with 
