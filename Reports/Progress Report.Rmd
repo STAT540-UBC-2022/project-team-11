@@ -1,0 +1,17 @@
+# WHAT HAS CHANGED BASED ON THE FINAL PROPOSAL (2 PT.)
+Did your dataset change? If so, why?
+Have you decided to do a different analysis than what was mentioned in your proposal? If so, Why?
+Are there any changes in task assignments of group members?
+# WHAT IS THE PROGRESS OF THE ANALYSES (4 PTS.)
+Since your initial proposal, you should have decided more concretely on what methods to use for each step of your analyses, and employed some of those methods.
+Briefly and concisely explain your methodology and progress for the aims you have investigated so far. Which parts were modified and which parts remained the same?
+What R packages or other tools are you using for your analyses? You do not need to provide your scripts in your report.
+Provide the links to any markdown reports within your repo to refer to the relevant analysis.
+Provide references.
+# RESULTS (2 PTS.)
+What are your primary results?
+Were you able to answer your hypothesis? Did you have any positive results? If no, postulate a discussion as to why that may be. Provide plots and/or tables to present your results.
+List some challenges that you have encountered or anticipate. How will you address them?
+
+# Deviation from the final proposal.
+As described in our final proposal, we are still using the supplemental file `GSE152075_raw_counts_GEO.txt` and `PhenoData` from the `GSE152075`as a source of the raw counts and metadata, respectively. Analysis of the aforementioned data sets for differential gene expression, we initially proposed to leverage DESeq2. However, we have opted for EdgeR because the authors of the paper used DESeq2 and based on the premise that no statistical modelling can fully capture all biological phenomena, we wanted to see if a different  pipeline of analysis would be comparable to what was originally found,
