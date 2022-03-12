@@ -163,9 +163,9 @@ below:
 
 ![Density plot.](../Results/Plots/density.jpg)
 
-![Heatmap.](../Results/Plots/heatmap.jpg)
-
 From the plots made using 20 genes, we could see that a number of samples had gene expression levels very different from others. For example, pos_169 appears like an outlier with a very different expression pattern.
+
+![Heatmap.](../Results/Plots/heatmap.jpg)
 
 The heatmap shows that the samples are well correlated looking at each one from both the x and y axes. We will still add annotation bars to better explain the correlation.
 
