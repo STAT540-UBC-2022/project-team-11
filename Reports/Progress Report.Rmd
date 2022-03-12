@@ -1,3 +1,11 @@
+---
+title: "Progress Report"
+author: "Credo Casmil, Aditi Nagaraj Nallan, Ekpereka Amutaigwe and Dollina Dodani"  
+date: '2022-03-10'
+output: github_document
+---
+
+
 # WHAT HAS CHANGED BASED ON THE FINAL PROPOSAL (2 PT.)
 
 Did your dataset change? If so, why?
@@ -60,13 +68,13 @@ What are your primary results?
 **Answer:** Differential gene expression was observed between individuals with negative and positive COVID infection status. 45 genes were up-regulated while 21 were down-regulated when sequencing batch was accounted for. When compared to what the authors of the paper found, we can determine that we have positive results though we have ~20 less genes than they got. This discrepancy can be attributed to the genes that we dropped based on our high CPM and sample thresholds.
 The following is a table showing the upregulated genes:
 ```{r,echo=FALSE}
-upreg <- read.delim("~/Desktop/GSAT 540/Group/project-team-11/Results/DE_Upregulated.tsv")
+upreg <- read.delim("../Results/DE_Upregulated.tsv")
 head(knitr::kable(upreg), 10)
 ```
 
 The following is a table showing the downregulated genes:
 ```{r,echo=FALSE}
-dnreg <- read.delim("~/Desktop/GSAT 540/Group/project-team-11/Results/DE_Downregulated.tsv")
+dnreg <- read.delim("../Results/DE_Downregulated.tsv")
 head(knitr::kable(dnreg), 10)
 ```
 
