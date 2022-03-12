@@ -143,9 +143,9 @@ The following is a table showing the downregulated genes:
     ##  [9] "|PCSK1N  | -3.299301| 7.753679|  6.870801| 0.0087615|"
     ## [10] "|PIGR    | -1.045433| 7.024179| 10.235317| 0.0013778|"
 
-For our downstream analyses, we proposed to predict - If a patient has
-COVID-19 given their RNA-Seq - The strength of immune response using
-associated metadata, if a patient has COVID-19
+For our downstream analyses, we proposed to predict 
+- If a patient has COVID-19, given their RNA-Seq 
+- The strength of immune response using associated metadata, if a patient has COVID-19
 
 We aim to build a logistic regression model to predict if a patient is
 infected with COVID-19 given their RNA-seq data. Our initial DEG
