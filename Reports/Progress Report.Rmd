@@ -17,3 +17,15 @@ List some challenges that you have encountered or anticipate. How will you addre
 As described in our final proposal, we are still using the supplemental file `GSE152075_raw_counts_GEO.txt` and `PhenoData` from the `GSE152075`as a source of the raw counts and metadata, respectively. 
 Analysis of the aforementioned data sets for differential gene expression, we initially proposed to leverage DESeq2. However, we have opted for EdgeR because the authors of the paper used DESeq2 and based on the premise that no statistical modelling can fully capture all biological phenomena, we wanted to see if a different  pipeline of analysis would be comparable to what was originally found.
 All group members contributed to the current progress of our project as described in the final proposal. 
+
+# Progress of Analyses
+The following steps describe the methodology used so far in out analyses:
+1. Preliminary data exploration was done using `dplyr` functions. Using `ggplot2 `and `pheatmap` packages, boxplots and heatmaps were generated.
+2. Using functions from the `EdgeR` package, data a `DGEList` was created amd the count data was normalized using the "TMM" method. 
+3. The `decideTestsDGE()` function was used to calculate differentially expressed genes. 
+4. From the list of up-regulated and down-regulated genes obtained from step 4, principal component analyses was performed using functions from the `stat` package.
+5. A logistic regression model was generated to predict infection status based on RNAseq data.
+
+Based on the above steps, aims 1 and 3 of our final proposal were partially answered.
+
+ 

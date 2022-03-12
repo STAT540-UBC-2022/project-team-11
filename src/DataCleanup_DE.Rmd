@@ -97,7 +97,8 @@ cpm = cpm(dge_norm, log = FALSE, normalized.lib.sizes = TRUE)
 log2cpm = log2(cpm + 1)
 
 #Transforming object from wide to long format for plotting after randomly sub-setting the data
-ran_samp <- log2cpm[, sample(ncol(log2cpm), 20)]
+#ran_samp <- log2cpm[, sample(ncol(log2cpm), 20)]
+ran_samp <- subset(log2cpm[,150:170])
 
 longExpr = ran_samp %>% 
            as.data.frame() %>% 
