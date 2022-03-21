@@ -19,6 +19,8 @@ suppressPackageStartupMessages(library(ggbiplot))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(caTools)) ## used for splitting the data into training and validation sets 
 suppressPackageStartupMessages(library(caret)) ## used for confusion matrix, accuracy, sensitivity, and specificity
+suppressPackageStartupMessages(library(mice))
+suppressPackageStartupMessages(library(VIM))
 ```
 
 ```{r}
@@ -41,19 +43,19 @@ pdata <- eset@phenoData@data %>% as_tibble()
 
 #Clean the metadata to include only columns of interest for the initial analysis
 pdata_clean = pdata %>%
-  select(title, `age:ch1`, characteristics_ch1.3, characteristics_ch1.4, `sars-cov-2 positivity:ch1`)
-colnames(pdata_clean) = c("Title", "Age", "Gender", "Batch", "Sars_test")
+  select(title, `age:ch1`, characteristics_ch1.3, characteristics_ch1.4, `sars-cov-2 positivity:ch1`, `n1_ct:ch1`)
+colnames(pdata_clean) = c("Title", "Age", "Gender", "Batch", "Sars_test", "Viral_load")
 
 pdata_clean$Gender = sapply(strsplit(pdata_clean$Gender, split=':', fixed=TRUE), function(x) (x[2]))
 pdata_clean$Batch = sapply(strsplit(pdata_clean$Batch, split=':', fixed=TRUE), function(x) (x[2]))
 
 #Modify the cleaned data set as per further DE analysis
 pdata_mod <- pdata_clean %>%
-  subset(Age != "Unknown") %>%
   transform(Age = as.numeric(Age))
 
-colnames(pdata_mod) = c("Title", "Age", "Gender", "Batch", "Sars_test")
 pdata_mod[is.na(pdata_mod)] <- 90
+pdata_mod <- within(pdata_mod, Age[Age == 90 & Viral_load == 'Unknown'] <- "Not Collected")
+
 
 pdata_mod = pdata_mod %>%
   mutate(Age_category =  case_when(
@@ -61,17 +63,37 @@ pdata_mod = pdata_mod %>%
     Age >= 18 & Age < 35 ~ "Young Adult",
     Age >= 35 & Age < 65  ~ "Adult",
     TRUE ~ "Senior"
-  ))
+  )) 
 
-data = pdata %>%
-       select(title, `age:ch1`) %>% 
-       subset(`age:ch1` == "Unknown")
+pdata_mod <- within(pdata_mod, Age_category[Age_category == "Senior" & Viral_load == "Unknown"] <- "Not Collected")
 
-drop <- data$title
-count_mat_final  = count_mat[,!colnames(count_mat) %in% drop]
+convert = c("Age_category", "Gender", "Sars_test", "Batch")
+pdata_mod[convert] <- lapply(pdata_mod[convert], factor)
+levels(pdata_mod$Gender)[3] <- "Not Collected"
 ```
 
-# Using EdgeR
+```{r}
+#Data modification for Imputation
+data <- within(pdata_mod, Age[Age == 90 & Viral_load == 'Unknown'] <- NA)
+data$Viral_load[data$Viral_load == "Unknown"] <- NA
+data <- within(pdata_mod, Age_category[Age_category == "Senior" & Viral_load == "Unknown"] <- NA)
+levels(data$Gender)[3] <- NA
+
+#Data Imputation
+mice_plot <- aggr(data, col=c('navyblue','yellow'),
+                    numbers=TRUE, sortVars=TRUE,
+                    labels=names(data), cex.axis=.7,
+                    gap=3, ylab=c("Missing data","Pattern"))
+
+imputed_Data <- mice(data, m=5, maxit = 50, method = 'pmm', seed = 500)
+summary(imputed_Data)
+#Check imputed values
+imputed_Data$imp$Age
+pdata_imputed <- complete(imputed_Data,3)
+```
+
+
+# Using EdgeR- DE analysis for Infected vs Non-Infected samples
 
 ```{r}
 #Creating DGE List 
@@ -143,12 +165,6 @@ dev.print(device = jpeg, filename = "../Results/Plots/heatmap.jpg", width = 480,
 #Setting up model matrix: Batch corrected and Batch not corrected
 designMatrix1 = model.matrix(~Sars_test , data = dge_norm$samples) # without batch
 designMatrix2 = model.matrix(~Sars_test + Batch , data = dge_norm$samples) # with batch
-```
-
-```{r}
-#Calculation of variance weights and generation of mean-variance trend plot
-de_model1 = voom(dge_norm, design = designMatrix1, plot = TRUE) # without batch
-de_model2 = voom(dge_norm, design = designMatrix2, plot = TRUE) # with batch
 ```
 
 ```{r}
@@ -286,8 +302,6 @@ dev.print(device = jpeg, filename = "../Results/Plots/elbow.jpg", width = 480, h
 
 # Logistic regression classifier 
 
-
-
 ```{r}
 ## We first subset the PCA data so that we only have the first 4 columns (PCs) to work with 
 PCA_data_subset <- as.data.frame(pca_DEG_new_trans2$x[, c(1, 2, 3, 4)])
@@ -334,3 +348,91 @@ c(con_mat$overall["Accuracy"], con_mat$byClass["Sensitivity"], con_mat$byClass["
 References
 https://www.datacamp.com/community/tutorials/pca-analysis-r
 https://www.statology.org/scree-plot-r/
+
+# Using EdgeR- DE analysis for Infected vs Non-Infected samples using Age and Sex as variables of interest
+
+```{r}
+#Creating DGE List 
+dge <- DGEList(counts = count_mat, samples = pdata_imputed)
+dim(dge)
+head(apply(dge$counts, 2, sum)) # total gene counts per sample
+
+#removing lowly expressed genes
+keep_edge <- rowSums(cpm(dge)>100) >= 50
+dge_mod <- dge[keep_edge,]
+dim(dge_mod)
+
+```
+
+```{r, results='hide'}
+# Reset library sizes
+dge$samples$lib.size <- colSums(dge$counts) 
+```
+
+
+```{r}
+#Calculating TMM normalization factors and directly adding them to the DGEList
+dge_norm = calcNormFactors(dge_mod, method = "TMM")
+
+#cpm and log transformation after adding a pseudo-count
+cpm = cpm(dge_norm, log = FALSE, normalized.lib.sizes = TRUE)
+log2cpm = log2(cpm + 1)
+```
+
+```{r}
+#Setting up model matrix
+designMatrix1 = model.matrix(~Sars_test*Age_category + Batch , data = dge_norm$samples) 
+designMatrix2 = model.matrix(~Sars_test*Gender , data = dge_norm$samples) 
+designMatrix3 = model.matrix(~Gender*Age_category , data = dge_norm$samples) 
+```
+
+
+```{r}
+batch = pdata_mod$Batch
+log2cpm_corrected_1 = removeBatchEffect(log2cpm, batch, design=designMatrix1)
+log2cpm_corrected_2 = removeBatchEffect(log2cpm, batch, design=designMatrix2)
+log2cpm_corrected_3 = removeBatchEffect(log2cpm, batch, design=designMatrix3)
+```
+
+```{r}
+#Estimating dispersion parameters for each tag
+dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE) 
+range(dge_disp1$prior.df)
+plotBCV(dge_disp1,  cex=0.5)
+
+dge_disp3 <- estimateDisp(log2cpm_corrected_3, designMatrix3, robust = TRUE) 
+range(dge_disp3$prior.df)
+plotBCV(dge_disp3,  cex=0.5)
+```
+
+```{r}
+
+lfit1 <- glmFit(dge_disp1, designMatrix1)
+lrt1 <- glmLRT(lfit1)
+toptags1 <- topTags(lrt1)$table %>% signif(3)
+
+lfit2 <- glmFit(dge_disp2, designMatrix2)
+lrt2 <- glmLRT(lfit2)
+toptags2 <- topTags(lrt2)$table %>% signif(3)
+
+#Filtering for up and downregulated genes
+lrt2_filter_upreg <- filter(lrt2$table, PValue < 0.05, logFC >1)
+dim(lrt2_filter_upreg)
+lrt2_filter_downreg <- filter(lrt2$table, PValue < 0.05, logFC < -1)
+dim(lrt2_filter_downreg)
+
+```
+
+```{r}
+de1 <- decideTestsDGE(lrt1, adjust.method="BH", p.value = 0.05)
+de1tags1 <- rownames(dge_disp1)[as.logical(de1)]
+plotSmear(lrt1, de.tags=de1tags1)
+de1_summary <- summary(de1)
+de1_summary
+
+de2 <- decideTestsDGE(lrt2, adjust.method="BH", p.value = 0.05)
+de1tags2 <- rownames(dge_disp2)[as.logical(de2)]
+plotSmear(lrt2, de.tags=de1tags2)
+de2_summary <- summary(de2)
+de2_summary
+```
