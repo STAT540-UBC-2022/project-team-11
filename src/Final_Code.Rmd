@@ -114,7 +114,7 @@ corrected_data3 <- ComBat_seq(counts = count_mat, batch = Batches, covar_mod = c
 dim(count_mat)
 dim(corrected_data1)
 dim(corrected_data2)
-dim(corrected_data2)
+dim(corrected_data3)
 
 ```
 
