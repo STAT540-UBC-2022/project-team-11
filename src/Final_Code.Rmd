@@ -4,7 +4,7 @@ author: "Credo Casmil, Aditi Nagaraj Nallan, Ekpereka Amutaigwe and Dollina Doda
 date: '2022-03-20'
 output: github_document
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 # Load packages
@@ -25,6 +25,8 @@ suppressPackageStartupMessages(library(caret)) ## used for confusion matrix, acc
 suppressPackageStartupMessages(library(mice))
 suppressPackageStartupMessages(library(VIM))
 suppressPackageStartupMessages(library(sva))
+suppressPackageStartupMessages(library(Glimma))
+
 ```
 
 ```{r}
@@ -85,7 +87,7 @@ pdata_mod %>% select(-Sample, -Viral_load, -Age) %>%
 data = pdata_mod
 data$Age[data$Age == "Unknown"] <- NA
 data$Age = as.numeric(data$Age)
-data$Age_category[data$Age_category == "Unknown"] <- NA
+levels(data$Age_category)[4] <- NA
 data$Viral_load[data$Viral_load == "N/A"] <- 0
 data$Viral_load[data$Viral_load == "Unknown"] <- NA
 data$Viral_load = as.numeric(data$Viral_load)
@@ -221,7 +223,8 @@ plotBCV(dge_disp1,  cex=0.5)
 
 lfit1 <- glmFit(dge_disp1, designMatrix1)
 lrt1 <- glmLRT(lfit1)
-toptags1 <- topTags(lrt1)$table %>% signif(3)
+toptags1 <- topTags(lrt1, n = Inf)$table %>% signif(3)
+upgenes <- toptags1[toptags1$PValue>1,]
 
 #Filtering for up and downregulated genes
 lrt1_filter_upreg <- filter(lrt1$table, PValue < 0.05, logFC >1)
@@ -229,11 +232,18 @@ dim(lrt1_filter_upreg)
 lrt1_filter_downreg <- filter(lrt1$table, PValue < 0.05, logFC < -1)
 dim(lrt1_filter_downreg)
 
-de1 <- decideTestsDGE(lrt1, adjust.method="BH", p.value = 0.05)
-de1tags1 <- rownames(dge_disp1)[as.logical(de2)]
+de1 <- decideTests(lrt1, adjust.method="BH", p.value = 0.05, lfc = 1) %>% table()
+de1tags1 <- rownames(dge_disp1)[as.logical(de1)]
 plotSmear(lrt1, de.tags=de1tags1)
 de1_summary <- summary(de1)
 de1_summary
+
+par(mfrow=c(1,2))
+plotMD(lrt1,coef=1,status=de1[,"Sars_testpos:Age_categoryYoung Adult"], values = c(-1, 1), hl.col=c("blue","red"))
+
+glMDPlot(fit.treat, coef=1, counts=v$E, groups=group2,
+        status=res.treat, side.main="ENTREZID", main="B.PregVsLac",
+        folder="md")
 ```
 
 ```{r}
