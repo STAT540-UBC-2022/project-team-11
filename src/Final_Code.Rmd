@@ -122,18 +122,13 @@ cov_test <- c(pdata_imputed$Sars_test)
 Batches = as.character(pdata_imputed$Batch)
 
 covariate_matrix1 <- cbind(cov_test)
-#covariate_matrix2 <- cbind(cov_test, age_groups)
-#covariate_matrix3 <- cbind(age_groups, sex)
 
 
 corrected_data1 <- ComBat_seq(counts = count_mat, batch = Batches, group = cov_test)
-#corrected_data2 <- ComBat_seq(counts = count_mat, batch = Batches, covar_mod = covariate_matrix2)
-#corrected_data3 <- ComBat_seq(counts = count_mat, batch = Batches, covar_mod = covariate_matrix3)
+
 
 dim(count_mat)
 dim(corrected_data1)
-#dim(corrected_data2)
-#dim(corrected_data3)
 
 ```
 
@@ -204,13 +199,18 @@ pheatmap(cormat, border_color = NA, annotation_col = annotation_column, cluster_
 ```{r}
 #Setting up model matrix
 designMatrix1 = model.matrix(~Sars_test*Age_category, data = pdata_imputed) 
-
+colnames(designMatrix1)
 
 designMatrix2 = model.matrix(~Sars_test*Gender, data = dge_norm$samples) 
+colnames(designMatrix2)
 
+designMatrix3 = model.matrix(~Gender*Age_category, data = dge_norm$samples)
+colnames(designMatrix3)
+designMatrix3 <- designMatrix3[,-6]
 
-designMatrix3 = model.matrix(~Gender*Age_category, data = dge_norm$samples) 
-
+designMatrix4 = model.matrix(~Sars_test*Gender*Age_category, data = dge_norm$samples)
+designMatrix4 <- designMatrix4[, c(-11, -14)]
+colnames(designMatrix4)
 ```
 
 ```{r}
@@ -223,7 +223,9 @@ lfit1 <- glmFit(dge_disp1, designMatrix1)
 lrt1 <- glmLRT(lfit1)
 deg_1 <- topTags(lrt1, n = Inf, p = 0.05)$table
 up_1 <- deg_1[deg_1$logFC > 0,]
+nrow(up_1)
 down_1 <- deg_1[deg_1$logFC < 0,]
+nrow(down_1)
 
 
 de1 <- decideTests(lrt1, adjust.method="BH", p.value = 0.05, lfc = 1)
@@ -232,11 +234,8 @@ de1_summary <- summary(de1)
 de1_summary
 
 par(mfrow=c(1,2))
-plotMD(lrt1,coef=1,status=de1[,"Sars_testpos:Age_categoryYoung Adult"], values = c(-1, 1), hl.col=c("blue","red"))
+plotMD(lrt1,status=de1[,"Sars_testpos:Age_categoryYoung Adult"], values = c(-1, 1), hl.col=c("blue","red"))
 
-#glMDPlot(fit.treat, coef=1, counts=v$E, groups=group2,
- #       status=res.treat, side.main="ENTREZID", main="B.PregVsLac",
- #       folder="md")
 ```
 
 ```{r}
@@ -268,7 +267,9 @@ lfit3 <- glmFit(dge_disp3, designMatrix3)
 lrt3 <- glmLRT(lfit3)
 deg_3 <- topTags(lrt3, n = Inf, p = 0.05)$table
 up_3 <- deg_3[deg_3$logFC > 0,]
+nrow(up_3)
 down_3 <- deg_3[deg_3$logFC < 0,]
+nrow(down_3)
 
 de3 <- decideTestsDGE(lrt3, adjust.method="BH", p.value = 0.05)
 de1tags3 <- rownames(dge_disp3)[as.logical(de2)]
@@ -276,3 +277,29 @@ plotSmear(lrt3, de.tags=de1tags3)
 de3_summary <- summary(de3)
 de3_summary
 ```
+
+```{r}
+#Estimating dispersion parameters for each tag
+dge_disp4 <- estimateDisp(dge_norm, designMatrix4, robust = TRUE) 
+range(dge_disp4$prior.df)
+plotBCV(dge_disp4,  cex=0.5)
+
+lfit4 <- glmFit(dge_disp4, designMatrix4)
+lrt4 <- glmLRT(lfit4)
+deg_4 <- topTags(lrt4, n = Inf, p = 0.1)$table
+up_4 <- deg_1[deg_4$logFC > 0,]
+nrow(up_4)
+down_4 <- deg_1[deg_4$logFC < 0,]
+nrow(down_4)
+
+
+de4 <- decideTests(lrt4, adjust.method="BH", p.value = 0.1, lfc = 1)
+de1tags4 <- rownames(dge_disp4)[as.logical(de4)]
+de4_summary <- summary(de4)
+de4_summary
+
+par(mfrow=c(1,2))
+plotMD(lrt4, status=de4[,"Sars_testpos:GenderM:Age_categoryYoung Adult"], 
+       values = c(-1, 1), hl.col=c("blue","red"))
+```
+
