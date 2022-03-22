@@ -222,8 +222,8 @@ plotBCV(dge_disp1,  cex=0.5)
 lfit1 <- glmFit(dge_disp1, designMatrix1)
 lrt1 <- glmLRT(lfit1)
 deg_1 <- topTags(lrt1, n = Inf, p = 0.05)$table
-up_1 <- deg[deg$logFC > 0,]
-down_1 <- deg[deg$logFC < 0,]
+up_1 <- deg_1[deg_1$logFC > 0,]
+down_1 <- deg_1[deg_1$logFC < 0,]
 
 
 de1 <- decideTests(lrt1, adjust.method="BH", p.value = 0.05, lfc = 1)
@@ -248,8 +248,8 @@ plotBCV(dge_disp2,  cex=0.5)
 lfit2 <- glmFit(dge_disp2, designMatrix2)
 lrt2 <- glmLRT(lfit2)
 deg_2 <- topTags(lrt2, n = Inf, p = 0.05)$table
-up_2 <- deg[deg$logFC > 0,]
-down_2 <- deg[deg$logFC < 0,]
+up_2 <- deg_2[deg_2$logFC > 0,]
+down_2 <- deg_2[deg_2$logFC < 0,]
 
 de2 <- decideTestsDGE(lrt2, adjust.method="BH", p.value = 0.05)
 de1tags2 <- rownames(dge_disp2)[as.logical(de2)]
@@ -267,8 +267,8 @@ plotBCV(dge_disp3,  cex=0.5)
 lfit3 <- glmFit(dge_disp3, designMatrix3)
 lrt3 <- glmLRT(lfit3)
 deg_3 <- topTags(lrt3, n = Inf, p = 0.05)$table
-up_3 <- deg[deg$logFC > 0,]
-down_3 <- deg[deg$logFC < 0,]
+up_3 <- deg_3[deg_3$logFC > 0,]
+down_3 <- deg_3[deg_3$logFC < 0,]
 
 de3 <- decideTestsDGE(lrt3, adjust.method="BH", p.value = 0.05)
 de1tags3 <- rownames(dge_disp3)[as.logical(de2)]
