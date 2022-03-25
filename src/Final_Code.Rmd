@@ -4,7 +4,7 @@ author: "Credo Casmil, Aditi Nagaraj Nallan, Ekpereka Amutaigwe and Dollina Doda
 date: '2022-03-20'
 output: github_document
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 # Load packages
@@ -50,25 +50,24 @@ pdata <- eset@phenoData@data %>% as_tibble()
 #Subset the metadata to include only columns of interest
 pdata_clean = pdata %>%
   select(title, `age:ch1`, `gender:ch1`, `sequencing_batch:ch1`, `sars-cov-2 positivity:ch1`, `n1_ct:ch1`)
+
 colnames(pdata_clean) = c("Sample", "Age", "Gender", "Batch", "Sars_test", "Viral_load")
+
+pdata_clean <- within(pdata_clean, Age[Age == "90+"] <- "90")
 
 #Modify the subset data to create a new column of Age_categories based on the column Age 
 pdata_mod <- pdata_clean %>%
   transform(Age = as.numeric(Age))
-
-pdata_mod[is.na(pdata_mod)] <- 90
-pdata_mod <- within(pdata_mod, Age[Age == 90 & Viral_load == 'Unknown'] <- "Unknown")
-
 
 pdata_mod = pdata_mod %>%
   mutate(Age_category =  case_when(
     Age < 18 ~ "Child",
     Age >= 18 & Age < 35 ~ "Young Adult",
     Age >= 35 & Age < 65  ~ "Adult",
-    TRUE ~ "Senior"
+    Age >= 65 ~ "Senior"
   )) 
 
-pdata_mod <- within(pdata_mod, Age_category[Age_category == "Senior" & Viral_load == "Unknown"] <- "Unknown")
+pdata_mod <- pdata_mod[complete.cases(pdata_mod), ]
 
 #Convert all character variables of interest to factor type 
 convert = c("Age_category", "Gender", "Sars_test", "Batch")
@@ -85,11 +84,7 @@ pdata_mod %>% select(-Sample, -Viral_load, -Age) %>%
 ```{r}
 #Modify data to convert all "Unknown/not collected" values to NAs to feed into the imputation function
 data = pdata_mod
-data$Age[data$Age == "Unknown"] <- NA
-data$Age = as.numeric(data$Age)
-levels(data$Age_category)[4] <- NA
 data$Viral_load[data$Viral_load == "N/A"] <- 40
-data$Viral_load[data$Viral_load == "Unknown"] <- NA
 data$Viral_load = as.numeric(data$Viral_load)
 levels(data$Gender)[3] <- NA
 
