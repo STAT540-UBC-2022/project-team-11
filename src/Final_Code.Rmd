@@ -81,27 +81,6 @@ pdata_mod %>% select(-Sample, -Viral_load, -Age) %>%
   ggpairs(aes(color=Sars_test, alpha=0.4), cardinality_threshold = 100)
 ```
 
-```{r}
-#Modify data to convert all "Unknown/not collected" values to NAs to feed into the imputation function
-data = pdata_mod
-data$Viral_load[data$Viral_load == "N/A"] <- 40
-data$Viral_load = as.numeric(data$Viral_load)
-levels(data$Gender)[3] <- NA
-
-#Data Imputation
-mice_plot <- aggr(data, col=c('navyblue','yellow'),
-                    numbers=TRUE, sortVars=TRUE,
-                    labels=names(data), cex.axis=.7,
-                    gap=3, ylab=c("Missing data","Pattern"))
-
-imputed_Data <- mice(data, m=5, maxit = 50, method = 'pmm', seed = 500)
-summary(imputed_Data)
-```
-
-```{r}
-pdata_imputed <- complete(imputed_Data,5)
-table(pdata_imputed$Age_category)
-```
 
 
 ```{r}
@@ -338,3 +317,24 @@ autoplot(counts_pdata_pca, data = counts_pdata, colour = 'Gender')
 
 ```
 
+```{r}
+#Modify data to convert all "Unknown/not collected" values to NAs to feed into the imputation function
+data = counts_pdata
+data$Viral_load[data$Viral_load == "N/A"] <- 0
+data$Viral_load = as.numeric(data$Viral_load)
+levels(data$Gender)[3] <- NA
+
+#Data Imputation
+mice_plot <- aggr(data, col=c('navyblue','yellow'),
+                    numbers=TRUE, sortVars=TRUE,
+                    labels=names(data), cex.axis=.7,
+                    gap=3, ylab=c("Missing data","Pattern"))
+
+imputed_Data <- mice(data, m=5, maxit = 100, method = 'pmm', seed = 500)
+summary(imputed_Data)
+```
+
+```{r}
+pdata_imputed <- complete(imputed_Data,5)
+table(pdata_imputed$Age_category)
+```
