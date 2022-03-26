@@ -25,6 +25,8 @@ suppressPackageStartupMessages(library(caret)) ## used for confusion matrix, acc
 suppressPackageStartupMessages(library(mice))
 suppressPackageStartupMessages(library(VIM))
 suppressPackageStartupMessages(library(sva))
+suppressPackageStartupMessages(library(factoextra))
+suppressPackageStartupMessages(library(knitr))
 #suppressPackageStartupMessages(library(Glimma))
 
 ```
@@ -316,6 +318,39 @@ str(counts_pdata_pca)
 autoplot(counts_pdata_pca, data = counts_pdata, colour = 'Gender')
 
 ```
+
+## K-means clustering
+
+```{r}
+set.seed(234)
+
+# Determine optimal number of clusters
+fviz_nbclust(counts_pdata_scaled, FUNcluster = kmeans, method = "wss")
+
+# Assign cluster value
+k <- 3
+
+# Scale the input data
+counts_pdata_scaled <- scale(counts_pdata)
+
+# What does the scaled data look like?
+head(counts_pdata_scaled[,1:3], 10)
+
+# Compute kmeans clustering
+kmeans_result <- kmeans(counts_pdata_scaled, centers = k, nstart = 50)
+
+# View within sum of squares of each cluster
+kmeans_result$withinss
+
+# Let's look at each cluster's composition
+kmeans_resultTable <- data.frame(gender = pdata_mod$Gender,
+                                 age_category = pdata_mod$Age_category,
+                                 cluster = kmeans_result$cluster)
+
+kable(kmeans_resultTable)
+```
+
+
 
 ```{r}
 #Modify data to convert all "Unknown/not collected" values to NAs to feed into the imputation function
