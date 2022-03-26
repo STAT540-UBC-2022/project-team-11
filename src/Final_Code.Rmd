@@ -298,3 +298,49 @@ plotMD(lrt4, status=de4[,"Sars_testpos:GenderM:Age_categoryYoung Adult"],
        values = c(-1, 1), hl.col=c("blue","red"))
 ```
 
+
+```{r}
+# Convert raw counts data matrix to data frame
+count_mat_mod <- count_mat %>% 
+  as.data.frame() %>% 
+  rownames_to_column("gene_id")
+
+# Transform counts data to a long form for merging with metadata
+count_mat_mod <- count_mat_mod %>% 
+  pivot_longer(-gene_id, names_to = "Sample", values_to = "Expression")
+
+# Join raw counts to filtered metadata. This automatically drops samples in the counts data that are not in the filtered metadata
+counts_pdata <- pdata_mod %>% 
+  left_join(count_mat_mod, by = "Sample")
+
+# Transform data back to a wide format
+counts_pdata <- pivot_wider(counts_pdata,
+                             names_from = gene_id, 
+                             values_from = Expression) %>% 
+                column_to_rownames("Sample")
+
+# To be sure there are no NAs
+counts_pdata <- counts_pdata %>% 
+                drop_na()
+
+counts_pdata_pca <- prcomp(counts_pdata[,-c(1, 2, 3, 4, 5, 6)], 
+                                            center = TRUE,
+                                            scale. = TRUE)
+
+summary(counts_pdata_pca)
+
+str(counts_pdata_pca)
+
+# Visualize PCA result by gender
+ggbiplot(counts_pdata_pca, 
+         ellipse = TRUE, 
+         labels = rownames(counts_pdata),
+         obs.scale = 1,
+         var.scale = 1,
+         groups = counts_pdata$Gender) +
+  ggtitle("PCA of SARS-Cov2 gene expression by gender") +
+  theme_bw()
+
+
+```
+
