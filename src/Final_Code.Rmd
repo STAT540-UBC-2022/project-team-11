@@ -319,28 +319,22 @@ counts_pdata <- pivot_wider(counts_pdata,
                              values_from = Expression) %>% 
                 column_to_rownames("Sample")
 
-# To be sure there are no NAs
-counts_pdata <- counts_pdata %>% 
-                drop_na()
+## Saving the gender column for future use!
+gender_list <- counts_pdata$Gender
 
-counts_pdata_pca <- prcomp(counts_pdata[,-c(1, 2, 3, 4, 5, 6)], 
-                                            center = TRUE,
-                                            scale. = TRUE)
+# This step is removing all columns with no variance and making  sure there are no NAs
+counts_pdata <- counts_pdata[ , which(apply(counts_pdata, 2, var) != 0)] %>%
+                  drop_na()
+
+counts_pdata_pca <- prcomp(counts_pdata, center = TRUE, scale. = TRUE)
+counts_pdata$Gender <- gender_list
 
 summary(counts_pdata_pca)
 
 str(counts_pdata_pca)
 
 # Visualize PCA result by gender
-ggbiplot(counts_pdata_pca, 
-         ellipse = TRUE, 
-         labels = rownames(counts_pdata),
-         obs.scale = 1,
-         var.scale = 1,
-         groups = counts_pdata$Gender) +
-  ggtitle("PCA of SARS-Cov2 gene expression by gender") +
-  theme_bw()
-
+autoplot(counts_pdata_pca, data = counts_pdata, colour = 'Gender')
 
 ```
 
