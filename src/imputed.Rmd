@@ -1,7 +1,7 @@
 ---
 output: github_document
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 # Load packages
@@ -22,6 +22,7 @@ suppressPackageStartupMessages(library(caret)) ## used for confusion matrix, acc
 suppressPackageStartupMessages(library(mice))
 suppressPackageStartupMessages(library(VIM))
 suppressPackageStartupMessages(library(sva))
+suppressPackageStartupMessages(library(missForest))
 ```
 
 
@@ -85,15 +86,54 @@ data = pdata %>%
 
 drop <- data$title
 
-# Removing samples that have unknown age from the count matrix
+#Removing samples that have unknown age from the count matrix
 count_mat_final  = count_mat[,!colnames(count_mat) %in% drop]
 ```
 
 ```{r}
-#check our two dfs are in the same order
-identical(pdata_mod$Sample, colnames(count_mat_final))
+# Convert raw counts data matrix to data frame
+count_mat_mod <- count_mat %>% 
+  as.data.frame() %>% 
+  rownames_to_column("gene_id")
+
+# Transform counts data to a long form for merging with metadata
+count_mat_mod <- count_mat_mod %>% 
+  pivot_longer(-gene_id, names_to = "Sample", values_to = "Expression")
+
+# Join raw counts to filtered metadata. This automatically drops samples in the counts data that are not in the filtered metadata
+counts_pdata <- pdata_mod %>% 
+  left_join(count_mat_mod, by = "Sample")
+
+# Transform data back to a wide format
+counts_pdata <- pivot_wider(counts_pdata,
+                             names_from = gene_id, 
+                             values_from = Expression) %>% 
+                column_to_rownames("Sample")
+
+#Modify data to convert all "Unknown/not collected" values to NAs to feed into the imputation function
+data = counts_pdata
+data$Viral_load[data$Viral_load == "N/A"] <- 0
+data$Viral_load = as.numeric(data$Viral_load)
+levels(data$Gender)[3] <- NA
+
 ```
 
+# Imputation with MissForest
+
+```{r}
+pdata.imp.1 <- missForest(data)
+table(pdata.imp.1$ximp$Gender)
+pdata.imp.1$OOBerror
+
+#Extract imputed metadata
+pdata_imputed = as.data.frame(pdata.imp.1$ximp[,1:6])
+pdata_imputed <- tibble::rownames_to_column(pdata_imputed, "Sample")
+```
+
+```{r}
+#check our two dfs are in the same order
+identical(pdata_imputed$Sample, colnames(count_mat_final))
+```
 
 ```{r}
 cov_test <- cbind(c(pdata_mod$Sars_test))
@@ -113,27 +153,9 @@ dim(corrected_data1)
 ```
 
 ```{r}
-#Data modification for Imputation
-data <- pdata_mod
-levels(data$Gender)[3] <- NA
-
-#Data Imputation
-mice_plot <- aggr(data, col=c('navyblue','yellow'),
-                    numbers=TRUE, sortVars=TRUE,
-                    labels=names(data), cex.axis=.7,
-                    gap=3, ylab=c("Missing data","Pattern"))
-imputed_Data <- mice(data, m=5, maxit = 50, method = 'pmm', seed = 500)
-summary(imputed_Data)
-#Check imputed values
-imputed_Data$imp$Gender
-pdata_imputed <- complete(imputed_Data,5)
-```
-
-```{r}
 dim(pdata_imputed)
 dim(corrected_data1)
 ```
-
 
 ```{r}
 #Creating DGE List 
