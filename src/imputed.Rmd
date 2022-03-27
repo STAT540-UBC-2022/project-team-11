@@ -219,10 +219,9 @@ pheatmap(cormat, border_color = NA, annotation_col = annotation_column, cluster_
 #Setting up model matrix
 designMatrix1 = model.matrix(~Sars_test*Gender, data = pdata_imputed)
 colnames(designMatrix1)
-colnames(designMatrix1)
-designMatrix2 = model.matrix(~Sars_test*Gender + Batch, data = pdata_imputed)
+designMatrix2 = model.matrix(~Sars_test*Gender, data = pdata_imputed)
 colnames(designMatrix2)
-designMatrix3 = model.matrix(~Age_category*Gender + Batch, data = pdata_imputed)
+designMatrix3 = model.matrix(~Age_category*Gender, data = pdata_imputed)
 colnames(designMatrix3)
 #designMatrix1 <- designMatrix1[, c(-32, -33,-36, -37, -38, -39,-42, -43, -44)]
 ```
