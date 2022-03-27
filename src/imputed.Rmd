@@ -130,6 +130,16 @@ pdata_imputed = as.data.frame(pdata.imp.1$ximp[,1:6])
 pdata_imputed <- tibble::rownames_to_column(pdata_imputed, "Sample")
 ```
 
+## imputation with Knn 
+```{r}
+data$GenderNumeric <- as.numeric(data$Gender)
+imp <- preProcess(data, method = "knnImpute", k = 5)
+pdata_imputed <- predict(imp, data)
+pdata_imputed <- pdata_imputed[, -2]
+colnames(pdata_imputed)[colnames(pdata_imputed) == 'GenderNumeric'] <- 'Gender'
+```
+
+
 ```{r}
 #check our two dfs are in the same order
 identical(pdata_imputed$Sample, colnames(count_mat_final))
