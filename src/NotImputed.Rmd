@@ -176,6 +176,7 @@ colnames(designMatrix3)
 #designMatrix1 <- designMatrix1[, c(-32, -33,-36, -37, -38, -39,-42, -43, -44)]
 ```
 
+
 ```{r}
 #Estimating dispersion parameters for each tag
 dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE) 
@@ -185,21 +186,12 @@ plotBCV(dge_disp1,  cex=0.5)
 lfit1 <- glmFit(dge_disp1, designMatrix1)
 lrt1 <- glmLRT(lfit1)
 
-deg_table <- lrt1$table
-
-updeg <- deg_table%>%
-  filter(logFC > 1 & PValue < 0.02)
-nrow(updeg)
-
-dndeg <- deg_table%>%
-  filter(logFC < -1 & PValue < 0.02)
-nrow(dndeg)
-
 #Filtering for up and downregulated genes
-lrt1_filter_upreg <- filter(lrt1$table, PValue < 0.05, logFC >1)
-dim(lrt1_filter_upreg)
-lrt1_filter_downreg <- filter(lrt1$table, PValue < 0.05, logFC < -1)
-dim(lrt1_filter_downreg)
+deg_1 <- topTags(lrt1, n = Inf, p.value = 0.05)$table
+up_1 <- deg_1[deg_1$logFC > 0,]
+nrow(up_1)
+down_1 <- deg_1[deg_1$logFC < 0,]
+nrow(down_1)
 ```
 
 ```{r}
@@ -211,21 +203,12 @@ plotBCV(dge_disp1,  cex=0.5)
 lfit2 <- glmFit(dge_disp2, designMatrix2)
 lrt2 <- glmLRT(lfit2)
 
-deg_table2 <- lrt2$table
-
-updeg2 <- deg_table2%>%
-  filter(logFC > 1 & PValue < 0.02)
-nrow(updeg2)
-
-dndeg2 <- deg_table2%>%
-  filter(logFC < -1 & PValue < 0.02)
-nrow(dndeg2)
-
 #Filtering for up and downregulated genes
-lrt2_filter_upreg2 <- filter(lrt2$table, PValue < 0.05, logFC >1)
-dim(lrt2_filter_upreg)
-lrt2_filter_downreg <- filter(lrt2$table, PValue < 0.05, logFC < -1)
-dim(lrt2_filter_downreg)
+deg_2 <- topTags(lrt2, n = Inf, p.value = 0.05)$table
+up_2 <- deg_2[deg_2$logFC > 0,]
+nrow(up_2)
+down_2 <- deg_2[deg_2$logFC < 0,]
+nrow(down_2)
 ```
 
 ```{r}
@@ -237,19 +220,34 @@ plotBCV(dge_disp3,  cex=0.5)
 lfit3 <- glmFit(dge_disp3, designMatrix3)
 lrt3 <- glmLRT(lfit3)
 
-deg_table3 <- lrt3$table
-
-upreg3 <- deg_table3%>%
-  filter(logFC > 1 & PValue < 0.02)
-nrow(upreg3)
-
-dnreg3 <- deg_table3%>%
-  filter(logFC < -1 & PValue < 0.02)
-nrow(dnreg3)
-
 #Filtering for up and downregulated genes
-lrt3_filter_upreg <- filter(lrt3_filter_upreg$table, PValue < 0.05, logFC >1)
-dim(lrt3_filter_upreg)
-lrt3_filter_downreg <- filter(lrt3$table, PValue < 0.05, logFC < -1)
-dim(lrt3_filter_downreg)
+deg_3 <- topTags(lrt3, n = Inf, p.value = 0.05)$table
+up_3 <- deg_3[deg_3$logFC > 0,]
+nrow(up_3)
+down_3 <- deg_3[deg_3$logFC < 0,]
+nrow(down_3)
+```
+
+```{r}
+#Matrix with Sars_test and Gender interaction terms
+de1 <- decideTestsDGE(lrt1, adjust.method="BH", p.value = 0.05)
+de1tags <- rownames(dge_disp1)[as.logical(de1)]
+plotSmear(lrt1, de.tags=de1tags)
+de1_summary <- summary(de1)
+de1_summary
+
+#Matrix with Sars_test and age_category interaction terms
+de2 <- decideTestsDGE(lrt2, adjust.method="BH", p.value = 0.05)
+de2tags <- rownames(dge_disp2)[as.logical(de2)]
+plotSmear(lrt2, de.tags=de2tags)
+de2_summary <- summary(de2)
+de2_summary
+
+#Matrix with Gender and age_category interaction terms
+de3 <- decideTestsDGE(lrt3, adjust.method="BH", p.value = 0.05)
+de3tags <- rownames(dge_disp3)[as.logical(de3)]
+plotSmear(lrt3, de.tags=de3tags)
+de3_summary <- summary(de3)
+de3_summary
+
 ```
