@@ -1,7 +1,7 @@
 ---
 output: github_document
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 # Load packages
@@ -145,16 +145,10 @@ dim(count_mat_final)
 length(Batches)
 
 corrected_data1 <- ComBat_seq(counts = count_mat_final, batch = Batches, group = cov_test )
-#corrected_data1 <- count_mat_final
 
 dim(count_mat_final)
 dim(corrected_data1)
-
-```
-
-```{r}
 dim(pdata_imputed)
-dim(corrected_data1)
 ```
 
 ```{r}
@@ -167,7 +161,6 @@ head(apply(dge$counts, 2, sum)) # total gene counts per sample
 keep_edge <- rowSums(cpm(dge)>10) >= 2
 dge_mod <- dge[keep_edge,]
 dim(dge_mod)
-
 ```
 
 
@@ -224,9 +217,14 @@ pheatmap(cormat, border_color = NA, annotation_col = annotation_column, cluster_
 
 ```{r}
 #Setting up model matrix
-designMatrix1 = model.matrix(~Sars_test*Gender*Age_category, data = pdata_imputed)
+designMatrix1 = model.matrix(~Sars_test*Gender, data = pdata_imputed)
 colnames(designMatrix1)
-designMatrix1 <- designMatrix1[, c(-11, -14)]
+colnames(designMatrix1)
+designMatrix2 = model.matrix(~Sars_test*Gender + Batch, data = pdata_mod)
+colnames(designMatrix2)
+designMatrix3 = model.matrix(~Age_category*Gender + Batch, data = pdata_mod)
+colnames(designMatrix3)
+#designMatrix1 <- designMatrix1[, c(-32, -33,-36, -37, -38, -39,-42, -43, -44)]
 ```
 
 ```{r}
@@ -240,12 +238,38 @@ lrt1 <- glmLRT(lfit1)
 
 deg_table <- lrt1$table
 
-updeg <- deg_table%>%
+upreg <- deg_table%>%
   filter(logFC > 1 & PValue < 0.02)
 nrow(updeg)
 
-dndeg <- deg_table%>%
+dnreg <- deg_table%>%
   filter(logFC < -1 & PValue < 0.02)
 nrow(dndeg)
 
+```
+
+```{r}
+#Estimating dispersion parameters for each tag
+dge_disp2 <- estimateDisp(dge_norm, designMatrix2, robust = TRUE) 
+range(dge_disp1$prior.df)
+plotBCV(dge_disp1,  cex=0.5)
+
+lfit2 <- glmFit(dge_disp2, designMatrix2)
+lrt2 <- glmLRT(lfit2)
+
+deg_table2 <- lrt2$table
+
+updeg2 <- deg_table2%>%
+  filter(logFC > 1 & PValue < 0.02)
+nrow(updeg2)
+
+dndeg2 <- deg_table2%>%
+  filter(logFC < -1 & PValue < 0.02)
+nrow(dndeg2)
+
+#Filtering for up and downregulated genes
+lrt2_filter_upreg2 <- filter(lrt2$table, PValue < 0.05, logFC >1)
+dim(lrt2_filter_upreg)
+lrt2_filter_downreg <- filter(lrt2$table, PValue < 0.05, logFC < -1)
+dim(lrt2_filter_downreg)
 ```
