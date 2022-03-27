@@ -1,7 +1,7 @@
 ---
 output: github_document
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 # Load packages
@@ -137,6 +137,7 @@ imp <- preProcess(data, method = "knnImpute", k = 5)
 pdata_imputed <- predict(imp, data)
 pdata_imputed <- pdata_imputed[, -2]
 colnames(pdata_imputed)[colnames(pdata_imputed) == 'GenderNumeric'] <- 'Gender'
+pdata_imputed <- tibble::rownames_to_column(pdata_imputed, "Sample")
 ```
 
 
