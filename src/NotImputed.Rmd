@@ -227,3 +227,29 @@ dim(lrt2_filter_upreg)
 lrt2_filter_downreg <- filter(lrt2$table, PValue < 0.05, logFC < -1)
 dim(lrt2_filter_downreg)
 ```
+
+```{r}
+#Estimating dispersion parameters for each tag
+dge_disp3 <- estimateDisp(dge_norm, designMatrix3, robust = TRUE) 
+range(dge_disp3$prior.df)
+plotBCV(dge_disp3,  cex=0.5)
+
+lfit3 <- glmFit(dge_disp3, designMatrix3)
+lrt3 <- glmLRT(lfit3)
+
+deg_table3 <- lrt3$table
+
+upreg3 <- deg_table3%>%
+  filter(logFC > 1 & PValue < 0.02)
+nrow(upreg3)
+
+dnreg3 <- deg_table3%>%
+  filter(logFC < -1 & PValue < 0.02)
+nrow(dnreg3)
+
+#Filtering for up and downregulated genes
+lrt3_filter_upreg <- filter(lrt3_filter_upreg$table, PValue < 0.05, logFC >1)
+dim(lrt3_filter_upreg)
+lrt3_filter_downreg <- filter(lrt3$table, PValue < 0.05, logFC < -1)
+dim(lrt3_filter_downreg)
+```
