@@ -23,6 +23,7 @@ suppressPackageStartupMessages(library(mice))
 suppressPackageStartupMessages(library(VIM))
 suppressPackageStartupMessages(library(sva))
 suppressPackageStartupMessages(library(missForest))
+suppressPackageStartupMessages(library(RANN))
 ```
 
 
@@ -252,6 +253,7 @@ up_1 <- deg_1[deg_1$logFC > 0,]
 nrow(up_1)
 down_1 <- deg_1[deg_1$logFC < 0,]
 nrow(down_1)
+
 ```
 
 ```{r}
@@ -310,5 +312,91 @@ plotSmear(lrt3, de.tags=de3tags)
 de3_summary <- summary(de3)
 de3_summary
 
+```
+
+## GO Analysis
+
+```{r}
+# Prepare DEG list for goseq analysis
+deg_1_vec <- deg_1 %>%
+  rownames_to_column("gene_id") %>% 
+    filter(!is.na(gene_id)) %>% 
+  arrange(PValue) %>% 
+    as.data.table %>% 
+    (function(.dt) { .dt[, head(.SD,1), by = .(gene_id)] }) %>% 
+    mutate(v = as.integer(PValue < 0.05)) %>%
+    (function(.dt) { v <- .dt$v; names(v) <- .dt$gene_id; v })
+
+# What does deg_1_vec look like?
+head(deg_1_vec)
+tail(deg_1_vec)
+
+# Estimate gene-level weights (a null distribution of gene lengths)
+pwf_deg_1 <- goseq::nullp(deg_1_vec,"hg19","geneSymbol")
+
+# Run goseq analysis
+goseq_results <- goseq::goseq(pwf_deg_1,"hg19","geneSymbol")
+
+# Print top 10 rows of goseq_results
+head(goseq_results, 10) %>%
+    mutate(over_represented_pvalue = num.sci(over_represented_pvalue)) %>% 
+    knitr::kable()
+
+```
+
+
+```{r}
+# Prepare DEG list for goseq analysis
+deg_2_vec <- deg_2 %>%
+  rownames_to_column("gene_id") %>% 
+    filter(!is.na(gene_id)) %>% 
+  arrange(PValue) %>% 
+    as.data.table %>% 
+    (function(.dt) { .dt[, head(.SD,1), by = .(gene_id)] }) %>% 
+    mutate(v = as.integer(PValue < 0.05)) %>%
+    (function(.dt) { v <- .dt$v; names(v) <- .dt$gene_id; v })
+
+# What does deg_2_vec look like?
+head(deg_2_vec)
+tail(deg_2_vec)
+
+# Estimate gene-level weights (a null distribution of gene lengths)
+pwf_deg_2 <- goseq::nullp(deg_2_vec,"hg19","geneSymbol")
+
+# Run goseq analysis
+goseq_results2 <- goseq::goseq(pwf_deg_2,"hg19","geneSymbol")
+
+# Print top 10 rows of goseq_results
+head(goseq_results2, 10) %>%
+    mutate(over_represented_pvalue = num.sci(over_represented_pvalue)) %>% 
+    knitr::kable()
+```
+
+
+```{r}
+# Prepare DEG list for goseq analysis
+deg_3_vec <- deg_3 %>%
+  rownames_to_column("gene_id") %>% 
+    filter(!is.na(gene_id)) %>% 
+  arrange(PValue) %>% 
+    as.data.table %>% 
+    (function(.dt) { .dt[, head(.SD,1), by = .(gene_id)] }) %>% 
+    mutate(v = as.integer(PValue < 0.05)) %>%
+    (function(.dt) { v <- .dt$v; names(v) <- .dt$gene_id; v })
+
+# What does deg_3_vec look like?
+head(deg_3_vec)
+tail(deg_3_vec)
+
+# Estimate gene-level weights (a null distribution of gene lengths)
+pwf_deg_3 <- goseq::nullp(deg_3_vec,"hg19","geneSymbol")
+
+# Run goseq analysis
+goseq_results3 <- goseq::goseq(pwf_deg_3,"hg19","geneSymbol")
+
+# Print top 10 rows of goseq_results
+head(goseq_results3, 10) %>%
+    mutate(over_represented_pvalue = num.sci(over_represented_pvalue)) %>% 
+    knitr::kable()
 ```
 
