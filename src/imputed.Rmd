@@ -1,7 +1,7 @@
 ---
 output: github_document
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 # Load packages
@@ -24,6 +24,11 @@ suppressPackageStartupMessages(library(VIM))
 suppressPackageStartupMessages(library(sva))
 suppressPackageStartupMessages(library(missForest))
 suppressPackageStartupMessages(library(RANN))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(goseq))
+suppressPackageStartupMessages(library(GOplot))
+suppressPackageStartupMessages(library(clusterProfiler))
+suppressPackageStartupMessages(library(org.Hs.eg.db))
 ```
 
 
@@ -128,16 +133,6 @@ pdata.imp.1$OOBerror
 
 #Extract imputed metadata
 pdata_imputed = as.data.frame(pdata.imp.1$ximp[,1:6])
-pdata_imputed <- tibble::rownames_to_column(pdata_imputed, "Sample")
-```
-
-## imputation with Knn 
-```{r}
-data$GenderNumeric <- as.numeric(data$Gender)
-imp <- preProcess(data, method = "knnImpute", k = 5)
-pdata_imputed <- predict(imp, data)
-pdata_imputed <- pdata_imputed[, -2]
-colnames(pdata_imputed)[colnames(pdata_imputed) == 'GenderNumeric'] <- 'Gender'
 pdata_imputed <- tibble::rownames_to_column(pdata_imputed, "Sample")
 ```
 
@@ -248,7 +243,7 @@ lfit1 <- glmFit(dge_disp1, designMatrix1)
 lrt1 <- glmLRT(lfit1)
 
 #Filtering for up and downregulated genes
-deg_1 <- topTags(lrt1, n = Inf, p.value = 0.05)$table
+deg_1 <- topTags(lrt1, n = Inf, sort.by = "logFC", p.value = 0.05)$table
 up_1 <- deg_1[deg_1$logFC > 0,]
 nrow(up_1)
 down_1 <- deg_1[deg_1$logFC < 0,]
@@ -266,7 +261,7 @@ lfit2 <- glmFit(dge_disp2, designMatrix2)
 lrt2 <- glmLRT(lfit2)
 
 #Filtering for up and downregulated genes
-deg_2 <- topTags(lrt2, n = Inf, p.value = 0.05)$table
+deg_2 <- topTags(lrt2, n = Inf, sort.by = "logFC", p.value = 0.05)$table
 up_2 <- deg_2[deg_2$logFC > 0,]
 nrow(up_2)
 down_2 <- deg_2[deg_2$logFC < 0,]
@@ -283,7 +278,7 @@ lfit3 <- glmFit(dge_disp3, designMatrix3)
 lrt3 <- glmLRT(lfit3)
 
 #Filtering for up and downregulated genes
-deg_3 <- topTags(lrt3, n = Inf, p.value = 0.05)$table
+deg_3 <- topTags(lrt3, n = Inf, p.value = 0.05, sort.by = "logFC")$table
 up_3 <- deg_3[deg_3$logFC > 0,]
 nrow(up_3)
 down_3 <- deg_3[deg_3$logFC < 0,]
@@ -317,11 +312,19 @@ de3_summary
 ## GO Analysis
 
 ```{r}
+# Make function to convert numbers to scientific notation
+num.sci <- function(x) {
+    format(x, scientific=TRUE, digits = 2)
+  }
+```
+
+
+```{r}
 # Prepare DEG list for goseq analysis
-deg_1_vec <- deg_1 %>%
+deg_1_vec <- topTags(lrt1, n = Inf, sort.by = "logFC")$table %>%
   rownames_to_column("gene_id") %>% 
     filter(!is.na(gene_id)) %>% 
-  arrange(PValue) %>% 
+  arrange(desc(logFC)) %>% 
     as.data.table %>% 
     (function(.dt) { .dt[, head(.SD,1), by = .(gene_id)] }) %>% 
     mutate(v = as.integer(PValue < 0.05)) %>%
@@ -335,22 +338,34 @@ tail(deg_1_vec)
 pwf_deg_1 <- goseq::nullp(deg_1_vec,"hg19","geneSymbol")
 
 # Run goseq analysis
-goseq_results <- goseq::goseq(pwf_deg_1,"hg19","geneSymbol")
+goseq_results <- goseq::goseq(pwf_deg_1,"hg19","geneSymbol", test.cats = c("GO:BP"), method = "Wallenius", use_genes_without_cat = TRUE)
 
 # Print top 10 rows of goseq_results
 head(goseq_results, 10) %>%
     mutate(over_represented_pvalue = num.sci(over_represented_pvalue)) %>% 
     knitr::kable()
 
+# plot enrichment
+goseq_results %>% 
+    top_n(10, wt=-over_represented_pvalue) %>% 
+    mutate(hitsPerc=numDEInCat*100/numInCat) %>% 
+    ggplot(aes(x=hitsPerc, 
+               y=term, 
+               colour=over_represented_pvalue, 
+               size=numDEInCat)) +
+        geom_point() +
+        expand_limits(x=0) +
+        labs(x="Hits (%)", y="GO term", colour="p value", size="Count")
+
 ```
 
 
 ```{r}
 # Prepare DEG list for goseq analysis
-deg_2_vec <- deg_2 %>%
+deg_2_vec <- topTags(lrt2, n = Inf, sort.by = "logFC")$table %>%
   rownames_to_column("gene_id") %>% 
     filter(!is.na(gene_id)) %>% 
-  arrange(PValue) %>% 
+  arrange(desc(logFC)) %>% 
     as.data.table %>% 
     (function(.dt) { .dt[, head(.SD,1), by = .(gene_id)] }) %>% 
     mutate(v = as.integer(PValue < 0.05)) %>%
@@ -364,21 +379,33 @@ tail(deg_2_vec)
 pwf_deg_2 <- goseq::nullp(deg_2_vec,"hg19","geneSymbol")
 
 # Run goseq analysis
-goseq_results2 <- goseq::goseq(pwf_deg_2,"hg19","geneSymbol")
+goseq_results2 <- goseq::goseq(pwf_deg_2,"hg19","geneSymbol", test.cats = c("GO:BP"), method = "Wallenius", use_genes_without_cat = TRUE)
 
 # Print top 10 rows of goseq_results
 head(goseq_results2, 10) %>%
     mutate(over_represented_pvalue = num.sci(over_represented_pvalue)) %>% 
     knitr::kable()
+
+# plot enrichment
+goseq_results2 %>% 
+    top_n(10, wt=-over_represented_pvalue) %>% 
+    mutate(hitsPerc=numDEInCat*100/numInCat) %>% 
+    ggplot(aes(x=hitsPerc, 
+               y=term, 
+               colour=over_represented_pvalue, 
+               size=numDEInCat)) +
+        geom_point() +
+        expand_limits(x=0) +
+        labs(x="Hits (%)", y="GO term", colour="p value", size="Count")
 ```
 
 
 ```{r}
 # Prepare DEG list for goseq analysis
-deg_3_vec <- deg_3 %>%
+deg_3_vec <- topTags(lrt3, n = Inf, sort.by = "logFC")$table %>%
   rownames_to_column("gene_id") %>% 
     filter(!is.na(gene_id)) %>% 
-  arrange(PValue) %>% 
+  arrange(desc(logFC)) %>% 
     as.data.table %>% 
     (function(.dt) { .dt[, head(.SD,1), by = .(gene_id)] }) %>% 
     mutate(v = as.integer(PValue < 0.05)) %>%
@@ -392,11 +419,23 @@ tail(deg_3_vec)
 pwf_deg_3 <- goseq::nullp(deg_3_vec,"hg19","geneSymbol")
 
 # Run goseq analysis
-goseq_results3 <- goseq::goseq(pwf_deg_3,"hg19","geneSymbol")
+goseq_results3 <- goseq::goseq(pwf_deg_3,"hg19","geneSymbol", test.cats = c("GO:BP"), method = "Wallenius", use_genes_without_cat = TRUE)
 
 # Print top 10 rows of goseq_results
 head(goseq_results3, 10) %>%
     mutate(over_represented_pvalue = num.sci(over_represented_pvalue)) %>% 
     knitr::kable()
+
+# plot enrichment
+goseq_results3 %>% 
+    top_n(10, wt=-over_represented_pvalue) %>% 
+    mutate(hitsPerc=numDEInCat*100/numInCat) %>% 
+    ggplot(aes(x=hitsPerc, 
+               y=term, 
+               colour=over_represented_pvalue, 
+               size=numDEInCat)) +
+        geom_point() +
+        expand_limits(x=0) +
+        labs(x="Hits (%)", y="GO term", colour="p value", size="Count")
 ```
 
