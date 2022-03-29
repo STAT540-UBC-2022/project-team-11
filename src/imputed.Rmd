@@ -590,7 +590,7 @@ data_ml_train <- data_ml_train %>%
   mutate(status = as.numeric(case_when(
   Sars_test == "pos" ~ "1",
   Sars_test == "neg" ~ "0"
-  )))
+)))
 
 ## Training the classifier
 classifier = glm(formula = status ~ .,family = binomial, data = data_ml_train)
