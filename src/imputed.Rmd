@@ -474,9 +474,9 @@ goseq_results2 %>%
 ```{r}
 # Prepare DEG list for goseq analysis
 deg_3_vec <- topTags(lrt3, n = Inf, sort.by = "logFC")$table %>%
-  rownames_to_column("gene_id") %>% 
+    rownames_to_column("gene_id") %>% 
     filter(!is.na(gene_id)) %>% 
-  arrange(desc(logFC)) %>% 
+    arrange(desc(logFC)) %>% 
     as.data.table %>% 
     (function(.dt) { .dt[, head(.SD,1), by = .(gene_id)] }) %>% 
     mutate(v = as.integer(PValue < 0.05)) %>%
@@ -543,6 +543,30 @@ data_ml <- data_ml %>% remove_rownames %>% column_to_rownames(var="Sample")
 ```
 
 
+
+```{r}
+# Perform PCA
+pca_data_ml <- prcomp(data_ml[,-c(1, 2, 3)], 
+                              center = TRUE, 
+                              scale. = TRUE)
+# See what PCA result looks like
+summary(pca_data_ml)
+
+# What are the components of the PCA result
+str(pca_data_ml)
+
+# Visualize PCA result by gender
+ggbiplot(pca_data_ml, 
+         ellipse = TRUE, 
+         var.axes = FALSE,
+         obs.scale = 1,
+         var.scale = 1,
+         groups = data_ml$Sars_test) +
+  ggtitle("PCA of SARS-Cov2 gene expression by infection status") +
+  theme_bw()
+  
+```
+
 ### Data spliting 
 ```{r}
 set.seed(123)
@@ -559,4 +583,34 @@ train_scale <- scale(data_ml_train[, -])
 ## Naive Bayes model 
 
 ## Logistic regression model 
+
+```{r}
+## Our dataset has "pos" or 'neg" for the Sars_test status. Such labels are incompatible with logistic regression which requires labels to be 1 or 0
+data_ml_train <- data_ml_train %>% 
+  mutate(status = as.numeric(case_when(
+  Sars_test == "pos" ~ "1",
+  Sars_test == "neg" ~ "0"
+  )))
+
+## Training the classifier
+classifier = glm(formula = status ~ .,family = binomial, data = data_ml_train)
+
+## Sanity check! Look at coefficients - only PC3 is significant? 
+summary(classifier) 
+
+## Prediction on the validation set
+prob_pred = predict(classifier, type = 'response', newdata = test_set[-5]) ## Will return a vector of predicted probabilities of belong to infected (1) vs uninfected (0)
+
+## Since this is a classification problem, we do not want probabilities but instead either 1 or 0.
+y_pred = ifelse(prob_pred > 0.5, 1, 0) ## Will round the probabilities to 1 or 0
+
+## Checking how accurate our model is
+cm = table(test_set[, 5], y_pred) ## Will return a confusion matrix. We notice that 1 COVID 19 patient was misclassified as healthy and 3 healthy patients were misclassified as diseased.
+cm
+
+## will now calculate Accuracy, Sensitivity and Specificity 
+con_mat = confusionMatrix(cm, positive = "1")
+c(con_mat$overall["Accuracy"], con_mat$byClass["Sensitivity"], con_mat$byClass["Specificity"])
+
+```
 
