@@ -515,15 +515,44 @@ goseq_results3 %>%
 
 ## Part 1: Given RNA-seq data, could we predict covid? 
 
+### Data prep 
+```{r}
+deg3_mod <-  lrt3$table %>% 
+                  rownames_to_column("gene")
+
+log2cpm_dat <-  log2cpm %>% 
+                as.data.frame() %>% 
+                rownames_to_column("gene") %>% 
+                filter(gene %in% deg3_mod$gene) %>% 
+                pivot_longer(cols = !gene,
+                             values_to = "Expression",
+                             names_to = "sample_ID")
+
+log2cpm_dat <- dplyr::rename(log2cpm_dat, Sample = sample_ID)
+
+data_ml_temp <- log2cpm_dat %>% 
+           left_join(pdata_imputed, 
+                     by = "Sample") 
+
+data_ml <- pivot_wider(data_ml_temp, 
+                             id_cols = c(Sample, Age_category, Gender, Sars_test), 
+                             names_from = gene, 
+                             values_from = Expression)
+```
+
+
 ### Data spliting 
 ```{r}
 set.seed(123)
-split = sample.split(PCA_data_subset$status, SplitRatio = 0.80) 
-training_set = subset(PCA_data_subset, split == TRUE) ## Filter to get rows where split is TRUE
-test_set = subset(PCA_data_subset, split == FALSE) ## Filter to get rows where split is FALSE
+split = sample.split(data_ml$Sars_test, SplitRatio = 0.80) 
+data_ml_train = subset(data_ml, split == TRUE) ## Filter to get rows where split is TRUE
+data_ml_validate = subset(data_ml, split == FALSE) ## Filter to get rows where split is FALSE
 ```
 
 ## KNN model 
+```{r}
+
+```
 
 ## Naive Bayes model 
 
