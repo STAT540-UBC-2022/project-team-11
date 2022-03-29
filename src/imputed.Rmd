@@ -1,7 +1,7 @@
 ---
 output: github_document
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 # Load packages
@@ -52,8 +52,9 @@ pdata <- eset@phenoData@data %>% as_tibble()
 
 #Subset the metadata to include only columns of interest
 pdata_clean = pdata %>%
-  select(title, `age:ch1`, `gender:ch1`, `sequencing_batch:ch1`, `sars-cov-2 positivity:ch1`, `n1_ct:ch1`)
+  dplyr::select(title, `age:ch1`, `gender:ch1`, `sequencing_batch:ch1`, `sars-cov-2 positivity:ch1`, `n1_ct:ch1`)
 
+#Rename metadata columns
 colnames(pdata_clean) = c("Sample", "Age", "Gender", "Batch", "Sars_test", "Viral_load")
 
 pdata_clean <- within(pdata_clean, Age[Age == "90+"] <- "90")
@@ -70,6 +71,7 @@ pdata_mod = pdata_mod %>%
     Age >= 65 ~ "Senior"
   )) 
 
+#Exclude samples where the newly created column has NAs for Age categories
 pdata_mod <- pdata_mod[complete.cases(pdata_mod), ]
 
 #Convert all character variables of interest to factor type 
@@ -80,14 +82,15 @@ pdata_mod[convert] <- lapply(pdata_mod[convert], factor)
 ```{r}
 #Examine metadata
 table(pdata_mod$Gender)
-pdata_mod %>% select(-Sample, -Viral_load, -Age) %>%
+pdata_mod %>% 
+  dplyr::select(-Sample, -Viral_load, -Age) %>%
   ggpairs(aes(color=Sars_test, alpha=0.4), cardinality_threshold = 100)
 ```
 
 ```{r}
 # Extracting info about samples with unknown age
 data = pdata %>%
-       select(title, `age:ch1`) %>% 
+       dplyr::select(title, `age:ch1`) %>% 
        subset(`age:ch1` == "Unknown")
 
 drop <- data$title
@@ -116,7 +119,7 @@ counts_pdata <- pivot_wider(counts_pdata,
                              values_from = Expression) %>% 
                 column_to_rownames("Sample")
 
-#Modify data to convert all "Unknown/not collected" values to NAs to feed into the imputation function
+#Modify data to convert all "Unknown" values to NAs within the Gender column to feed into the imputation function
 data = counts_pdata
 data$Viral_load[data$Viral_load == "N/A"] <- 0
 data$Viral_load = as.numeric(data$Viral_load)
@@ -127,6 +130,7 @@ levels(data$Gender)[3] <- NA
 # Imputation with MissForest
 
 ```{r}
+#Data Imputation
 pdata.imp.1 <- missForest(data)
 table(pdata.imp.1$ximp$Gender)
 pdata.imp.1$OOBerror
@@ -186,6 +190,7 @@ log2cpm = log2(cpm + 1)
 ```
 
 ```{r}
+#Randomly sample positive and negative samples to plot a heatmap, density plots and box plot to view the trends within the dataset.
 ran_samp = pdata_mod %>%
            group_by(Sars_test) %>%
            sample_n(size = 10)
@@ -193,6 +198,7 @@ samples = ran_samp$Sample
 names.use <- colnames(log2cpm)[(colnames(log2cpm) %in% samples)]
 subset_data <- log2cpm[, names.use]
 
+#Convert the subset data to long format for ease in plotting
 longExpr = subset_data %>% 
            as.data.frame() %>% 
            rownames_to_column("gene") %>%
@@ -252,6 +258,32 @@ nrow(down_1)
 ```
 
 ```{r}
+#Comparing DE genes within samples between positive and negative samples in males and females
+up1 = tibble::rownames_to_column(up_1, "Gene")
+down1 = tibble::rownames_to_column(down_1, "Gene")
+up1 = subset(up1, select = c(1, 5))
+down1 = subset(down1, select = c(1, 5))
+deg1 = rbind(up1,down1)
+norm_deg1 = subset(dge_norm$counts, rownames(dge_norm) %in% deg1$Gene)
+longExpr = norm_deg1 %>% 
+           as.data.frame() %>% 
+           rownames_to_column("Gene") %>%
+           pivot_longer(cols = !Gene,
+                        values_to = "Expression",
+                        names_to = "Sample")
+longExpr = left_join(longExpr, dge_norm$samples, by="Sample")
+longExpr = left_join(deg1, longExpr, by = "Gene")
+
+
+
+#Box plot
+p = ggplot(longExpr, aes(x=Gender, y=Expression, fill=Sars_test)) + 
+    geom_boxplot() + facet_wrap(. ~ Gene) + scale_y_log10() + theme_bw() + scale_fill_discrete(name = "Test result") + labs(y = "Log10 Expression values", x = "Gender")
+
+p
+```
+
+```{r}
 #Estimating dispersion parameters for each tag
 dge_disp2 <- estimateDisp(dge_norm, designMatrix2, robust = TRUE) 
 range(dge_disp1$prior.df)
@@ -266,6 +298,37 @@ up_2 <- deg_2[deg_2$logFC > 0,]
 nrow(up_2)
 down_2 <- deg_2[deg_2$logFC < 0,]
 nrow(down_2)
+```
+
+```{r}
+#Comparing DE genes within samples between positive and negative samples in all age groups
+up2 = tibble::rownames_to_column(up_2, "Gene")
+down2 = tibble::rownames_to_column(down_2, "Gene")
+up2 = subset(up2, select = c(1, 5))
+down2 = subset(down2, select = c(1, 5))
+deg2 = rbind(up2,down2)
+norm_deg2 = subset(dge_norm$counts, rownames(dge_norm) %in% deg2$Gene)
+longExpr = norm_deg2 %>% 
+           as.data.frame() %>% 
+           rownames_to_column("Gene") %>%
+           pivot_longer(cols = !Gene,
+                        values_to = "Expression",
+                        names_to = "Sample")
+longExpr = left_join(longExpr, dge_norm$samples, by="Sample")
+longExpr = left_join(deg2, longExpr, by = "Gene")
+
+#Box plot
+p = longExpr %>%
+  mutate(Age_category=factor(Age_category, levels= c("Child", "Young Adult", "Adult", "Senior")))%>% ggplot(aes(x=Age_category, y=Expression, fill=Sars_test)) + 
+    geom_boxplot() + scale_y_log10() + theme_bw() + scale_fill_discrete(name = "Test result") + labs(y = "Log10 Expression values", x = "Gender") 
+p
+
+#Scatter plot
+p = longExpr %>%
+  mutate(Age_category=factor(Age_category, levels= c("Child", "Young Adult", "Adult", "Senior")))%>%
+  ggplot(aes(x=Age_category, y=Expression, colour = PValue)) + 
+    geom_boxplot() + scale_y_log10() + labs(y = "Log10 Expression values", x = "Age categories")
+p + scale_color_gradient(low="darkblue", high="red") + geom_point(alpha = 0.05, position=position_jitter(height=0.50, width=0.20)) + facet_wrap(~Sars_test, labeller = label_both) + theme_bw()
 ```
 
 ```{r}
