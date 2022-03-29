@@ -538,6 +538,8 @@ data_ml <- pivot_wider(data_ml_temp,
                              id_cols = c(Sample, Age_category, Gender, Sars_test), 
                              names_from = gene, 
                              values_from = Expression)
+
+data_ml <- data_ml %>% remove_rownames %>% column_to_rownames(var="Sample")
 ```
 
 
@@ -551,7 +553,7 @@ data_ml_validate = subset(data_ml, split == FALSE) ## Filter to get rows where s
 
 ## KNN model 
 ```{r}
-
+train_scale <- scale(data_ml_train[, -])
 ```
 
 ## Naive Bayes model 
