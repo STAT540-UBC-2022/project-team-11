@@ -29,6 +29,7 @@ suppressPackageStartupMessages(library(goseq))
 suppressPackageStartupMessages(library(GOplot))
 suppressPackageStartupMessages(library(clusterProfiler))
 suppressPackageStartupMessages(library(org.Hs.eg.db))
+suppressPackageStartupMessages(library(viridis))
 ```
 
 
@@ -418,8 +419,8 @@ goseq_results %>%
                size=numDEInCat)) +
         geom_point() +
         expand_limits(x=0) +
-        labs(x="Hits (%)", y="GO term", colour="p value", size="Count")
-
+        labs(x="Number of Genes", y="GO term", colour="p value", size="Count") +
+        scale_colour_viridis(option = "magma")
 ```
 
 
@@ -459,7 +460,8 @@ goseq_results2 %>%
                size=numDEInCat)) +
         geom_point() +
         expand_limits(x=0) +
-        labs(x="Hits (%)", y="GO term", colour="p value", size="Count")
+        labs(x="Number of Genes", y="GO term", colour="p value", size="Count") +
+        scale_colour_viridis(option = "magma")
 ```
 
 
@@ -499,7 +501,8 @@ goseq_results3 %>%
                size=numDEInCat)) +
         geom_point() +
         expand_limits(x=0) +
-        labs(x="Hits (%)", y="GO term", colour="p value", size="Count")
+        labs(x="Number of Genes", y="GO term", colour="p value", size="Count") +
+        scale_colour_viridis(option = "magma")
 ```
 
 # Machine learning analysis
