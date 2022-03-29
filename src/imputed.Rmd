@@ -439,3 +439,21 @@ goseq_results3 %>%
         labs(x="Hits (%)", y="GO term", colour="p value", size="Count")
 ```
 
+# Machine learning analysis
+
+## Part 1: Given RNA-seq data, could we predict covid? 
+
+### Data spliting 
+```{r}
+set.seed(123)
+split = sample.split(PCA_data_subset$status, SplitRatio = 0.80) 
+training_set = subset(PCA_data_subset, split == TRUE) ## Filter to get rows where split is TRUE
+test_set = subset(PCA_data_subset, split == FALSE) ## Filter to get rows where split is FALSE
+```
+
+## KNN model 
+
+## Naive Bayes model 
+
+## Logistic regression model 
+
