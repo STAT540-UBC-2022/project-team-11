@@ -278,9 +278,9 @@ longExpr = left_join(deg1, longExpr, by = "Gene")
 
 #Box plot
 p = ggplot(longExpr, aes(x=Gender, y=Expression, fill=Sars_test)) + 
-    geom_boxplot() + facet_wrap(. ~ Gene) + scale_y_log10() + theme_bw() + scale_fill_discrete(name = "Test result") + labs(y = "Log10 Expression values", x = "Gender")
+    geom_boxplot() + facet_wrap(. ~ Gene) + scale_y_log10() + theme_bw() + scale_fill_discrete(name = "Test result") + labs(y = "Log10 Expression values", x = "Gender") 
 
-p
+p 
 ```
 
 ```{r}
