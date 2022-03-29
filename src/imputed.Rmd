@@ -392,9 +392,9 @@ num.sci <- function(x) {
 ```{r}
 # Prepare DEG list for goseq analysis
 deg_1_vec <- topTags(lrt1, n = Inf, sort.by = "logFC")$table %>%
-  rownames_to_column("gene_id") %>% 
+    rownames_to_column("gene_id") %>% 
     filter(!is.na(gene_id)) %>% 
-  arrange(desc(logFC)) %>% 
+    arrange(desc(logFC)) %>% 
     as.data.table %>% 
     (function(.dt) { .dt[, head(.SD,1), by = .(gene_id)] }) %>% 
     mutate(v = as.integer(PValue < 0.05)) %>%
@@ -408,7 +408,7 @@ tail(deg_1_vec)
 pwf_deg_1 <- goseq::nullp(deg_1_vec,"hg19","geneSymbol")
 
 # Run goseq analysis
-goseq_results <- goseq::goseq(pwf_deg_1,"hg19","geneSymbol", test.cats = c("GO:BP"), method = "Wallenius", use_genes_without_cat = TRUE)
+goseq_results <- goseq::goseq(pwf_deg_1,"hg19","geneSymbol", test.cats = "GO:BP", method = "Wallenius", use_genes_without_cat = TRUE)
 
 # Print top 10 rows of goseq_results
 head(goseq_results, 10) %>%
@@ -433,9 +433,9 @@ goseq_results %>%
 ```{r}
 # Prepare DEG list for goseq analysis
 deg_2_vec <- topTags(lrt2, n = Inf, sort.by = "logFC")$table %>%
-  rownames_to_column("gene_id") %>% 
+    rownames_to_column("gene_id") %>% 
     filter(!is.na(gene_id)) %>% 
-  arrange(desc(logFC)) %>% 
+    arrange(desc(logFC)) %>% 
     as.data.table %>% 
     (function(.dt) { .dt[, head(.SD,1), by = .(gene_id)] }) %>% 
     mutate(v = as.integer(PValue < 0.05)) %>%
@@ -449,7 +449,7 @@ tail(deg_2_vec)
 pwf_deg_2 <- goseq::nullp(deg_2_vec,"hg19","geneSymbol")
 
 # Run goseq analysis
-goseq_results2 <- goseq::goseq(pwf_deg_2,"hg19","geneSymbol", test.cats = c("GO:BP"), method = "Wallenius", use_genes_without_cat = TRUE)
+goseq_results2 <- goseq::goseq(pwf_deg_2,"hg19","geneSymbol", test.cats = "GO:BP", method = "Wallenius", use_genes_without_cat = TRUE)
 
 # Print top 10 rows of goseq_results
 head(goseq_results2, 10) %>%
@@ -490,7 +490,7 @@ tail(deg_3_vec)
 pwf_deg_3 <- goseq::nullp(deg_3_vec,"hg19","geneSymbol")
 
 # Run goseq analysis
-goseq_results3 <- goseq::goseq(pwf_deg_3,"hg19","geneSymbol", test.cats = c("GO:BP"), method = "Wallenius", use_genes_without_cat = TRUE)
+goseq_results3 <- goseq::goseq(pwf_deg_3,"hg19","geneSymbol", test.cats = "GO:BP", method = "Wallenius", use_genes_without_cat = TRUE)
 
 # Print top 10 rows of goseq_results
 head(goseq_results3, 10) %>%
