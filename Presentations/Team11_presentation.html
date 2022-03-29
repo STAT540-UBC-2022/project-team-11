@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Host transcriptional response to SARS-Cov2 by Sex and Age.</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="  Ekpereka Amutaigwe, Credo Casmil, Dollina Dodani, Aditi Nallan " />
+    <meta name="date" content="2022-03-30" />
+    <script src="libs/header-attrs-2.13/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# <big><big>Host transcriptional response to SARS-Cov2 by Sex and Age.</big></big>
+### <br><font size=6> Ekpereka Amutaigwe, Credo Casmil, Dollina Dodani, Aditi Nallan </font>
+### <font size=6> 30 March 2022
+
+---
+
+
+
+
+
+
+
+&lt;style type="text/css"&gt;
+pre {
+  white-space: pre-wrap;
+}
+.remark-code {
+  background: #f8f8f8;
+}
+.remark-inline-code {
+  background: "white";
+}
+.remark-code {
+  font-size: 22px;
+}
+.huge .remark-code { /*Change made here*/
+  font-size: 200% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 60% !important;
+}
+.smaller .remark-code { /*Change made here*/
+  font-size: 90% !important;
+}
+.smaller2 .remark-code { /*Change made here*/
+  font-size: 80% !important;
+}
+.smaller3 .remark-code { /*Change made here*/
+  font-size: 70% !important;
+}
+&lt;/style&gt;
+
+
+# Background
+
+&lt;small&gt;
+- SARS-CoV-2, a novel coronavirus, has rapidly spread worldwide and has shown a wide range of clinical manifestations among different population groups.
+
+- Clinically, COVID-19 cases tend to be more severe for older adults and males
+
+- [Lieberman et al. (Plos Biology 2020)](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3000849) examined host response gene expression across infection status, viral load, age, and sex among shotgun RNA sequencing profiles of nasopharyngeal (NP) swabs from 430 individuals with PCR-confirmed SARS-CoV-2 and 54 negative controls.
+
+- Their study described gene signatures associated with Viral load extensively but the same analysis for Age and Sex was lacking. 
+
+&lt;/small&gt;
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="Heatmap_paper.png" alt="Figure from Lieberman et al. (Plos Biology 2020) paper" width="70%" /&gt;
+&lt;p class="caption"&gt;Figure from Lieberman et al. (Plos Biology 2020) paper&lt;/p&gt;
+&lt;/div&gt;
+
+---
+
+## Project Aim
+
+- Describe gene signatures associated with COVID infection by extending the original research to explore the interactive effects of age and sex on gene expression profiles.
+
+- Leverage these signatures in a Machine Learning model to predict infection state.
+
+---
+
+
+
+## Dataset
+
+- Obtained from Lieberman et al. (Plos Biology 2020) paper. 
+
+- This data was obtained in two separate files-
+
+  - **Main data file**: expression values - one per gene, per sample ( `\(G\)` genes `\(\times\)` `\(N\)` samples)
+  
+  - **Metadata file**: several covariates/experimental design variables for each sample ( `\(N\)` samples `\(\times\)` `\(P\)` covariates). This file was modified to retain only the columns of interest that is- Sample, Age, Sex, Batch, Viral load and Sars test result.
+
+
+```r
+# Expression matrix
+dim(c)
+```
+
+```
+## [1] 35784   484
+```
+
+```r
+# Metadata
+dim(m)
+```
+
+```
+## [1] 484   6
+```
+
+---
+
+# Metadata 
+
+
+```r
+summary(m)
+```
+
+```
+##     Sample               Age                 Gender      Viral_load   
+##  Length:484         Min.   : 2.0   F            :231   Min.   : 0.00  
+##  Class :character   1st Qu.:39.5   M            :200   1st Qu.:17.73  
+##  Mode  :character   Median :54.0   not collected: 53   Median :20.44  
+##                     Mean   :54.6                       Mean   :18.76  
+##                     3rd Qu.:70.5                       3rd Qu.:23.54  
+##                     Max.   :90.0                       Max.   :30.54  
+##                     NA's   :17                         NA's   :17     
+##  Sars_test     Batch    
+##  neg: 54   Q      : 57  
+##  pos:430   P      : 54  
+##            L      : 43  
+##            O      : 28  
+##            J      : 26  
+##            F      : 24  
+##            (Other):252
+```
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
