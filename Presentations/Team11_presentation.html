@@ -244,8 +244,8 @@ pdata.imp.1$OOBerror
 ```
 
 ```
-##      NRMSE        PFC 
-## 0.00000000 0.06264501
+##     NRMSE       PFC 
+## 0.0000000 0.0649652
 ```
 
 ```r
@@ -266,7 +266,7 @@ table(pdata_imputed$Gender)
 ```
 ## 
 ##   F   M 
-## 246 221
+## 247 220
 ```
 
 ---
@@ -343,22 +343,22 @@ dim(dge_mod)
 ]
 
 .pull-right[
-
-```r
-#Box plot
-longExpr %&gt;%
-  ggplot(aes(Sample, Expression)) + 
-    geom_boxplot() + 
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-```
-
-&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto 0 auto auto;" /&gt;
+&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-23-1.png" width="75%" style="display: block; margin: auto 0 auto auto;" /&gt;
 
 &lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto 0 auto auto;" /&gt;
 ]
 ---
 # Differential expression analyses using EdgeR
+&lt;small&gt;
+- Interaction terms: Age:Sars_test; Age:Sex; Sars_test:Sex
+&lt;small&gt;
 
+```r
+#Setting up model matrix
+designMatrix1 = model.matrix(~Sars_test*Gender, data = pdata_imputed)
+designMatrix2 = model.matrix(~Sars_test*Age_category, data = pdata_imputed)
+designMatrix3 = model.matrix(~Age_category*Gender, data = pdata_imputed)[, -6]
+```
 ---
 
     </textarea>
