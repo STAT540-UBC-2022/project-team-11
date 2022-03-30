@@ -387,8 +387,6 @@ annotation_column = data.frame(Infection_state = ran_samp$Sars_test,
                                Age = ran_samp$Age_category,
                                row.names = colnames(cormat))
 ```
-
-
 ]
 
 .pull-right[
@@ -492,13 +490,13 @@ abline(h=c(-1, 1), col="blue")
 ```
 
 
-```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="centre"out.height="50%"}
+```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="centre", out.height="50%"}
 plotMD(lrt2, main="Sars_test*Age_category")
 abline(h=c(-1, 1), col="blue")
 ```
 
 
-```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="left"out.height="50%"}
+```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="left", out.height="50%"}
 plotMD(lrt3, main="Age_category*Gender")
 abline(h=c(-1, 1), col="blue")
 ```
