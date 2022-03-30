@@ -120,13 +120,14 @@ suppressPackageStartupMessages(library(GOplot))
 suppressPackageStartupMessages(library(clusterProfiler))
 suppressPackageStartupMessages(library(org.Hs.eg.db))
 suppressPackageStartupMessages(library(viridis))
+suppressPackageStartupMessages(library(naniar))
 
 #set working directory
 setwd(getwd())
 
 #data download
 raw_counts = read.csv("../GSE152075/GSE152075_raw_counts_GEO.txt", sep = "")
-c = as.matrix(raw_counts,row.names="gene_id")
+count_mat = as.matrix(raw_counts,row.names="gene_id")
 
 #metadata
 pdata = read.csv("../GSE152075/Metadata.tsv", header = TRUE, sep = "\t")
@@ -143,10 +144,11 @@ convert = c("Gender", "Sars_test", "Batch")
 m[convert] <- lapply(m[convert], factor)
 m$Viral_load[m$Viral_load == "N/A"] <- 0
 m$Viral_load = as.numeric(m$Viral_load)
+levels(m$Gender)[3] <- NA
 ```
 
 ## Dataset
-
+<small>
 - Obtained from Lieberman et al. (Plos Biology 2020) paper. 
 
 - This data was obtained in two separate files-
@@ -154,10 +156,11 @@ m$Viral_load = as.numeric(m$Viral_load)
   - **Main data file**: expression values - one per gene, per sample ( $G$ genes $\times$ $N$ samples)
   
   - **Metadata file**: several covariates/experimental design variables for each sample ( $N$ samples $\times$ $P$ covariates). This file was modified to retain only the columns of interest that is- Sample, Age, Sex, Batch, Viral load and Sars test result.
+<small>  
 
 ```{r}
 # Expression matrix
-dim(c)
+dim(count_mat)
 # Metadata
 dim(m)
 ```
@@ -168,6 +171,151 @@ dim(m)
 
 ```{r}
 summary(m)
+```
+
+---
+
+# Visualization of missing data
+
+.pull-left[
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+# Plot missing data
+gg_miss_upset(m)
+```
+
+]
+
+.pull-right[
+```{r}
+#Check for percentage of missing data
+pct_miss(m)
+#Check for percent rows that have missing data
+pct_miss_case(m)
+```
+]
+
+---
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+pdata_mod = m %>%
+  mutate(Age_category =  case_when(
+    Age < 18 ~ "Child",
+    Age >= 18 & Age < 35 ~ "Young Adult",
+    Age >= 35 & Age < 65  ~ "Adult",
+    Age >= 65 ~ "Senior"
+  )) 
+pdata_mod <- pdata_mod[-c(414:430), ]
+data = m %>%
+       dplyr::select(Sample, Age) 
+
+data = subset(data[414:430,] )
+
+drop <- data$Sample
+
+#Removing samples that have unknown age from the count matrix
+count_mat_final  = count_mat[,!colnames(count_mat) %in% drop]
+pdata_mod$Age_category = as.factor(pdata_mod$Age_category)
+```
+
+# Data Manipulations
+<small>
+- Removed 17 samples from the study that did not have any associated metadata as observed previously. 
+- Added a new column to the sample metadata that groups the recorded ages into four categories of Child (<18), Young Adult (18 - 35), Adult (35 - 65) and Senior (>65). 
+<small>
+
+```{r}
+summary(pdata_mod)
+```
+
+---
+
+# Data Imputation
+<small> 
+- MissForest is a random forest imputation algorithm for missing data, implemented in `R` in the `missForest()` package.
+<small>
+
+```{r, echo=FALSE, out.width="60%", fig.show = 'hold', fig.cap = 'Figure from Stekhoven and Buhlmann, creators of the algorithm', fig.align="center"}
+knitr::include_graphics("MissForest_algorithm.png")
+```
+
+ 
+- **Advantages:**
+  - Can be applied to mixed data types (missings in numeric & categorical variables)
+  - Robust to noisy data
+  - Non-parametric: makes no assumptions about the relationship between the features, unlike MICE which assumes linearity.
+
+- **Disadvantages:** 
+  - Imputation time increases with the number of observations, predictors and number of predictors containing missing values
+  - It is an algorithm so it cannot be stored. This means it has to run each time missing data has to be imputed, which could be problematic in some production environments
+
+---
+
+# Data Imputation- Results
+
+<small>
+- After imputation, performance is assessed using the normalized root mean squared error for the continuous variables and proportion of falsely classified entries for categorical variables. 
+- In both cases, good performance leads to a value close to 0 and bad performance to a value around 1.
+<small>
+
+```{r, include=FALSE}
+# Convert raw counts data matrix to data frame
+count_mat_mod <- count_mat %>% 
+  as.data.frame() %>% 
+  rownames_to_column("gene_id")
+
+# Transform counts data to a long form for merging with metadata
+count_mat_mod <- count_mat_mod %>% 
+  pivot_longer(-gene_id, names_to = "Sample", values_to = "Expression")
+
+# Join raw counts to filtered metadata. This automatically drops samples in the counts data that are not in the filtered metadata
+counts_pdata <- pdata_mod %>% 
+  left_join(count_mat_mod, by = "Sample")
+
+# Transform data back to a wide format
+counts_pdata <- pivot_wider(counts_pdata,
+                             names_from = gene_id, 
+                             values_from = Expression) %>% 
+                column_to_rownames("Sample")
+
+#data = counts_pdata
+
+#Data Imputation
+pdata.imp.1 <- missForest(counts_pdata)
+
+#Extract imputed metadata
+pdata_imputed = as.data.frame(pdata.imp.1$ximp[,1:6])
+pdata_imputed <- tibble::rownames_to_column(pdata_imputed, "Sample")
+```
+
+```{r}
+#Checking for performance 
+pdata.imp.1$OOBerror
+#Checking gender column before and after imputation
+table(pdata_mod$Gender)
+table(pdata_imputed$Gender)
+```
+
+---
+
+# Batch correction using ComBat_seq
+
+<small>
+- ComBat_seq is an improved model from ComBat using negative binomial regression, which specifically targets RNA-Seq count data. 
+- ComBat-seq takes untransformed, raw count matrix as input. 
+- Same as ComBat, it requires a known batch variable.
+<small>
+
+```{r, include=FALSE}
+cov_test <- c(pdata_mod$Sars_test)
+Batches = c(pdata_mod$Batch)
+dim(count_mat_final)
+length(Batches)
+corrected_data1 <- ComBat_seq(counts = count_mat_final, batch = Batches, group = cov_test )
+```
+
+```{r}
+dim(count_mat_final)
+dim(corrected_data1)
 ```
 
 ---

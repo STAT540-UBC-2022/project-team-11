@@ -1,0 +1,468 @@
+Sample	Age	Gender	Batch	Sars_test	Viral_load	Age_category
+POS_001	64	M	I	pos	18.88	Adult
+POS_002	30	F	I	pos	21.18	Young Adult
+POS_003	47	M	I	pos	24.24	Adult
+POS_004	67	F	G	pos	18.91	Senior
+POS_005	62	M	H	pos	25.62	Adult
+POS_006	52	F	H	pos	25.61	Adult
+POS_007	39	M	G	pos	21.8735	Adult
+POS_008	59	F	I	pos	25.91	Adult
+POS_009	60	F	I	pos	21.85	Adult
+POS_010	71	M	I	pos	17.99	Senior
+POS_011	64	M	H	pos	18.63	Adult
+POS_012	45	F	I	pos	19.3	Adult
+POS_013	42	F	G	pos	19.7662	Adult
+POS_014	53	F	M	pos	19.47	Adult
+POS_015	86	F	G	pos	19.34	Senior
+POS_016	50	F	I	pos	23.95	Adult
+POS_017	65	F	H	pos	15.5	Senior
+POS_018	34	F	M	pos	25.5	Young Adult
+POS_019	67	M	M	pos	22.68	Senior
+POS_020	61	M	J	pos	15.2341	Adult
+POS_021	60	F	J	pos	23.8	Adult
+POS_022	23	M	H	pos	19.5	Young Adult
+POS_023	61	F	I	pos	16.66	Adult
+POS_024	33	F	I	pos	23.21	Young Adult
+POS_025	33	F	J	pos	17.64	Young Adult
+POS_026	24	M	J	pos	22.64	Young Adult
+POS_027	51	F	J	pos	17.31	Adult
+POS_028	25	M	J	pos	18.62	Young Adult
+POS_029	82	M	I	pos	24.54	Senior
+POS_030	72	F	H	pos	21.19	Senior
+POS_031	78	M	H	pos	19.17	Senior
+POS_032	72	M	H	pos	21.12	Senior
+POS_033	61	F	O	pos	15.92	Adult
+POS_034	68	F	O	pos	19.29	Senior
+POS_035	34	M	O	pos	24.63	Young Adult
+POS_036	75	M	O	pos	15.29	Senior
+POS_037	55	F	O	pos	23.92	Adult
+POS_039	46	F	Q	pos	13.28	Adult
+POS_040	27	F	Q	pos	21.52	Young Adult
+POS_041	31	F	Q	pos	23.83	Young Adult
+POS_042	51	M	Q	pos	21.64	Adult
+POS_043	46	F	Q	pos	16.06	Adult
+POS_044	51	M	Q	pos	21.76	Adult
+POS_045	71	F	Q	pos	20.07	Senior
+POS_046	88	M	Q	pos	20.6	Senior
+POS_047	71	F	Q	pos	18.4	Senior
+POS_048	41	M	Q	pos	17.92	Adult
+POS_049	51	M	Q	pos	20.54	Adult
+POS_050	53	M	Q	pos	25.22	Adult
+POS_051	52	F	Q	pos	25.09	Adult
+POS_052	80	F	Q	pos	14.96	Senior
+POS_053	37	F	Q	pos	14.48	Adult
+POS_055	51	M	Q	pos	19.85	Adult
+POS_056	41	F	Q	pos	24.2	Adult
+POS_057	64	F	Q	pos	24.65	Adult
+POS_058	28	F	Q	pos	24.73	Young Adult
+POS_059	37	M	Q	pos	19.6	Adult
+POS_060	62	F	Q	pos	19.35	Adult
+POS_061	78	F	E	pos	14.41	Senior
+POS_062	19	F	F	pos	14.29	Young Adult
+POS_063	76	M	E	pos	20.69	Senior
+POS_064	23	M	F	pos	20.33	Young Adult
+POS_065	30	M	F	pos	17.09	Young Adult
+POS_066	63	F	F	pos	25.64	Adult
+POS_067	75	F	F	pos	17.75	Senior
+POS_068	65	F	F	pos	19.71	Senior
+POS_069	21	F	F	pos	23.78	Young Adult
+POS_070	51	F	F	pos	21.55	Adult
+POS_071	72	M	F	pos	25.31	Senior
+POS_072	66	M	F	pos	20.55	Senior
+POS_073	57	M	F	pos	24.93	Adult
+POS_074	83	M	F	pos	21.11	Senior
+POS_075	56	M	I	pos	20.41	Adult
+POS_076	49	F	I	pos	20.24	Adult
+POS_077	44	F	F	pos	20.66	Adult
+POS_078	49	M	F	pos	18.45	Adult
+POS_079	57	F	I	pos	22.83	Adult
+POS_080	34	F	F	pos	25.69	Young Adult
+POS_081	57	M	F	pos	18.37	Adult
+POS_082	46	M	F	pos	18.09	Adult
+POS_083	26	M	F	pos	16.78	Young Adult
+POS_084	69	F	I	pos	20.75	Senior
+POS_085	56	F	O	pos	17.11	Adult
+POS_086	30	M	O	pos	21.4	Young Adult
+POS_087	58	F	O	pos	23.72	Adult
+POS_088	77	F	O	pos	15.04	Senior
+POS_089	33	F	O	pos	22.96	Young Adult
+POS_090	53	M	O	pos	23.85	Adult
+POS_092	56	F	O	pos	14.84	Adult
+POS_093	32	M	O	pos	14.96	Young Adult
+POS_094	44	M	O	pos	12.32	Adult
+POS_095	28	F	O	pos	20.32	Young Adult
+POS_096	46	F	O	pos	20.55	Adult
+POS_097	28	F	Q	pos	20.73	Young Adult
+POS_098	43	M	Q	pos	14.79	Adult
+POS_099	72	F	B	pos	28.78	Senior
+POS_100	54	F	C	pos	23.11	Adult
+POS_101	22	F	C	pos	27.8	Young Adult
+POS_102	64	M	B	pos	15.23	Adult
+POS_103	43	F	B	pos	18.31	Adult
+POS_104	59	M	B	pos	24.94	Adult
+POS_105	81	M	B	pos	25.49	Senior
+POS_106	54	M	B	pos	19.18	Adult
+POS_107	65	M	B	pos	23.01	Senior
+POS_108	67	F	B	pos	25.43	Senior
+POS_109	80	M	C	pos	22.34	Senior
+POS_111	43	F	B	pos	21.31	Adult
+POS_112	49	M	M	pos	17.81	Adult
+POS_113	53	M	L	pos	26.34	Adult
+POS_114	90	F	L	pos	23.51	Senior
+POS_115	38	F	L	pos	21.76	Adult
+POS_116	70	M	L	pos	23.53	Senior
+POS_117	38	M	L	pos	22.74	Adult
+POS_118	54	F	L	pos	16.84	Adult
+POS_119	66	F	L	pos	17.08	Senior
+POS_120	67	M	L	pos	21.93	Senior
+POS_121	36	M	L	pos	14.5	Adult
+POS_122	56	F	L	pos	20.18	Adult
+POS_123	41	F	L	pos	17.09	Adult
+POS_124	20	F	L	pos	19.56	Young Adult
+POS_125	51	M	L	pos	18.65	Adult
+POS_126	66	F	L	pos	19.08	Senior
+POS_127	35	F	M	pos	18.31	Adult
+POS_128	90	F	L	pos	16.46	Senior
+POS_129	47	F	M	pos	24.21	Adult
+POS_130	35	F	L	pos	16.43	Adult
+POS_131	27	M	M	pos	21.92	Young Adult
+POS_132	90	M	L	pos	19.92	Senior
+POS_133	29	F	L	pos	24.16	Young Adult
+POS_134	51	F	M	pos	20.59	Adult
+POS_135	50	F	L	pos	17.2	Adult
+POS_136	28	F	L	pos	25.86	Young Adult
+POS_137	30	M	N	pos	25.36	Young Adult
+POS_138	27	M	L	pos	26.01	Young Adult
+POS_139	48	F	N	pos	20.26	Adult
+POS_141	64	M	N	pos	24.59	Adult
+POS_142	80	M	L	pos	21.93	Senior
+POS_143	52	F	L	pos	14.55	Adult
+POS_144	44	M	P	pos	24.82	Adult
+POS_145	90	M	N	pos	17.57	Senior
+POS_146	41	M	P	pos	18.42	Adult
+POS_147	46	M	P	pos	22.14	Adult
+POS_148	63	F	P	pos	19.6	Adult
+POS_149	76	M	N	pos	22.39	Senior
+POS_150	30	F	P	pos	19.71	Young Adult
+POS_151	29	F	P	pos	22.03	Young Adult
+POS_152	41	M	N	pos	22.87	Adult
+POS_153	53	M	P	pos	24.15	Adult
+POS_154	20	M	P	pos	24.17	Young Adult
+POS_155	39	F	K	pos	18.21	Adult
+POS_156	25	F	H	pos	17.73	Young Adult
+POS_157	72	F	H	pos	21.79	Senior
+POS_158	27	F	L	pos	18.71	Young Adult
+POS_159	30	M	H	pos	25.34	Young Adult
+POS_160	82	F	H	pos	24.94	Senior
+POS_161	87	F	G	pos	24.8097	Senior
+POS_162	56	M	K	pos	18.93	Adult
+POS_163	70	M	H	pos	22.83	Senior
+POS_164	66	F	J	pos	20.2725	Senior
+POS_165	72	F	J	pos	19.637	Senior
+POS_166	50	M	H	pos	18.46	Adult
+POS_167	49	F	G	pos	24.4803	Adult
+POS_168	56	M	J	pos	16.5525	Adult
+POS_169	50	F	M	pos	23.54	Adult
+POS_170	52	F	L	pos	18.69	Adult
+POS_171	75	F	H	pos	20.73	Senior
+POS_172	90	F	M	pos	21.93	Senior
+POS_173	82	F	K	pos	24.78	Senior
+POS_174	30	M	J	pos	23.12	Young Adult
+POS_175	83	F	K	pos	15.17	Senior
+POS_176	21	F	L	pos	23.33	Young Adult
+POS_177	45	F	L	pos	22.53	Adult
+POS_178	64	M	L	pos	18.64	Adult
+POS_179	48	F	L	pos	20.91	Adult
+POS_180	76	M	G	pos	14.6424	Senior
+POS_181	37	M	G	pos	23.1274	Adult
+POS_182	90	F	G	pos	14.9152	Senior
+POS_183	50	M	J	pos	20.81	Adult
+POS_184	48	M	J	pos	22.8	Adult
+POS_185	90	M	Q	pos	20.11	Senior
+POS_186	40	F	Q	pos	22.54	Adult
+POS_187	31	F	Q	pos	15.64	Young Adult
+POS_188	22	F	Q	pos	19.94	Young Adult
+POS_189	61	M	Q	pos	25.25	Adult
+POS_190	24	F	Q	pos	22.54	Young Adult
+POS_191	67	M	Q	pos	20.33	Senior
+POS_192	37	F	Q	pos	22.94	Adult
+POS_193	51	M	Q	pos	24.16	Adult
+POS_194	83	F	Q	pos	19.38	Senior
+POS_195	39	M	Q	pos	18.81	Adult
+POS_196	41	M	Q	pos	16.24	Adult
+POS_197	48	F	Q	pos	20.99	Adult
+POS_198	26	F	Q	pos	21.36	Young Adult
+POS_199	79	F	Q	pos	18.32	Senior
+POS_200	62	M	Q	pos	20.92	Adult
+POS_201	76	M	Q	pos	20.38	Senior
+POS_202	44	M	Q	pos	25.59	Adult
+POS_203	57	F	Q	pos	20.42	Adult
+POS_204	72	M	Q	pos	18.15	Senior
+POS_205	59	F	Q	pos	22.36	Adult
+POS_206	60	M	Q	pos	24.67	Adult
+POS_207	76	F	Q	pos	21.44	Senior
+POS_208	32	F	Q	pos	20.23	Young Adult
+POS_209	66	M	Q	pos	20.48	Senior
+POS_210	65	M	Q	pos	18.29	Senior
+POS_211	33	F	Q	pos	22.97	Young Adult
+POS_212	72	M	Q	pos	19.08	Senior
+POS_213	12	M	Q	pos	23.81	Child
+POS_214	51	M	K	pos	23.9	Adult
+POS_215	80	M	M	pos	19.12	Senior
+POS_216	45	F	H	pos	24.03	Adult
+POS_217	57	F	G	pos	23.9381	Adult
+POS_218	57	M	J	pos	24.66	Adult
+POS_219	47	F	H	pos	23.38	Adult
+POS_220	86	F	H	pos	19.68	Senior
+POS_221	29	M	L	pos	16.18	Young Adult
+POS_222	33	M	H	pos	16.77	Young Adult
+POS_223	43	M	K	pos	21.34	Adult
+POS_224	31	F	H	pos	25.62	Young Adult
+POS_225	78	F	B	pos	27.24	Senior
+POS_226	79	F	B	pos	22.89	Senior
+POS_227	90	F	B	pos	19.13	Senior
+POS_228	81	M	B	pos	27.92	Senior
+POS_229	21	F	B	pos	21.27	Young Adult
+POS_230	71	M	B	pos	27.68	Senior
+POS_231	82	M	C	pos	29.69	Senior
+POS_232	41	M	C	pos	23.25	Adult
+POS_233	35	M	C	pos	24.18	Adult
+POS_234	58	F	C	pos	18.27	Adult
+POS_236	75	M	C	pos	18.22	Senior
+POS_237	77	F	C	pos	25.77	Senior
+POS_238	53	M	C	pos	14.43	Adult
+POS_239	70	F	C	pos	17.26	Senior
+POS_240	41	M	C	pos	16.71	Adult
+POS_241	59	M	D	pos	25.49	Adult
+POS_242	43	F	C	pos	17.66	Adult
+POS_243	22	M	D	pos	22.35	Young Adult
+POS_244	55	M	D	pos	22	Adult
+POS_245	67	F	C	pos	19.96	Senior
+POS_246	57	F	D	pos	26.91	Adult
+POS_247	71	F	D	pos	20.68	Senior
+POS_249	62	F	D	pos	25.17	Adult
+POS_250	64	M	C	pos	19.38	Adult
+POS_251	16	M	D	pos	18.35	Child
+POS_252	58	F	C	pos	20.37	Adult
+POS_253	37	F	D	pos	24.96	Adult
+POS_254	37	F	E	pos	22.57	Adult
+POS_255	56	M	E	pos	25.37	Adult
+POS_256	79	F	E	pos	25.18	Senior
+POS_257	49	F	N	pos	22.06	Adult
+POS_258	63	F	N	pos	14.8	Adult
+POS_259	58	M	N	pos	19.75	Adult
+POS_260	90	F	N	pos	19.91	Senior
+POS_261	79	F	N	pos	25.87	Senior
+POS_262	70	M	L	pos	21.66	Senior
+POS_263	35	M	P	pos	20.17	Adult
+POS_264	62	F	P	pos	26.2	Adult
+POS_265	57	M	P	pos	15.14	Adult
+POS_266	36	F	P	pos	17.7	Adult
+POS_267	41	F	P	pos	27.86	Adult
+POS_268	63	M	P	pos	19.13	Adult
+POS_269	61	F	P	pos	18.72	Adult
+POS_270	35	F	P	pos	20.27	Adult
+POS_271	57	F	P	pos	24	Adult
+POS_272	52	F	P	pos	20.86	Adult
+POS_273	45	M	P	pos	22.12	Adult
+POS_274	39	F	P	pos	26.78	Adult
+POS_275	30	M	P	pos	19.41	Young Adult
+POS_276	64	M	N	pos	25.65	Adult
+POS_277	57	M	P	pos	17.79	Adult
+POS_278	53	F	P	pos	21.29	Adult
+POS_279	57	M	P	pos	24.26	Adult
+POS_280	72	F	P	pos	19.11	Senior
+POS_281	23	M	P	pos	19.1	Young Adult
+POS_282	88	F	P	pos	24.87	Senior
+POS_283	90	F	P	pos	19.23	Senior
+POS_284	90	F	P	pos	24.47	Senior
+POS_285	60	F	P	pos	18.55	Adult
+POS_286	40	F	P	pos	20.31	Adult
+POS_287	90	M	P	pos	21.91	Senior
+POS_288	80	M	P	pos	19.74	Senior
+POS_289	19	F	O	pos	24.82	Young Adult
+POS_290	77	F	D	pos	25.24	Senior
+POS_291	76	F	D	pos	19.14	Senior
+POS_292	53	M	D	pos	16.7	Adult
+POS_293	58	M	E	pos	22.8	Adult
+POS_295	72	M	D	pos	21.34	Senior
+POS_296	71	M	D	pos	20.02	Senior
+POS_297	36	F	D	pos	17.85	Adult
+POS_298	49	M	E	pos	17.73	Adult
+POS_299	76	F	E	pos	21.19	Senior
+POS_300	70	M	E	pos	25.27	Senior
+POS_301	28	F	E	pos	16.6	Young Adult
+POS_302	32	M	E	pos	23.92	Young Adult
+POS_303	84	F	E	pos	22.292	Senior
+POS_304	90	F	E	pos	18.15	Senior
+POS_305	25	F	E	pos	21.77	Young Adult
+POS_306	70	F	E	pos	25.53	Senior
+POS_307	24	M	E	pos	18.56	Young Adult
+POS_308	48	F	F	pos	17.72	Adult
+POS_309	28	M	E	pos	20.29	Young Adult
+POS_310	40	M	F	pos	20.49	Adult
+POS_311	70	M	F	pos	25.37	Senior
+POS_312	58	F	E	pos	23.99	Adult
+POS_313	70	M	E	pos	18.92	Senior
+POS_314	89	M	E	pos	22.15	Senior
+POS_315	89	M	E	pos	15.87	Senior
+POS_316	52	F	F	pos	21.48	Adult
+POS_317	71	M	F	pos	23.35	Senior
+POS_318	48	M	E	pos	18.01	Adult
+POS_319	66	M	F	pos	23.8	Senior
+POS_320	65	M	E	pos	26.11	Senior
+POS_321	87	F	P	pos	21.64	Senior
+POS_322	78	F	P	pos	22.52	Senior
+POS_323	90	M	P	pos	20.02	Senior
+POS_324	39	M	P	pos	16.82	Adult
+POS_325	38	M	P	pos	16.41	Adult
+POS_326	58	M	P	pos	20.62	Adult
+POS_327	56	F	P	pos	19.81	Adult
+POS_328	85	M	P	pos	18.58	Senior
+POS_329	47	M	P	pos	20.36	Adult
+POS_330	51	M	P	pos	20.19	Adult
+POS_331	58	F	P	pos	21.39	Adult
+POS_332	42	M	P	pos	20.51	Adult
+POS_333	78	M	P	pos	20.24	Senior
+POS_334	56	F	P	pos	20.44	Adult
+POS_335	39	F	O	pos	18.68	Adult
+POS_336	50	M	O	pos	19.39	Adult
+POS_337	63	M	O	pos	19.64	Adult
+POS_338	64	M	P	pos	15.28	Adult
+POS_339	22	M	P	pos	24.46	Young Adult
+POS_340	71	M	P	pos	20.13	Senior
+POS_341	80	F	P	pos	17.73	Senior
+POS_342	32	F	O	pos	22.4	Young Adult
+POS_343	85	M	P	pos	23.08	Senior
+POS_344	56	F	P	pos	22.38	Adult
+POS_345	71	F	O	pos	24.65	Senior
+POS_346	61	F	P	pos	22.25	Adult
+POS_347	50	F	O	pos	23.89	Adult
+POS_348	28	F	O	pos	17.61	Young Adult
+POS_349	40	M	O	pos	23.59	Adult
+POS_350	84	F	O	pos	25.93	Senior
+POS_351	24	F	O	pos	18.53	Young Adult
+POS_352	60	F	O	pos	13.7	Adult
+POS_353	28	M	A	pos	29.44	Young Adult
+POS_354	22	F	A	pos	27.61	Young Adult
+POS_355	90	F	A	pos	24.28	Senior
+POS_356	71	F	A	pos	21.8	Senior
+POS_357	74	M	A	pos	24.13	Senior
+POS_358	90	F	A	pos	24.28	Senior
+POS_359	81	F	A	pos	23.46	Senior
+POS_360	86	M	A	pos	29.13	Senior
+POS_361	90	F	A	pos	28.04	Senior
+POS_362	82	M	A	pos	16.43	Senior
+POS_363	90	M	A	pos	21.08	Senior
+POS_364	85	F	A	pos	22.03	Senior
+POS_365	70	F	A	pos	26.94	Senior
+POS_366	90	F	A	pos	30.54	Senior
+POS_367	85	F	A	pos	27.3	Senior
+POS_368	54	M	A	pos	27.47	Adult
+POS_369	58	M	A	pos	28.43	Adult
+POS_370	62	F	A	pos	27.95	Adult
+POS_371	78	M	A	pos	25.43	Senior
+POS_372	90	F	J	pos	16.57	Senior
+POS_373	39	M	G	pos	25.6408	Adult
+POS_374	45	F	J	pos	13.1299	Adult
+POS_375	57	M	J	pos	20.2351	Adult
+POS_376	28	F	J	pos	22.57	Young Adult
+POS_377	85	F	L	pos	22.82	Senior
+POS_378	90	M	M	pos	19.69	Senior
+POS_379	49	F	L	pos	17	Adult
+POS_380	55	M	H	pos	24.6	Adult
+POS_381	78	F	J	pos	24.39	Senior
+POS_382	77	M	K	pos	23.11	Senior
+POS_383	59	M	K	pos	23.86	Adult
+POS_384	47	M	G	pos	14.9203	Adult
+POS_385	58	F	J	pos	17.73	Adult
+POS_386	63	M	J	pos	24.33	Adult
+POS_387	55	F	J	pos	23.53	Adult
+POS_388	78	F	G	pos	21.9453	Senior
+POS_389	18	F	J	pos	21.46	Young Adult
+POS_390	44	F	J	pos	20.22	Adult
+POS_391	54	F	G	pos	21.197	Adult
+POS_392	41	F	G	pos	25.8747	Adult
+POS_393	33	F	J	pos	19.19	Young Adult
+POS_394	2	M	L	pos	25.34	Child
+POS_395	37	F	J	pos	17.09	Adult
+POS_396	72	M	J	pos	22.47	Senior
+POS_397	48	F	K	pos	22.81	Adult
+POS_398	75	F	M	pos	24.98	Senior
+POS_399	58	F	K	pos	19.43	Adult
+POS_400	82	F	M	pos	21.46	Senior
+POS_401	78	F	L	pos	25.46	Senior
+POS_402	81	M	M	pos	19.5	Senior
+POS_403	57	F	M	pos	16.46	Adult
+POS_404	74	M	L	pos	21.19	Senior
+POS_405	54	M	L	pos	21.02	Adult
+POS_406	50	M	L	pos	22.81	Adult
+POS_407	37	F	L	pos	17.9	Adult
+POS_408	38	M	L	pos	25.58	Adult
+POS_409	45	M	L	pos	22.09	Adult
+POS_410	78	M	M	pos	21.5	Senior
+POS_411	78	M	G	pos	21.8405	Senior
+POS_412	65	M	L	pos	19.11	Senior
+POS_413	42	F	N	pos	26.32	Adult
+POS_414	35	M	L	pos	19.44	Adult
+POS_415	35	M	M	pos	24.41	Adult
+POS_416	39	F	M	pos	23.88	Adult
+POS_417	48	M	Q	pos	19.18	Adult
+POS_418	42	M	Q	pos	25.43	Adult
+POS_419	53	M	Q	pos	20.99	Adult
+POS_420	61	F	Q	pos	17.56	Adult
+POS_421	51	M	Q	pos	21.58	Adult
+NEG_001	26	F	R	neg	0	Young Adult
+NEG_002	29	F	R	neg	0	Young Adult
+NEG_003	47	M	R	neg	0	Adult
+NEG_004	66	M	R	neg	0	Senior
+NEG_005	51	M	R	neg	0	Adult
+NEG_006	45	M	R	neg	0	Adult
+NEG_007	13	M	R	neg	0	Child
+NEG_008	12	M	R	neg	0	Child
+NEG_009	35	F	R	neg	0	Adult
+NEG_010	64	M	R	neg	0	Adult
+NEG_011	23	F	R	neg	0	Young Adult
+NEG_012	60	M	R	neg	0	Adult
+NEG_013	76	F	R	neg	0	Senior
+NEG_014	90	M	C	neg	0	Senior
+NEG_016	29	F	U	neg	0	Young Adult
+NEG_018	65	F	S	neg	0	Senior
+NEG_019	22	F	S	neg	0	Young Adult
+NEG_020	30	F	S	neg	0	Young Adult
+NEG_021	79	M	S	neg	0	Senior
+NEG_022	22	F	S	neg	0	Young Adult
+NEG_023	63	F	S	neg	0	Adult
+NEG_024	74	F	S	neg	0	Senior
+NEG_025	38	F	S	neg	0	Adult
+NEG_026	45	F	S	neg	0	Adult
+NEG_027	51	M	T	neg	0	Adult
+NEG_028	55	M	T	neg	0	Adult
+NEG_030	23	F	T	neg	0	Young Adult
+NEG_031	52	F	U	neg	0	Adult
+NEG_032	71	F	U	neg	0	Senior
+NEG_035	66	F	U	neg	0	Senior
+NEG_036	40	F	U	neg	0	Adult
+NEG_037	22	F	U	neg	0	Young Adult
+NEG_038	63	F	U	neg	0	Adult
+NEG_039	66	F	U	neg	0	Senior
+NEG_040	30	M	U	neg	0	Young Adult
+NEG_042	55	M	U	neg	0	Adult
+NEG_043	72	M	U	neg	0	Senior
+NEG_046	44	M	S	neg	0	Adult
+NEG_047	52	F	S	neg	0	Adult
+NEG_048	43	M	U	neg	0	Adult
+NEG_049	54	M	U	neg	0	Adult
+NEG_050	54	M	U	neg	0	Adult
+NEG_051	30	F	S	neg	0	Young Adult
+NEG_052	20	F	S	neg	0	Young Adult
+NEG_054	24	F	S	neg	0	Young Adult
+NEG_055	41	F	S	neg	0	Adult
+NEG_056	39	F	S	neg	0	Adult
+NEG_057	46	M	S	neg	0	Adult
+NEG_058	47	M	S	neg	0	Adult
+NEG_059	41	F	S	neg	0	Adult
+NEG_060	22	M	S	neg	0	Young Adult
+NEG_062	59	M	U	neg	0	Adult
+NEG_063	49	F	U	neg	0	Adult
+NEG_065	75	M	R	neg	0	Senior
