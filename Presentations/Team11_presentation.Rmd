@@ -464,7 +464,7 @@ nrow(down_3)
 ```
 ---
 # Differentially expressed genes
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 #Matrix with Sars_test and Gender interaction terms
 de1 <- decideTestsDGE(lrt1, adjust.method="BH", p.value = 0.05)
 de1tags <- rownames(dge_disp1)[as.logical(de1)]
