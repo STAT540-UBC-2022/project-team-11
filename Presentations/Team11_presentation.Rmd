@@ -506,7 +506,7 @@ abline(h=c(-1, 1), col="blue")
 ```
 
 
-```{r, echo=FALSE, out.width="80%", fig.show = 'hold', fig.align="right"}
+```{r, echo=FALSE, out.width="80%", fig.show = 'hold', fig.align="left"}
 plotMD(lrt3, main="Age_category:Gender")
 abline(h=c(-1, 1), col="blue")
 ```
