@@ -392,7 +392,7 @@ annotation_column = data.frame(Infection_state = ran_samp$Sars_test,
 ]
 
 .pull-right[
-```{r, fig.align='right', out.width="80%", echo=FALSE}
+```{r, fig.align='right', out.width="75%", echo=FALSE}
 #Box plot
 longExpr %>%
   ggplot(aes(Sample, Expression)) + 
@@ -416,5 +416,29 @@ designMatrix1 = model.matrix(~Sars_test*Gender, data = pdata_imputed)
 designMatrix2 = model.matrix(~Sars_test*Age_category, data = pdata_imputed)
 designMatrix3 = model.matrix(~Age_category*Gender, data = pdata_imputed)[, -6]
 ```
+
+<small>
+- Estimating dispersion and fitting to a generalized linear model
+  - Example: Interaction between Sars_test and Gender
+<small>
+```{r, warning=FALSE, message=FALSE}
+dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE) 
+lfit1 <- glmFit(dge_disp1, designMatrix1)
+lrt1 <- glmLRT(lfit1)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#Estimating dispersion parameters for each tag
+#Model 2: Sars_test:Age_category
+dge_disp2 <- estimateDisp(dge_norm, designMatrix2, robust = TRUE) 
+lfit2 <- glmFit(dge_disp2, designMatrix2)
+lrt2 <- glmLRT(lfit2)
+
+#Model 1: Age_category:Gender
+dge_disp3 <- estimateDisp(dge_norm, designMatrix3, robust = TRUE) 
+lfit3 <- glmFit(dge_disp3, designMatrix3)
+lrt3 <- glmLRT(lfit3)
+```
+
 ---
 
