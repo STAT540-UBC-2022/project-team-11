@@ -64,7 +64,7 @@ pre {
 
 - [Lieberman et al. (Plos Biology 2020)](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3000849) examined host response gene expression across infection status, viral load, age, and sex among shotgun RNA sequencing profiles of nasopharyngeal (NP) swabs from 430 individuals with PCR-confirmed SARS-CoV-2 and 54 negative controls.
 
-- Their study described gene signatures associated with Viral load extensively but the same analysis for Age and Sex was lacking. 
+- Their study mainly examined gene expression differences associated with Viral load but did not report these differences for Age and Sex. 
 
 &lt;/small&gt;
 
@@ -77,9 +77,9 @@ pre {
 
 ## Project Aim
 
-- Describe gene signatures associated with COVID infection by extending the original research to explore the interactive effects of age and sex on gene expression profiles.
+- Examine the statistical difference in gene expression profiles among SARS-CoV-2 infected patients by extending the original research to explore the interactive effects of age and sex.
 
-- Leverage these signatures in a Machine Learning model to predict infection state.
+- Leverage these differences in a Machine Learning model to predict infection state.
 
 ---
 
@@ -210,24 +210,21 @@ summary(pdata_mod)
 ---
 
 # Data Imputation
-&lt;small&gt; 
-- MissForest is a random forest imputation algorithm for missing data, implemented in `R` in the `missForest()` package.
-&lt;small&gt;
-
+ - MissForest is a random forest imputation algorithm for missing data, implemented in `R` in the `missForest()` package.
+ 
 &lt;div class="figure" style="text-align: center"&gt;
 &lt;img src="MissForest_algorithm.png" alt="Figure from Stekhoven and Buhlmann, creators of the algorithm" width="60%" /&gt;
 &lt;p class="caption"&gt;Figure from Stekhoven and Buhlmann, creators of the algorithm&lt;/p&gt;
 &lt;/div&gt;
-
  
-- **Advantages:**
+ - **Advantages:**
   - Can be applied to mixed data types (missings in numeric &amp; categorical variables)
   - Robust to noisy data
-  - Non-parametric: makes no assumptions about the relationship between the features, unlike MICE which assumes linearity.
+  - Non-parametric: makes no assumptions about the relationship between the features, unlike MICE.
 
 - **Disadvantages:** 
-  - Imputation time increases with the number of observations, predictors and number of predictors containing missing values
-  - It is an algorithm so it cannot be stored. This means it has to run each time missing data has to be imputed, which could be problematic in some production environments
+  - Imputation time increases with the number of observations, predictors and missing values
+  - Missing data is imputed in each run, which could be problematic in some production environments
 
 ---
 
@@ -248,7 +245,7 @@ pdata.imp.1$OOBerror
 
 ```
 ##      NRMSE        PFC 
-## 0.00000000 0.06438515
+## 0.00000000 0.07540603
 ```
 
 ```r
@@ -269,7 +266,7 @@ table(pdata_imputed$Gender)
 ```
 ## 
 ##   F   M 
-## 246 221
+## 247 220
 ```
 
 ---
@@ -281,6 +278,11 @@ table(pdata_imputed$Gender)
 - ComBat-seq takes untransformed, raw count matrix as input. 
 - Same as ComBat, it requires a known batch variable.
 &lt;small&gt;
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="ComBat-seq.png" alt="Figure from Zhang et al." width="50%" /&gt;
+&lt;p class="caption"&gt;Figure from Zhang et al.&lt;/p&gt;
+&lt;/div&gt;
 
 
 
