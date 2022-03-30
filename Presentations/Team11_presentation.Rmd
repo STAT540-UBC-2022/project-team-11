@@ -500,13 +500,13 @@ abline(h=c(-1, 1), col="blue")
 ```
 
 
-```{r, echo=FALSE, out.width="80%", fig.show = 'hold', fig.align="centre"}
+```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="centre"}
 plotMD(lrt2, main="Sars_test:Age_category")
 abline(h=c(-1, 1), col="blue")
 ```
 
 
-```{r, echo=FALSE, out.width="80%", fig.show = 'hold', fig.align="left"}
+```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="left"}
 plotMD(lrt3, main="Age_category:Gender")
 abline(h=c(-1, 1), col="blue")
 ```
