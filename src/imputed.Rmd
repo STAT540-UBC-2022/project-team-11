@@ -30,6 +30,7 @@ suppressPackageStartupMessages(library(GOplot))
 suppressPackageStartupMessages(library(clusterProfiler))
 suppressPackageStartupMessages(library(org.Hs.eg.db))
 suppressPackageStartupMessages(library(viridis))
+suppressPackageStartupMessages(library(MASS))
 ```
 
 
@@ -517,7 +518,9 @@ goseq_results3 %>%
 
 ### Data prep 
 ```{r}
-deg3_mod <-  lrt3$table %>% 
+deg3_mod <- topTags(lrt3, n = 800, sort.by = "logFC")$table
+
+deg3_mod <-  deg3_mod %>% 
                   rownames_to_column("gene")
 
 log2cpm_dat <-  log2cpm %>% 
@@ -586,31 +589,47 @@ train_scale <- scale(data_ml_train[, -])
 
 ```{r}
 ## Our dataset has "pos" or 'neg" for the Sars_test status. Such labels are incompatible with logistic regression which requires labels to be 1 or 0
-data_ml_train <- data_ml_train %>% 
-  mutate(status = as.numeric(case_when(
+data_ml_train_mod <- data_ml_train %>% 
+  mutate(Sars_test = as.factor(case_when(
   Sars_test == "pos" ~ "1",
   Sars_test == "neg" ~ "0"
-)))
+))) %>% 
+dplyr::rename(status = Sars_test)
+
+data_ml_validate_mod <- data_ml_validate %>% 
+  mutate(Sars_test = as.factor(case_when(
+  Sars_test == "pos" ~ "1",
+  Sars_test == "neg" ~ "0"
+))) %>% 
+dplyr::rename(status = Sars_test)
+
+null <- glm(status ~ 1, family = binomial(link = 'logit'), data = data_ml_train_mod)
+full <- glm(status ~ .,family = binomial(link = "logit"), data = data_ml_train_mod)
+
+# Stepwise regression
+null_full <- stepAIC(null, scope=list(lower=null, upper=full), direction="both")
+summary(null_full)
 
 ## Training the classifier
-classifier = glm(formula = status ~ .,family = binomial, data = data_ml_train)
+classifier <- glm(status ~ EFS + MTCO2P22 + EXOC5P1, data = data_ml_train_mod, family = binomial(link = "logit"))
 
 ## Sanity check! Look at coefficients - only PC3 is significant? 
 summary(classifier) 
 
 ## Prediction on the validation set
-prob_pred = predict(classifier, type = 'response', newdata = test_set[-5]) ## Will return a vector of predicted probabilities of belong to infected (1) vs uninfected (0)
+prob_pred = predict(classifier, type = 'response', newdata = data_ml_validate[-3]) ## Will return a vector of predicted probabilities of belong to infected (1) vs uninfected (0)
 
 ## Since this is a classification problem, we do not want probabilities but instead either 1 or 0.
 y_pred = ifelse(prob_pred > 0.5, 1, 0) ## Will round the probabilities to 1 or 0
 
 ## Checking how accurate our model is
-cm = table(test_set[, 5], y_pred) ## Will return a confusion matrix. We notice that 1 COVID 19 patient was misclassified as healthy and 3 healthy patients were misclassified as diseased.
+cm = table(data_ml_validate_mod[, 3], y_pred) ## Will return a confusion matrix. We notice that 1 COVID 19 patient was misclassified as healthy and 3 healthy patients were misclassified as diseased.
 cm
 
 ## will now calculate Accuracy, Sensitivity and Specificity 
 con_mat = confusionMatrix(cm, positive = "1")
 c(con_mat$overall["Accuracy"], con_mat$byClass["Sensitivity"], con_mat$byClass["Specificity"])
+
 
 ```
 
