@@ -244,8 +244,8 @@ pdata.imp.1$OOBerror
 ```
 
 ```
-##     NRMSE       PFC 
-## 0.0000000 0.0649652
+##      NRMSE        PFC 
+## 0.00000000 0.07192575
 ```
 
 ```r
@@ -266,7 +266,7 @@ table(pdata_imputed$Gender)
 ```
 ## 
 ##   F   M 
-## 247 220
+## 248 219
 ```
 
 ---
@@ -280,11 +280,11 @@ table(pdata_imputed$Gender)
 &lt;small&gt;
 
 .pull-left[
-&lt;img src="GeneWiseModel.png" width="70%" style="display: block; margin: auto 0 auto auto;" /&gt;
+&lt;img src="GeneWiseModel.png" width="65%" /&gt;
 ]
 
 .pull-right[
-&lt;img src="BatchFreeDist.png" width="65%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="BatchFreeDist.png" width="70%" style="display: block; margin: auto auto auto 0;" /&gt;
 ]
 
 
@@ -349,9 +349,9 @@ dim(dge_mod)
 ]
 ---
 # Differential expression analyses using EdgeR
-&lt;small&gt;
+
 - Interaction terms: Age:Sars_test; Age:Sex; Sars_test:Sex
-&lt;small&gt;
+
 
 ```r
 #Setting up model matrix
@@ -359,8 +359,81 @@ designMatrix1 = model.matrix(~Sars_test*Gender, data = pdata_imputed)
 designMatrix2 = model.matrix(~Sars_test*Age_category, data = pdata_imputed)
 designMatrix3 = model.matrix(~Age_category*Gender, data = pdata_imputed)[, -6]
 ```
----
 
+&lt;small&gt;
+- Estimating dispersion and fitting to a generalized linear model
+  - Example: Interaction between Sars_test and Gender
+&lt;small&gt;
+
+```r
+dge_disp1 &lt;- estimateDisp(dge_norm, designMatrix1, robust = TRUE) 
+lfit1 &lt;- glmFit(dge_disp1, designMatrix1)
+lrt1 &lt;- glmLRT(lfit1)
+```
+
+
+
+
+```
+## [1] 7
+```
+
+```
+## [1] 8
+```
+
+```
+## [1] 15
+```
+
+```
+## [1] 126
+```
+
+```
+## [1] 2
+```
+
+```
+## [1] 0
+```
+---
+# Differentially expressed genes
+&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-29-1.png" width="504" /&gt;
+
+```
+##        Sars_testpos:GenderM
+## Down                      8
+## NotSig                18879
+## Up                        7
+```
+
+&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-29-2.png" width="504" /&gt;
+
+```
+##        Sars_testpos:Age_categoryYoung Adult
+## Down                                    126
+## NotSig                                18753
+## Up                                       15
+```
+
+&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-29-3.png" width="504" /&gt;
+
+```
+##        Age_categoryYoung Adult:GenderM
+## Down                                 0
+## NotSig                           18892
+## Up                                   2
+```
+
+&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-30-1.png" width="66%" style="display: block; margin: auto 0 auto auto;" /&gt;
+
+
+&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-31-1.png" width="66%" /&gt;
+
+
+&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-32-1.png" width="66%" style="display: block; margin: auto auto auto 0;" /&gt;
+---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

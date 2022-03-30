@@ -392,15 +392,7 @@ annotation_column = data.frame(Infection_state = ran_samp$Sars_test,
 ]
 
 .pull-right[
-```{r, fig.align='right', out.width="75%", echo=FALSE}
-#Box plot
-longExpr %>%
-  ggplot(aes(Sample, Expression)) + 
-    geom_boxplot() + 
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-```
-
-```{r, echo=FALSE, out.width="80%", fig.show = 'hold', fig.align="right"}
+```{r, echo=FALSE, out.width="90%", fig.show = 'hold', fig.align="right"}
 #Plot heatmap
 pheatmap(cormat, border_color = NA, annotation_col = annotation_column, cluster_rows = TRUE, cellheight=9, cellwidth = 9)
 ```
@@ -494,20 +486,20 @@ de3_summary
 
 ```
 
-```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="right"}
-plotMD(lrt1, main="Sars_test:Gender")
+```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="right", out.height="50%"}
+plotMD(lrt1, main="Sars_test*Gender")
 abline(h=c(-1, 1), col="blue")
 ```
 
 
-```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="centre"}
-plotMD(lrt2, main="Sars_test:Age_category")
+```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="centre"out.height="50%"}
+plotMD(lrt2, main="Sars_test*Age_category")
 abline(h=c(-1, 1), col="blue")
 ```
 
 
-```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="left"}
-plotMD(lrt3, main="Age_category:Gender")
+```{r, echo=FALSE, out.width="66%", fig.show = 'hold', fig.align="left"out.height="50%"}
+plotMD(lrt3, main="Age_category*Gender")
 abline(h=c(-1, 1), col="blue")
 ```
 ---
