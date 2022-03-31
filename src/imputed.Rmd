@@ -31,6 +31,7 @@ suppressPackageStartupMessages(library(clusterProfiler))
 suppressPackageStartupMessages(library(org.Hs.eg.db))
 suppressPackageStartupMessages(library(viridis))
 suppressPackageStartupMessages(library(MASS))
+suppressPackageStartupMessages(library(class))
 ```
 
 
@@ -79,14 +80,6 @@ pdata_mod <- pdata_mod[complete.cases(pdata_mod), ]
 #Convert all character variables of interest to factor type 
 convert = c("Age_category", "Gender", "Sars_test", "Batch")
 pdata_mod[convert] <- lapply(pdata_mod[convert], factor)
-```
-
-```{r}
-#Examine metadata
-table(pdata_mod$Gender)
-pdata_mod %>% 
-  dplyr::select(-Sample, -Viral_load, -Age) %>%
-  ggpairs(aes(color=Sars_test, alpha=0.4), cardinality_threshold = 100)
 ```
 
 ```{r}
@@ -166,7 +159,7 @@ dim(dge)
 head(apply(dge$counts, 2, sum)) # total gene counts per sample
 
 #removing lowly expressed genes
-keep_edge <- rowSums(cpm(dge)>100) >= 50
+keep_edge <- rowSums(cpm(dge)>10) >= 2
 dge_mod <- dge[keep_edge,]
 dim(dge_mod)
 ```
@@ -227,7 +220,6 @@ pheatmap(cormat, border_color = NA, annotation_col = annotation_column, cluster_
 
 ```{r}
 #Setting up model matrix
-designMatrix = model.matrix(~Sars_test, data = pdata_imputed)
 designMatrix1 = model.matrix(~Sars_test*Gender, data = pdata_imputed)
 colnames(designMatrix1)
 designMatrix2 = model.matrix(~Sars_test*Age_category, data = pdata_imputed)
@@ -238,14 +230,6 @@ designMatrix3<- designMatrix3[, -6]
 ```
 
 ```{r}
-#Estimating dispersion parameters for each tag
-dge_disp <- estimateDisp(dge_norm, designMatrix, robust = TRUE) 
-range(dge_disp$prior.df)
-plotBCV(dge_disp,  cex=0.5)
-
-lfit <- glmFit(dge_disp, designMatrix)
-lrt <- glmLRT(lfit)
-
 #Estimating dispersion parameters for each tag
 dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE) 
 range(dge_disp1$prior.df)
@@ -328,13 +312,6 @@ p = longExpr %>%
   mutate(Age_category=factor(Age_category, levels= c("Child", "Young Adult", "Adult", "Senior")))%>% ggplot(aes(x=Age_category, y=Expression, fill=Sars_test)) + 
     geom_boxplot() + scale_y_log10() + theme_bw() + scale_fill_discrete(name = "Test result") + labs(y = "Log10 Expression values", x = "Gender") 
 p
-
-#Scatter plot
-p = longExpr %>%
-  mutate(Age_category=factor(Age_category, levels= c("Child", "Young Adult", "Adult", "Senior")))%>%
-  ggplot(aes(x=Age_category, y=Expression, colour = PValue)) + 
-    geom_boxplot() + scale_y_log10() + labs(y = "Log10 Expression values", x = "Age categories")
-p + scale_color_gradient(low="darkblue", high="red") + geom_point(alpha = 0.05, position=position_jitter(height=0.50, width=0.20)) + facet_wrap(~Sars_test, labeller = label_both) + theme_bw()
 ```
 
 ```{r}
