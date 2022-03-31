@@ -58,19 +58,19 @@ Applying a cutoff of |1| for the log fold change and adjust p-value of 0.05:
 
 To answer our second research question whether the differentially expressed genes are directly connected to immune response, we performed Gene Ontology analysis using top differentially expressed genes from the three design matrices. 
 
-+ Design matrix 1 (interaction between infection status and age):
+#### **Design matrix 1 (interaction between infection status and age):**
 
 We observed statistically significant enrichment of immune function terms and quite a number of genes associated with these functions.
 
 ![](../Results/Plots/GoSeq_2.png)
 
-+ Design matrix 2 (interaction between infection status and sex):
+#### **Design matrix 2 (interaction between infection status and sex):**
 
 We also observed statistically significant enrichment of immune function terms and a substantial amount of genes associated with these functions.
 
 ![](../Results/Plots/GoSeq_1.png)
 
-+ Design matrix 3 (interaction between age and sex):
+#### **Design matrix 3 (interaction between age and sex):**
 
 Immune function terms were not enriched.
 
