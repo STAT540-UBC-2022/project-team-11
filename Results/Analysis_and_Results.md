@@ -2,8 +2,11 @@
 
 ## Project aims 
 Using data published by Liberman et al, we wanted to answer:
+
 **1) What genes are significantly differentially expressed between the two groups (healthy and infected) while accounting for factors such as age and sex?**
+
 **2) Are the differentially expressed genes (identified in aim 1) directly connected to immune response?**
+
 **3) Could we leverage RNA-Seq data to predict infection status of an individual?**
 
 ## Data exploration and manipulation 
