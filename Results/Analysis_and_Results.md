@@ -56,7 +56,7 @@ Applying a cutoff of |1| for the log fold change and adjust p-value of 0.05:
 
 ## Gene Ontology analysis
 
-To answer our second research question whether the differentially expressed genes are directly connected to immune response, we performed Gene Ontology analysis using top differentially expressed genes from the three design matrices. 
+To answer our second research question of whether the differentially expressed genes are directly connected to immune response, we performed a Gene Ontology analysis using top differentially expressed genes from the three design matrices. 
 
 #### **Design matrix 1 (interaction between infection status and age):**
 
