@@ -60,13 +60,13 @@ To answer our second research question whether the differentially expressed gene
 
 #### **Design matrix 1 (interaction between infection status and age):**
 
-We observed statistically significant enrichment of immune function terms and quite a number of genes associated with these functions.
+We observed a statistically significant enrichment of immune function terms and several genes associated with these functions.
 
 ![](../Results/Plots/GoSeq_2.png)
 
 #### **Design matrix 2 (interaction between infection status and sex):**
 
-We also observed statistically significant enrichment of immune function terms and a substantial amount of genes associated with these functions.
+We also observed a statistically significant enrichment of immune function terms and a substantial amount of genes associated with these functions.
 
 ![](../Results/Plots/GoSeq_1.png)
 
