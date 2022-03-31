@@ -62,6 +62,7 @@ We trained two models for our classification problem:
 2) Logistic regression: This model assigns a probability (0 to 1) to an unknown sample of belonging to a class (infection status positive or negative). Since we had 102 explanatory variables, we were not able to cope with the computational burden. We then decided to perform feature selection analysis using step wise logistic regression. We build a null model and a full model consisting of a constant term and all genes, respectively. Using this, we identified 3 genes (EFS, MTCO2P22 and EXOC5P1) that significantly contributed to the classification (explained most of the variance in the data set). We used the `glm` function to fit our model. 
 
 **Model selection**
+
 The two models acquired the follwing accuracy metrics: 
 
 | Model         | Sensitivity   | Specificity  | Accuracy |
