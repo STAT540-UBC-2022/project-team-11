@@ -34,11 +34,11 @@ Using EdgeR, we generated three design matrices and identified the number of Dif
 
 - Interaction between infection status and age which resuted in 126 and 15 down and up DEGs, respectively.
 
-![](Results/Plots/MD_1.png)
+![](Results/Plots/MD_2.png)
 
 - Interaction between infection status and sex which resulted in 8 and 7 down and up DEGs, respectively. 
 
-![](Results/Plots/MD_2.png)
+![](Results/Plots/MD_1.png)
 
 - Interaction between age and sex which resulted in 0 and 2 down and up DEGs, respectively. 
 

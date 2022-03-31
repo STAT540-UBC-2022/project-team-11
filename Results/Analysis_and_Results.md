@@ -39,7 +39,7 @@ To answer our first question, we examined if interaction between infection statu
 
 - Matrix 1: `Age * infection status`.
 
-- Matrix 2: `Infection status * age`.
+- Matrix 2: `Infection status * Sex`.
 
 - Matrix 3: `Sex * Age`.
 
