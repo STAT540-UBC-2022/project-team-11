@@ -11,17 +11,42 @@ SARS-CoV2 has shown a wide range of clinical manifestions among different popula
 Using EdgeR, we generated three design matrices and identified the number of Differentially Expressed Genes (DEGs). The three design matrices examined:
 
 - Interaction between infection status and age which resuted in 126 and 15 down and up DEGs, respectively.
+
+![](Results/Plots/MD_1.png)
+
 - Interaction between infection status and sex which resulted in 8 and 7 down and up DEGs, respectively. 
+
+![](Results/Plots/MD_2.png)
+
 - Interaction between age and sex which resulted in 0 and 2 down and up DEGs, respectively. 
+
+![](Results/Plots/MD_3.png)
 
 **2) Are the differentially expressed genes (identified in aim 1) directly connected to immune response?**
 
-For each design matrix generated in aim 1, we conducted a 
+For each design matrix generated in aim 1, we conducted a GO ontology analysis to examine if the genes differentially expressed have an immune function.We noticed that while design matrices 1 (interaction between infection status and age) and 2 (interaction between infection status and sex) had genes directly related to immune response, matrix 3 (interaction between age and sex) consisted of no such genes. 
+
+- Design matrix 1:
+
+![](Results/Plots/GoSeq_1.png)
+
+- Design matrix 2:
+
+![](Results/Plots/GoSeq_2.png)
+
+- Design matrix 3:
+
+![](Results/Plots/GoSeq_3.png)
+
 
 **3) Could we leverage RNA-Seq data to predict infection status of an individual?**
 
+Using the genes identified using design matrix 3, we build two machine learning models (KNN and logistic regression) to predict the infection status of a patient given expression values (transcriptomic data. The two models had the following accuracy metrics. 
 
-
+ Model  | Sensitivity | Specificity | Accuracy  |
+| ------------- |:-------------:| -----:|
+| KNN |  0.943  | 1.00  | 0.947 |
+| Logistic regression | 0.965 | 1.00  | 0.968 |
 
 The repository is organized as follows: 
 
