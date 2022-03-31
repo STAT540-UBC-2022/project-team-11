@@ -10,13 +10,13 @@ SARS-CoV2 has shown a wide range of clinical manifestions among different popula
     * [Final presentation](Presentations/STAT540.pptx)
 
 * **Results**: Folder containing the results, summary figures and/or reports of our analysis 
-    * [Analysis and Results (Technical report)](Results/Analysis_and_Results.md)
+    * [Analysis and results (Technical report)](Results/Analysis_and_Results.md)
     * [Plots](Results/Plots)
 
 * **Reports**: Folder containing the project proposal and progress report deliverables
-    * [Initial Proposal](Reports/initial_project_proposal.md)
-    * [Final Proposal](Reports/final_project_proposal.md)
-    * [Progress Report](Reports/Progress-Report.md)
+    * [Initial proposal](Reports/initial_project_proposal.md)
+    * [Final proposal](Reports/final_project_proposal.md)
+    * [Progress report](Reports/Progress-Report.md)
     
 
 * **src**: Folder containing our source code
