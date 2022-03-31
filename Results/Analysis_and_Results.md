@@ -16,7 +16,7 @@ The boxplot show the distribution of gene expression levels of 20 random samples
 
 Additional pairwise correlation between samples was ploted on a heat map. Based on the clustering, higher correlation was present in both negative and positive SARS tested samples as long as they were within the senior and adult age category. This was similar to what liberman et al. (2020) observed.
 
-![](Results/Plots/heatmap.png)
+![](https://github.com/STAT540-UBC-2022/project-team-11/blob/dc53ae687dd40eb342cfcfafd5c49cee6f15f213/Results/Plots/heatmap.png)
 
 To test our 1st hypothesis, we examined if interaction between infection status, age category and sex would result in differentially expressed genes. To acomplish this, 3 design matrices were made:
 Matrix 1: `Age * infection status`.
