@@ -31,18 +31,18 @@ Matrix 2: `Infection status * age`.
 Matrix 3: `Sex * Age`.
 
 Applying a cutoff of |1| for the log fold change and adjust p-value of 0.05: 
-
 - Interaction between infection status and age which resuted in 126 and 15 down and up DEGs, respectively.
-
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/263abeff2f45447b7568219d6215f820a1164090/Results/Plots/MD_1.png)
 
 - Interaction between infection status and sex which resulted in 8 and 7 down and up DEGs, respectively.
-
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/263abeff2f45447b7568219d6215f820a1164090/Results/Plots/MD_2.png)
 
 - Interaction between age and sex which resulted in 0 and 2 down and up DEGs, respectively. 
-
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/263abeff2f45447b7568219d6215f820a1164090/Results/Plots/MD_3.png)
+
+In light of having just 2 DEGs when looking at the interaction between age and sex, we plotted the top 15 genes that had differential expression (includes 13 that were not significant). From the boxplot below, we verified that sex did not have a significant contribution to expresssion of genes.
+![](https://github.com/STAT540-UBC-2022/project-team-11/blob/263abeff2f45447b7568219d6215f820a1164090/Results/Plots/DEG_expression.png)
+
 
 
 ## GO ontology analysis
