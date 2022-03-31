@@ -149,16 +149,11 @@ identical(pdata_imputed$Sample, colnames(count_mat_final))
 ```
 
 ```{r}
-cov_test <- cbind(c(pdata_mod$Sars_test))
-
-Batches = as.character(pdata_mod$Batch)
-
-
+cov_test <- c(pdata_mod$Sars_test)
+Batches = c(pdata_mod$Batch)
 dim(count_mat_final)
 length(Batches)
-
 corrected_data1 <- ComBat_seq(counts = count_mat_final, batch = Batches, group = cov_test )
-
 dim(count_mat_final)
 dim(corrected_data1)
 dim(pdata_imputed)
@@ -530,11 +525,12 @@ goseq_results3 %>%
 
 # Machine learning analysis
 
-## Part 1: Given RNA-seq data, could we predict covid? 
+# Part 1: Given RNA-seq data, could we predict covid? 
 
-### Data prep 
+# Data prep 
 ```{r}
-deg3_mod <- topTags(lrt3, n = 800, sort.by = "logFC")$table
+## Using top 100 genes irrespective of significance 
+deg3_mod <- topTags(lrt3, n = 100, sort.by = "logFC")$table
 
 deg3_mod <-  deg3_mod %>% 
                   rownames_to_column("gene")
@@ -557,22 +553,21 @@ data_ml <- pivot_wider(data_ml_temp,
                              id_cols = c(Sample, Age_category, Gender, Sars_test), 
                              names_from = gene, 
                              values_from = Expression)
-
+# Dataset for ML
 data_ml <- data_ml %>% remove_rownames %>% column_to_rownames(var="Sample")
 ```
 
-
-
+# PCA analysis for possible dimension reduction
 ```{r}
 # Perform PCA
 pca_data_ml <- prcomp(data_ml[,-c(1, 2, 3)], 
                               center = TRUE, 
                               scale. = TRUE)
 # See what PCA result looks like
-summary(pca_data_ml)
+#summary(pca_data_ml)
 
 # What are the components of the PCA result
-str(pca_data_ml)
+#str(pca_data_ml)
 
 # Visualize PCA result by gender
 ggbiplot(pca_data_ml, 
@@ -586,7 +581,7 @@ ggbiplot(pca_data_ml,
   
 ```
 
-### Data spliting 
+### Data spliting for ml training and validation sets 
 ```{r}
 set.seed(123)
 split = sample.split(data_ml$Sars_test, SplitRatio = 0.80) 
@@ -596,14 +591,73 @@ data_ml_validate = subset(data_ml, split == FALSE) ## Filter to get rows where s
 
 ## KNN model 
 ```{r}
-train_scale <- scale(data_ml_train[, -])
-```
+## data prep: converting the predictor variable to numeric 
+data_ml_train1 <- data_ml_train %>% 
+  mutate(status = as.numeric(case_when(
+  Sars_test == "pos" ~ "1",
+  Sars_test == "neg" ~ "0")))
 
-## Naive Bayes model 
+data_ml_validate1 <- data_ml_validate %>% 
+  mutate(status = as.numeric(case_when(
+  Sars_test == "pos" ~ "1",
+  Sars_test == "neg" ~ "0")))
+
+data_ml_train1 <- data_ml_train1[,-3]
+data_ml_validate1 <- data_ml_validate1[,-3]
+
+## data prep: converting the explanatory  variables to numeric for feature scaling
+data_ml_train1$Age_category <- as.numeric(data_ml_train1$Age_category)
+data_ml_validate1$Age_category <- as.numeric(data_ml_validate1$Age_category)
+
+data_ml_train1$Gender <- as.numeric(data_ml_train1$Gender)
+data_ml_validate1$Gender <- as.numeric(data_ml_validate1$Gender)
+
+## Feature scaling for KNN
+data_ml_train_scale <- scale(data_ml_train1[, -103])
+data_ml_validate_scale <- scale(data_ml_validate1[, -103])
+data_ml_validate_sub <- data_ml_validate_scale[ , colSums(is.na(data_ml_validate_scale)) == 0]
+data_ml_train_sub <- data_ml_train_scale[,c(colnames(data_ml_validate_sub))]
+
+set.seed(42)
+
+calc_class_err = function(actual, predicted) {
+  mean(actual != predicted)
+}
+
+## Fine tuning for k
+k_to_try = 1:20
+err_k = rep(x = 0, times = length(k_to_try))
+for (i in seq_along(k_to_try)) {
+  classifier_knn <- knn(train = data_ml_train_sub,
+                      test = data_ml_validate_sub,
+                      cl = data_ml_train1$status,
+                      k = k_to_try[i])
+  err_k[i] = calc_class_err(data_ml_validate1$status, classifier_knn)
+}
+
+plot(err_k, type = "b", col = "dodgerblue", cex = 1, pch = 20, 
+      xlab = "k, number of neighbors", ylab = "classification error",
+      main = "(Test) Error Rate vs Neighbors")
+# add line for min error seen
+abline(h = min(err_k), col = "darkorange", lty = 3)
+
+## Using KNN with k=15 to avoid over fitting and yet having a small error
+classifier_knn <- knn(train = data_ml_train_sub,
+                      test = data_ml_validate_sub,
+                      cl = data_ml_train1$status,
+                      k = 15)
+
+## Confusion matrix
+cm <- table(data_ml_validate1$status, classifier_knn)
+cm
+con_mat = confusionMatrix(cm, positive = "1")
+c(con_mat$overall["Accuracy"], con_mat$byClass["Sensitivity"], con_mat$byClass["Specificity"])
+
+```
 
 ## Logistic regression model 
 
-```{r}
+```{r, warning=FALSE}
 ## Our dataset has "pos" or 'neg" for the Sars_test status. Such labels are incompatible with logistic regression which requires labels to be 1 or 0
 data_ml_train_mod <- data_ml_train %>% 
   mutate(Sars_test = as.factor(case_when(
@@ -622,24 +676,22 @@ dplyr::rename(status = Sars_test)
 null <- glm(status ~ 1, family = binomial(link = 'logit'), data = data_ml_train_mod)
 full <- glm(status ~ .,family = binomial(link = "logit"), data = data_ml_train_mod)
 
-# Stepwise regression
-null_full <- stepAIC(null, scope=list(lower=null, upper=full), direction="both")
-summary(null_full)
+# Step wise regression
+null_full <- stepAIC(null, scope=list(lower=null, upper=full), direction="both", trace = FALSE)
+#summary(null_full)
 
-## Training the classifier
+## Training the classifier with top 3 significant genes 
 classifier <- glm(status ~ EFS + MTCO2P22 + EXOC5P1, data = data_ml_train_mod, family = binomial(link = "logit"))
 
-## Sanity check! Look at coefficients - only PC3 is significant? 
 summary(classifier) 
-
 ## Prediction on the validation set
 prob_pred = predict(classifier, type = 'response', newdata = data_ml_validate[-3]) ## Will return a vector of predicted probabilities of belong to infected (1) vs uninfected (0)
 
 ## Since this is a classification problem, we do not want probabilities but instead either 1 or 0.
-y_pred = ifelse(prob_pred > 0.5, 1, 0) ## Will round the probabilities to 1 or 0
+classifier_logistic = ifelse(prob_pred > 0.5, 1, 0) ## Will round the probabilities to 1 or 0
 
 ## Checking how accurate our model is
-cm = table(data_ml_validate_mod[, 3], y_pred) ## Will return a confusion matrix. We notice that 1 COVID 19 patient was misclassified as healthy and 3 healthy patients were misclassified as diseased.
+cm = table(data_ml_validate_mod[, 3], classifier_logistic) ## Will return a confusion matrix. We notice that 1 COVID 19 patient was misclassified as healthy and 3 healthy patients were misclassified as diseased.
 cm
 
 ## will now calculate Accuracy, Sensitivity and Specificity 

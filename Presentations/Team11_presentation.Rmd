@@ -305,13 +305,21 @@ table(pdata_imputed$Gender)
 <small>
 
 .pull-left[
+<<<<<<< HEAD
 ```{r, echo=FALSE, out.width="70%", fig.show = 'hold'}
+=======
+```{r, echo=FALSE, out.width="65%", fig.show = 'hold', fig.align="centre"}
+>>>>>>> 74ff0bf57140fe2ee80ff9951cafe4e201b82b91
 knitr::include_graphics("GeneWiseModel.png")
 ```
 ]
 
 .pull-right[
+<<<<<<< HEAD
 ```{r, echo=FALSE, out.width="65%", fig.show = 'hold'}
+=======
+```{r, echo=FALSE, out.width="70%", fig.show = 'hold', fig.align="left"}
+>>>>>>> 74ff0bf57140fe2ee80ff9951cafe4e201b82b91
 knitr::include_graphics("BatchFreeDist.png")
 ```
 ]
@@ -391,6 +399,7 @@ annotation_column = data.frame(Infection_state = ran_samp$Sars_test,
                                Age = ran_samp$Age_category,
                                row.names = colnames(cormat))
 ```
+<<<<<<< HEAD
 
 
 .pull-left[
@@ -405,6 +414,12 @@ longExpr %>%
 
 .pull-right[
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
+=======
+]
+
+.pull-right[
+```{r, echo=FALSE, out.width="90%", fig.show = 'hold', fig.align="right"}
+>>>>>>> 74ff0bf57140fe2ee80ff9951cafe4e201b82b91
 #Plot heatmap
 pheatmap(cormat, border_color = NA, annotation_col = annotation_column, cluster_rows = TRUE, cellheight=9, cellwidth = 9)
 ```
@@ -446,5 +461,79 @@ lfit3 <- glmFit(dge_disp3, designMatrix3)
 lrt3 <- glmLRT(lfit3)
 ```
 
----
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#Filtering for up and downregulated genes - model matrix 2
+deg_1 <- topTags(lrt1, n = Inf, sort.by = "logFC", p.value = 0.05)$table
+up_1 <- deg_1[deg_1$logFC > 0,]
+nrow(up_1)
+down_1 <- deg_1[deg_1$logFC < 0,]
+nrow(down_1)
 
+#Filtering for up and downregulated genes - model matrix 2
+deg_2 <- topTags(lrt2, n = Inf, sort.by = "logFC", p.value = 0.05)$table
+up_2 <- deg_2[deg_2$logFC > 0,]
+nrow(up_2)
+down_2 <- deg_2[deg_2$logFC < 0,]
+nrow(down_2)
+
+#Filtering for up and downregulated genes - Model matrix 3
+deg_3 <- topTags(lrt3, n = Inf, p.value = 0.05, sort.by = "logFC")$table
+up_3 <- deg_3[deg_3$logFC > 0,]
+nrow(up_3)
+down_3 <- deg_3[deg_3$logFC < 0,]
+nrow(down_3)
+```
+---
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#Matrix with Sars_test and Gender interaction terms
+de1 <- decideTestsDGE(lrt1, adjust.method="BH", p.value = 0.05)
+de1tags <- rownames(dge_disp1)[as.logical(de1)]
+#plotSmear(lrt1, de.tags=de1tags)
+plotMD(lrt1, main="MD plot")
+abline(h=c(-1, 1), col="blue")
+de1_summary <- summary(de1)
+de1_summary
+
+#Matrix with Sars_test and age_category interaction terms
+de2 <- decideTestsDGE(lrt2, adjust.method="BH", p.value = 0.05)
+de2tags <- rownames(dge_disp2)[as.logical(de2)]
+#plotSmear(lrt2, de.tags=de2tags)
+plotMD(lrt2, main="MD plot")
+abline(h=c(-1, 1), col="blue")
+de2_summary <- summary(de2)
+de2_summary
+
+#Matrix with Gender and age_category interaction terms
+de3 <- decideTestsDGE(lrt3, adjust.method="BH", p.value = 0.05)
+de3tags <- rownames(dge_disp3)[as.logical(de3)]
+#plotSmear(lrt3, de.tags=de3tags)
+plotMD(lrt3, main="MD plot")
+abline(h=c(-1, 1), col="blue")
+de3_summary <- summary(de3)
+de3_summary
+
+```
+
+---
+# Interaction between SARS_test and sex
+```{r, echo=FALSE, fig.show = 'hold', fig.align="right"}
+plotMD(lrt1, main="Sars_test*Gender")
+abline(h=c(-1, 1), col="blue")
+de2_summary
+```
+---
+# Interaction between SARS_test and age category
+```{r, echo=FALSE,fig.show = 'hold', fig.align="centre"}
+plotMD(lrt2, main="Sars_test*Age_category")
+abline(h=c(-1, 1), col="blue")
+de2_summary
+```
+
+---
+# Interaction between age category and sex
+```{r, echo=FALSE, fig.show = 'hold', fig.align="left"}
+plotMD(lrt3, main="Age_category*Gender")
+abline(h=c(-1, 1), col="blue")
+de2_summary
+```
+---
