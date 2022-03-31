@@ -1,7 +1,7 @@
 # Technical Report - Analysis and Results 
 
 ## Project aims 
-Using data published by Liberman et al, we wanted to answer:
+Using data published by Liberman et al, that consists of RNA-Seq as well as associated metadata, we wanted to answer:
 
 **1) What genes are significantly differentially expressed between the two groups (healthy and infected) while accounting for factors such as age and sex?**
 
