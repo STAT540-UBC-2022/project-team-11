@@ -46,15 +46,15 @@ Using EdgeR, we generated three design matrices and identified the number of Dif
 
 **2) Are the differentially expressed genes (identified in aim 1) directly connected to immune response?**
 
-For each design matrix generated in aim 1, we conducted a GO ontology analysis to examine if the genes differentially expressed have an immune function.We noticed that while design matrices 1 (interaction between infection status and age) and 2 (interaction between infection status and sex) had genes directly related to immune response, matrix 3 (interaction between age and sex) consisted of no such genes. 
+For each design matrix generated in aim 1, we conducted a Gene Ontology analysis to examine if the genes differentially expressed have an immune function.We noticed that while design matrices 1 (interaction between infection status and age) and 2 (interaction between infection status and sex) had genes directly related to immune response, matrix 3 (interaction between age and sex) consisted of no such genes. 
 
 - Design matrix 1:
 
-![](Results/Plots/GoSeq_1.png)
+![](Results/Plots/GoSeq_2.png)
 
 - Design matrix 2:
 
-![](Results/Plots/GoSeq_2.png)
+![](Results/Plots/GoSeq_1.png)
 
 - Design matrix 3:
 
