@@ -4,6 +4,28 @@ This repository contains reports and files corresponding to the [Group project](
 
 SARS-CoV2 has shown a wide range of clinical manifestions among different population groups. Clinically, COVID-19 cases tend to be more severe for older adults and makes. The dataset used in this project was first described by liberman et al. (2020) who examined host response gene expression across infection status, viral load, age and sex among 430 individuals with PCR-confimed SARS-CoV2 and 54 negative controls. While the study mainly examined gene expression differences associated with viral load, they did not take into account factors such as age and sex. 
 
+## Repository organization:
+
+* **Presentations**: Folder containing presentation slides file
+    * [Final presentation](Presentations/STAT540.pptx)
+
+* **Results**: Folder containing the results, summary figures and/or reports of our analysis 
+    * [Analysis and results (Technical report)](Results/Analysis_and_Results.md)
+    * [Plots](Results/Plots)
+
+* **Reports**: Folder containing the project proposal and progress report deliverables
+    * [Initial proposal](Reports/initial_project_proposal.md)
+    * [Final proposal](Reports/final_project_proposal.md)
+    * [Progress report](Reports/Progress-Report.md)
+    
+
+* **src**: Folder containing our source code
+    * [Datasets](src/GSE152075)
+    * [Progress report code](src/Progress_report.Rmd)
+    * [Completed analysis](src/imputed.Rmd)
+
+* **README.md**- A guide through the github repository. You are currently viewing this file.
+
 ## Proposed aims and associated results 
 
 **1) What genes are significantly differentially expressed between the two groups (healthy and infected) while accounting for factors such as age and sex?**
@@ -47,26 +69,4 @@ Using the genes identified using design matrix 3, we build two machine learning 
 | ------------- |:-------------:| :-----:| :--------------: |
 | KNN           | 0.943 | 1.00 | 0.947 |
 | Logistic regression      | 0.965 | 1.00 | 0.968 |
-
-## Repository organization:
-
-* **Presentations**: Folder containing presentation slides file
-    * [Final presentation](Presentations/STAT540.pptx)
-
-* **Results**: Folder containing the results, summary figures and/or reports of our analysis 
-    * [Analysis and Results (Technical report)](Results/Analysis_and_Results.md)
-    * [Plots](Results/Plots)
-
-* **Reports**: Folder containing the project proposal and progress report deliverables
-    * [Initial Proposal](Reports/initial_project_proposal.md)
-    * [Final Proposal](Reports/final_project_proposal.md)
-    * [Progress Report](Reports/Progress-Report.md)
-    
-
-* **src**: Folder containing our source code
-    * [Datasets](src/GSE152075)
-    * [Progress report code](src/Progress_report.Rmd)
-    * [Completed analysis](src/imputed.Rmd)
-
-* **README.md**- A guide through the github repository. You are currently viewing this file.
 
