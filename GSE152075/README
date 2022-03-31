@@ -1,0 +1,7 @@
+
+This folder contains the input and outputs of our analysis.
+
+The `GSE152075_raw_counts_GEO.txt.gz` and its corresponding text file are the raw counts that were obtained from the GEO database.
+The `metadata.tsv` file contains all the information abou the samples.
+
+The `imputed_metadata.tsv` contains select information from the `metadata.tsv` such as age, gender, sars_test, batch and viral load. However, missing values for gender were imputed in our final analysis.
