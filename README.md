@@ -43,16 +43,19 @@ For each design matrix generated in aim 1, we conducted a GO ontology analysis t
 
 Using the genes identified using design matrix 3, we build two machine learning models (KNN and logistic regression) to predict the infection status of a patient given expression values (transcriptomic data. The two models had the following accuracy metrics. 
 
- Model  | Sensitivity | Specificity | Accuracy  |
-| ------------- |:-------------:| -----:|
-| KNN |  0.943  | 1.00  | 0.947 |
-| Logistic regression | 0.965 | 1.00  | 0.968 |
+| Model         | Sensitivity   | Specificity  | Accuracy |
+| ------------- |:-------------:| :-----:| :--------------: |
+| KNN           | 0.943 | 1.00 | 0.947 |
+| Logistic regression      | 0.965 | 1.00 | 0.968 |
 
-The repository is organized as follows: 
+## Repository organization:
 
 * **Presentations**: Folder containing presentation slides file
+    * [Final presentation]()
 
 * **Results**: Folder containing the results, summary figures and/or reports of our analysis 
+    * [Analysis and Results]()
+    * [Plots]()
 
 * **Reports**: Folder containing the project proposal and progress report deliverables
     * [Initial Proposal](Reports/initial_project_proposal.md)
