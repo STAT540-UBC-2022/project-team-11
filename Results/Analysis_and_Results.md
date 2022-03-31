@@ -12,7 +12,7 @@ After TMM normalization and filtering of lowly expressed genes (cpm > 10 for at 
 
 The boxplot show the distribution of gene expression levels of 20 random samples. Only a small number of samples have different distributions i.e. sample 167 and 169.
 
-![](Results/Plots/box_plot.jpg)
+![](https://github.com/STAT540-UBC-2022/project-team-11/blob/580decab757e78a930b6954cbb1988a954c6f572/Results/Plots/box_plot.jpg)
 
 Additional pairwise correlation between samples was ploted on a heat map. Based on the clustering, higher correlation was present in both negative and positive SARS tested samples as long as they were within the senior and adult age category. This was similar to what liberman et al. (2020) observed.
 
