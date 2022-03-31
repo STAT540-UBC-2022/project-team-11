@@ -54,7 +54,7 @@ Applying a cutoff of |1| for the log fold change and adjust p-value of 0.05:
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/263abeff2f45447b7568219d6215f820a1164090/Results/Plots/MD_3.png)
 
 
-## GO ontology analysis
+## Gene Ontology analysis
 
 To answer our second research question whether the differentially expressed genes are directly connected to immune response, we performed Gene Ontology analysis using top differentially expressed genes from the three design matrices. 
 
