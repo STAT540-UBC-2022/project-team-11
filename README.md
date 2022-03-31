@@ -51,11 +51,11 @@ Using the genes identified using design matrix 3, we build two machine learning 
 ## Repository organization:
 
 * **Presentations**: Folder containing presentation slides file
-    * [Final presentation]()
+    * [Final presentation](Presentations/STAT540.pptx)
 
 * **Results**: Folder containing the results, summary figures and/or reports of our analysis 
-    * [Analysis and Results]()
-    * [Plots]()
+    * [Analysis and Results](Results/Analysis_and_Results.md)
+    * [Plots](Results/Plots)
 
 * **Reports**: Folder containing the project proposal and progress report deliverables
     * [Initial Proposal](Reports/initial_project_proposal.md)
@@ -64,6 +64,9 @@ Using the genes identified using design matrix 3, we build two machine learning 
     
 
 * **src**: Folder containing our source code
+    * [Datasets](src/GSE152075)
+    * [Progress report code](src/Progress_report.Rmd)
+    * [Completed analysis](src/imputed.Rmd)
 
 * **README.md**- A guide through the github repository. You are currently viewing this file.
 
