@@ -54,7 +54,7 @@ Using the genes identified using design matrix 3, we build two machine learning 
     * [Final presentation](Presentations/STAT540.pptx)
 
 * **Results**: Folder containing the results, summary figures and/or reports of our analysis 
-    * [Analysis and Results](Results/Analysis_and_Results.md)
+    * [Analysis and Results (Technical report)](Results/Analysis_and_Results.md)
     * [Plots](Results/Plots)
 
 * **Reports**: Folder containing the project proposal and progress report deliverables
