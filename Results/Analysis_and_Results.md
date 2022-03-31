@@ -16,22 +16,22 @@ We obtained our dataset from a study by [Lieberman el al. (Plos Biology 2020)](h
 
 ![Missing data plot](../Results/Plots/Missing_data.png)
 
-We then went on to remove the 17 samples from our downstream analysis and these would not help inform our analysis in any way. For the remaining 36 samples, we decided to carry out data imputation using the missForest algorithm in R. We observed an error rate of 0.06 which confirmed that our imputation algorithm was performing well. 
+We then went on to remove the 17 samples from our downstream analysis as these would not help inform our analysis in any way. For the remaining 36 samples, we decided to carry out data imputation using the `missForest` algorithm in R. We observed an error rate of 0.06 which confirmed that our imputation algorithm was performing well. 
 
 The code for the data exploration and manipulation is located within the `src` folder in our repo and can be found [here](https://github.com/STAT540-UBC-2022/project-team-11/blob/main/src/imputed.Rmd). 
 
 
 ## RNA-Seq analysis
 
-Before creating, the DGEList, `Combat_seq()` is utilized to adjust the count matrix for batch effects. This adjust count matrix as well the modified metadata (including the imputed sex annotations) are used to build the DGEList. 
+Before creating, the DGEList, `Combat_seq()` was utilized to adjust the count matrix for batch effects. This adjusted count matrix as well the modified metadata (including the imputed sex annotations) are used to build the DGEList. 
 
-After TMM normalization and filtering of lowly expressed genes (cpm > 10 for at least 2 samples), data visualization is perfomed. 
+After TMM normalization and filtering of lowly expressed genes (cpm > 10 for at least 2 samples), data visualization was perfomed. 
 
-The boxplot show the distribution of gene expression levels of 20 random samples. Only a small number of samples have different distributions i.e. sample 167 and 169.
+The boxplot show the distribution of gene expression levels of 20 samples. Only a small number of samples have different distributions i.e. sample 167 and 169.
 
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/580decab757e78a930b6954cbb1988a954c6f572/Results/Plots/box_plot.jpg)
 
-Additional pairwise correlation between samples was ploted on a heat map. Based on the clustering, higher correlation was present in both negative and positive SARS tested samples as long as they were within the senior and adult age category. This was similar to what liberman et al. (2020) observed.
+Additional pairwise correlation between samples was plotted on a heat map. Based on the clustering, higher correlation was present in both negative and positive SARS tested samples as long as they were within the senior and adult age category. This was similar to what Lieberman et al. (2020) observed.
 
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/dc53ae687dd40eb342cfcfafd5c49cee6f15f213/Results/Plots/heatmap.png)
 
@@ -87,3 +87,4 @@ We can see that while both models have a specificity of 0 (that is, no COVID-19 
 Using the data first described by Liberman et al., we were able to accomplish our three goals. Using EdgeR we identified significantly DEGs while examining interactive effects of [infection status and age], [infection status and sex], and [age and sex]. We further leveraged GO ontology analysis to identify genes that were directly related to the immune response system in humans. We concluded that there were no significant associations to immune function using the interaction of age and sex. Lastly, we successfully build a classification model (with an accuracy of 97%) that utilizes three genes (EFS, MTCO2P22 and EXOC5P1) to predict if an individual has COVID-19.
 As future work, we would like to explore the biological mechanisms of why our model (specially the logistic regression generated such high accuracy scores). This could be done by a more detailed pathway analysis (using GO) or wet lab techniques such a knock out models. 
 
+We also think that if we included the infection state as a covariate in the third design matrix we could have seen more DEGs and higher enrichment for immune function but we could not test this as part of our analysis. Additionally, to validate our ML model we could use a new dataset and this is also something we did not test as part of our study. 
