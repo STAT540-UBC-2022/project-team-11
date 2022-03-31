@@ -37,7 +37,7 @@ Additional pairwise correlation between samples was plotted on a heat map. Based
 
 To answer our first question, we examined if interaction between infection status, age category and sex would result in differentially expressed genes. To accomplish this, 3 design matrices were made:
 
-- Matrix 1: `Age * infection status`.
+- Matrix 1: `infection status * Age`.
 
 - Matrix 2: `Infection status * Sex`.
 
@@ -55,6 +55,28 @@ Applying a cutoff of |1| for the log fold change and adjust p-value of 0.05:
 
 
 ## GO ontology analysis
+
+To answer our second research question whether the differentially expressed genes are directly connected to immune response, we performed Gene Ontology analysis using top differentially expressed genes from the three design matrices. 
+
++ Design matrix 1 (interaction between infection status and age):
+
+We observed statistically significant enrichment of immune function terms and quite a number of genes associated with these functions.
+
+![](https://github.com/STAT540-UBC-2022/project-team-11/blob/main/Results/Plots/GoSeq_2.png)
+
++ Design matrix 2 (interaction between infection status and sex):
+
+We also observed statistically significant enrichment of immune function terms and a substantial amount of genes associated with these functions.
+
+![](https://github.com/STAT540-UBC-2022/project-team-11/blob/main/Results/Plots/GoSeq_1.png)
+
++ Design matrix 3 (interaction between age and sex):
+
+Immune function terms were not enriched.
+
+![](https://github.com/STAT540-UBC-2022/project-team-11/blob/main/Results/Plots/GoSeq_3.png)
+
+
 
 ## Machine learning analysis
 
