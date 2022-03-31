@@ -1,7 +1,7 @@
 # Technical Report - Analysis and Results 
 
 ## Project aims 
-Using data published by Liberman et al, that consists of RNA-Seq as well as associated metadata, we wanted to answer:
+Given that SARS-CoV2 has shown a wide range of clinical manifestations among different population groups, particularly affecting older adults and males more severely, we decided to do a statistical analysis addressing the following questions:
 
 **1) What genes are significantly differentially expressed between the two groups (healthy and infected) while accounting for factors such as age and sex?**
 
@@ -9,7 +9,17 @@ Using data published by Liberman et al, that consists of RNA-Seq as well as asso
 
 **3) Could we leverage RNA-Seq data to predict infection status of an individual?**
 
+
 ## Data exploration and manipulation 
+
+We obtained our dataset from a study by [Lieberman el al. (Plos Biology 2020)](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3000849) that examined host response gene expression across infection status, viral load, age, and sex among 430 individuals with PCR-confirmed SARS-CoV-2 and 54 negative controls. The data was obtained from GEO as two separate files- first being the expression/count matrix with 35784 genes in the rows and 484 samples in the columns. The second file was the metadata file with 484 samples and six metadata columns pertaining to Age, Sex, Batch, Viral load and Sars test result. Upon further exploration of the metadata, we observed that 53 samples had missing values across Age, Sex and Viral load. When we made a plot for these missing values we noticed that 17 samples had missing values across all three columns and 36 samples had missing values for Sex. The plot is shown below. 
+
+![Missing data plot](../Results/Plots/Missing_data.png)
+
+We then went on to remove the 17 samples from our downstream analysis and these would not help inform our analysis in any way. For the remaining 36 samples, we decided to carry out data imputation using the missForest algorithm in R. We observed an error rate of 0.06 which confirmed that our imputation algorithm was performing well. 
+
+The code for the data exploration and manipulation is located within the `src` folder in our repo and can be found [here](https://github.com/STAT540-UBC-2022/project-team-11/blob/main/src/imputed.Rmd). 
+
 
 ## RNA-Seq analysis
 
@@ -62,6 +72,7 @@ We trained two models for our classification problem:
 2) Logistic regression: This model assigns a probability (0 to 1) to an unknown sample of belonging to a class (infection status positive or negative). Since we had 102 explanatory variables, we were not able to cope with the computational burden. We then decided to perform feature selection analysis using step wise logistic regression. We build a null model and a full model consisting of a constant term and all genes, respectively. Using this, we identified 3 genes (EFS, MTCO2P22 and EXOC5P1) that significantly contributed to the classification (explained most of the variance in the data set). We used the `glm` function to fit our model. 
 
 **Model selection**
+
 The two models acquired the follwing accuracy metrics: 
 
 | Model         | Sensitivity   | Specificity  | Accuracy |
