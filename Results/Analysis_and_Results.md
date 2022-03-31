@@ -23,11 +23,11 @@ The code for the data exploration and manipulation is located within the `src` f
 
 ## RNA-Seq analysis
 
-Before creating, the DGEList, `Combat_seq()` was utilized to adjust the count matrix for batch effects. This adjusted count matrix as well the modified metadata (including the imputed sex annotations) are used to build the DGEList. 
+Before creating, the DGEList, `Combat_seq()` was utilized to adjust the count matrix for batch effects. This adjusted count matrix as well the modified metadata (including the imputed sex annotations) were used to build the DGEList. 
 
-After TMM normalization and filtering of lowly expressed genes (cpm > 10 for at least 2 samples), data visualization was perfomed. 
+After TMM normalization and filtering of lowly expressed genes (cpm > 10 for at least 2 samples), data visualization was performed. 
 
-The boxplot show the distribution of gene expression levels of 20 samples. Only a small number of samples have different distributions i.e. sample 167 and 169.
+The boxplot shows the distribution of gene expression levels of 20 samples. Only a small number of samples have different distributions i.e. sample 167 and 169.
 
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/580decab757e78a930b6954cbb1988a954c6f572/Results/Plots/box_plot.jpg)
 
@@ -35,19 +35,22 @@ Additional pairwise correlation between samples was plotted on a heat map. Based
 
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/dc53ae687dd40eb342cfcfafd5c49cee6f15f213/Results/Plots/heatmap.png)
 
-To test our 1st hypothesis, we examined if interaction between infection status, age category and sex would result in differentially expressed genes. To acomplish this, 3 design matrices were made:
-Matrix 1: `Age * infection status`.
-Matrix 2: `Infection status * age`.
-Matrix 3: `Sex * Age`.
+To answer our first question, we examined if interaction between infection status, age category and sex would result in differentially expressed genes. To accomplish this, 3 design matrices were made:
+
+- Matrix 1: `Age * infection status`.
+
+- Matrix 2: `Infection status * age`.
+
+- Matrix 3: `Sex * Age`.
 
 Applying a cutoff of |1| for the log fold change and adjust p-value of 0.05: 
-- Interaction between infection status and age which resuted in 126 and 15 down and up DEGs, respectively.
+- Interaction between infection status and age which resulted in 126 down and 15 up DEGs.
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/263abeff2f45447b7568219d6215f820a1164090/Results/Plots/MD_2.png)
 
-- Interaction between infection status and sex which resulted in 8 and 7 down and up DEGs, respectively.
+- Interaction between infection status and sex which resulted in 8 down and 7 up DEGs.
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/263abeff2f45447b7568219d6215f820a1164090/Results/Plots/MD_1.png)
 
-- Interaction between age and sex which resulted in 0 and 2 down and up DEGs, respectively. 
+- Interaction between age and sex which resulted in 0 down and 2 up DEGs. 
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/263abeff2f45447b7568219d6215f820a1164090/Results/Plots/MD_3.png)
 
 In light of having just 2 DEGs when looking at the interaction between age and sex, we plotted the top 15 genes that had differential expression (includes 13 that were not significant). From the boxplot below, we verified that sex did not have a significant contribution to expresssion of genes.
