@@ -18,7 +18,7 @@ We obtained our dataset from a study by [Lieberman el al. (Plos Biology 2020)](h
 
 We then went on to remove the 17 samples from our downstream analysis as these would not help inform our analysis in any way. For the remaining 36 samples, we decided to carry out data imputation using the `missForest` algorithm in R. We observed an error rate of 0.06 which confirmed that our imputation algorithm was performing well. 
 
-The code for the data exploration and manipulation is located within the `src` folder in our repo and can be found [here](https://github.com/STAT540-UBC-2022/project-team-11/blob/main/src/imputed.Rmd). 
+The code for the data exploration, manipulation and downstream analysis is located within the `src` folder in our repo and can be found [here](https://github.com/STAT540-UBC-2022/project-team-11/blob/main/src/imputed.Rmd). 
 
 
 ## RNA-Seq analysis
@@ -52,10 +52,6 @@ Applying a cutoff of |1| for the log fold change and adjust p-value of 0.05:
 
 - Interaction between age and sex which resulted in 0 down and 2 up DEGs. 
 ![](https://github.com/STAT540-UBC-2022/project-team-11/blob/263abeff2f45447b7568219d6215f820a1164090/Results/Plots/MD_3.png)
-
-In light of having just 2 DEGs when looking at the interaction between age and sex, we plotted the top 15 genes that had differential expression (includes 13 that were not significant). From the boxplot below, we verified that sex did not have a significant contribution to expresssion of genes.
-![](https://github.com/STAT540-UBC-2022/project-team-11/blob/263abeff2f45447b7568219d6215f820a1164090/Results/Plots/DEG_expression.png)
-
 
 
 ## GO ontology analysis
