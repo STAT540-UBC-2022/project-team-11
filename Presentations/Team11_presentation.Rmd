@@ -230,6 +230,7 @@ summary(pdata_mod)
 ---
 
 # Data Imputation
+<small>
  - MissForest is a random forest imputation algorithm for missing data, implemented in `R` in the `missForest()` package.
  
 ```{r, echo=FALSE, out.width="60%", fig.show = 'hold', fig.cap = 'Figure from Stekhoven and Buhlmann, creators of the algorithm', fig.align="center"}
@@ -245,6 +246,7 @@ knitr::include_graphics("MissForest_algorithm.png")
   - Imputation time increases with the number of observations, predictors and missing values
   - Missing data is imputed in each run, which could be problematic in some production environments
 
+<small>
 ---
 
 # Data Imputation- Results
@@ -273,9 +275,9 @@ counts_pdata <- pivot_wider(counts_pdata,
                              names_from = gene_id, 
                              values_from = Expression) %>% 
                 column_to_rownames("Sample")
+```
 
-#data = counts_pdata
-
+```{r, include=FALSE}
 #Data Imputation
 pdata.imp.1 <- missForest(counts_pdata)
 
@@ -303,13 +305,13 @@ table(pdata_imputed$Gender)
 <small>
 
 .pull-left[
-```{r, echo=FALSE, out.width="70%", fig.show = 'hold', fig.align="right"}
+```{r, echo=FALSE, out.width="70%", fig.show = 'hold'}
 knitr::include_graphics("GeneWiseModel.png")
 ```
 ]
 
 .pull-right[
-```{r, echo=FALSE, out.width="65%", fig.show = 'hold', fig.align="left"}
+```{r, echo=FALSE, out.width="65%", fig.show = 'hold'}
 knitr::include_graphics("BatchFreeDist.png")
 ```
 ]
@@ -328,7 +330,9 @@ dim(corrected_data1)
 ```
 
 ---
-# Assessment of normalized DGEList
+# Assessing overall distributions
+
+<small>
 ```{r, include=FALSE}
 #Creating DGE List 
 dge <- DGEList(counts = corrected_data1, samples = pdata_imputed)
@@ -336,19 +340,19 @@ dim(dge)
 head(apply(dge$counts, 2, sum)) # total gene counts per sample
 ```
 
-.pull-left[
--Removing lowly expressed genes
+- Removing lowly expressed genes
 
 ```{r}
 keep_edge <- rowSums(cpm(dge)>10) >= 2
 ```
 
+- Data Normalization followed by computing CPM and log2CPM values
 ```{r, include=FALSE}
 dge_mod <- dge[keep_edge,]
 ```
 
 ```{r}
-dim(dge)
+# Number of genes present after filtering
 dim(dge_mod)
 ```
 
@@ -389,27 +393,30 @@ annotation_column = data.frame(Infection_state = ran_samp$Sars_test,
 ```
 
 
-]
-
-.pull-right[
-```{r, fig.align='right', out.width="75%", echo=FALSE}
+.pull-left[
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 #Box plot
 longExpr %>%
   ggplot(aes(Sample, Expression)) + 
     geom_boxplot() + 
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
+]
 
-```{r, echo=FALSE, out.width="80%", fig.show = 'hold', fig.align="right"}
+.pull-right[
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 #Plot heatmap
 pheatmap(cormat, border_color = NA, annotation_col = annotation_column, cluster_rows = TRUE, cellheight=9, cellwidth = 9)
 ```
 ]
+
+<small>
+
 ---
 # Differential expression analyses using EdgeR
-<small>
+
 - Interaction terms: Age:Sars_test; Age:Sex; Sars_test:Sex
-<small>
+
 ```{r, warning=FALSE, message=FALSE}
 #Setting up model matrix
 designMatrix1 = model.matrix(~Sars_test*Gender, data = pdata_imputed)
@@ -417,10 +424,9 @@ designMatrix2 = model.matrix(~Sars_test*Age_category, data = pdata_imputed)
 designMatrix3 = model.matrix(~Age_category*Gender, data = pdata_imputed)[, -6]
 ```
 
-<small>
 - Estimating dispersion and fitting to a generalized linear model
   - Example: Interaction between Sars_test and Gender
-<small>
+
 ```{r, warning=FALSE, message=FALSE}
 dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE) 
 lfit1 <- glmFit(dge_disp1, designMatrix1)

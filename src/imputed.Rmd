@@ -171,7 +171,7 @@ dim(dge)
 head(apply(dge$counts, 2, sum)) # total gene counts per sample
 
 #removing lowly expressed genes
-keep_edge <- rowSums(cpm(dge)>10) >= 2
+keep_edge <- rowSums(cpm(dge)>100) >= 50
 dge_mod <- dge[keep_edge,]
 dim(dge_mod)
 ```
@@ -232,6 +232,7 @@ pheatmap(cormat, border_color = NA, annotation_col = annotation_column, cluster_
 
 ```{r}
 #Setting up model matrix
+designMatrix = model.matrix(~Sars_test, data = pdata_imputed)
 designMatrix1 = model.matrix(~Sars_test*Gender, data = pdata_imputed)
 colnames(designMatrix1)
 designMatrix2 = model.matrix(~Sars_test*Age_category, data = pdata_imputed)
@@ -242,6 +243,14 @@ designMatrix3<- designMatrix3[, -6]
 ```
 
 ```{r}
+#Estimating dispersion parameters for each tag
+dge_disp <- estimateDisp(dge_norm, designMatrix, robust = TRUE) 
+range(dge_disp$prior.df)
+plotBCV(dge_disp,  cex=0.5)
+
+lfit <- glmFit(dge_disp, designMatrix)
+lrt <- glmLRT(lfit)
+
 #Estimating dispersion parameters for each tag
 dge_disp1 <- estimateDisp(dge_norm, designMatrix1, robust = TRUE) 
 range(dge_disp1$prior.df)
@@ -352,6 +361,13 @@ nrow(down_3)
 
 ```{r}
 #Matrix with Sars_test and Gender interaction terms
+de <- decideTestsDGE(lrt, adjust.method="BH", p.value = 0.05)
+detags <- rownames(dge_disp)[as.logical(de)]
+plotMD(lrt, main="MD plot")
+abline(h=c(-1, 1), col="blue")
+de_summary <- summary(de)
+de_summary
+
 de1 <- decideTestsDGE(lrt1, adjust.method="BH", p.value = 0.05)
 de1tags <- rownames(dge_disp1)[as.logical(de1)]
 #plotSmear(lrt1, de.tags=de1tags)

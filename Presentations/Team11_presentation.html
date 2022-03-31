@@ -210,6 +210,7 @@ summary(pdata_mod)
 ---
 
 # Data Imputation
+&lt;small&gt;
  - MissForest is a random forest imputation algorithm for missing data, implemented in `R` in the `missForest()` package.
  
 &lt;div class="figure" style="text-align: center"&gt;
@@ -226,6 +227,7 @@ summary(pdata_mod)
   - Imputation time increases with the number of observations, predictors and missing values
   - Missing data is imputed in each run, which could be problematic in some production environments
 
+&lt;small&gt;
 ---
 
 # Data Imputation- Results
@@ -238,6 +240,8 @@ summary(pdata_mod)
 
 
 
+
+
 ```r
 #Checking for performance 
 pdata.imp.1$OOBerror
@@ -245,7 +249,7 @@ pdata.imp.1$OOBerror
 
 ```
 ##      NRMSE        PFC 
-## 0.00000000 0.06264501
+## 0.00000000 0.08758701
 ```
 
 ```r
@@ -266,7 +270,7 @@ table(pdata_imputed$Gender)
 ```
 ## 
 ##   F   M 
-## 246 221
+## 252 215
 ```
 
 ---
@@ -280,11 +284,11 @@ table(pdata_imputed$Gender)
 &lt;small&gt;
 
 .pull-left[
-&lt;img src="GeneWiseModel.png" width="70%" style="display: block; margin: auto 0 auto auto;" /&gt;
+&lt;img src="GeneWiseModel.png" width="70%" /&gt;
 ]
 
 .pull-right[
-&lt;img src="BatchFreeDist.png" width="65%" style="display: block; margin: auto auto auto 0;" /&gt;
+&lt;img src="BatchFreeDist.png" width="65%" /&gt;
 ]
 
 
@@ -307,29 +311,24 @@ dim(corrected_data1)
 ```
 
 ---
-# Assessment of normalized DGEList
+# Assessing overall distributions
+
+&lt;small&gt;
 
 
-.pull-left[
--Removing lowly expressed genes
+- Removing lowly expressed genes
 
 
 ```r
 keep_edge &lt;- rowSums(cpm(dge)&gt;10) &gt;= 2
 ```
 
+- Data Normalization followed by computing CPM and log2CPM values
 
 
 
 ```r
-dim(dge)
-```
-
-```
-## [1] 35784   467
-```
-
-```r
+# Number of genes present after filtering
 dim(dge_mod)
 ```
 
@@ -340,24 +339,40 @@ dim(dge_mod)
 
 
 
+.pull-left[
+&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-24-1.png" width="504" /&gt;
 ]
 
 .pull-right[
-
-```r
-#Box plot
-longExpr %&gt;%
-  ggplot(aes(Sample, Expression)) + 
-    geom_boxplot() + 
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-```
-
-&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto 0 auto auto;" /&gt;
-
-&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto 0 auto auto;" /&gt;
+&lt;img src="Team11_presentation_files/figure-html/unnamed-chunk-25-1.png" width="504" /&gt;
 ]
+
+&lt;small&gt;
+
 ---
 # Differential expression analyses using EdgeR
+
+- Interaction terms: Age:Sars_test; Age:Sex; Sars_test:Sex
+
+
+```r
+#Setting up model matrix
+designMatrix1 = model.matrix(~Sars_test*Gender, data = pdata_imputed)
+designMatrix2 = model.matrix(~Sars_test*Age_category, data = pdata_imputed)
+designMatrix3 = model.matrix(~Age_category*Gender, data = pdata_imputed)[, -6]
+```
+
+- Estimating dispersion and fitting to a generalized linear model
+  - Example: Interaction between Sars_test and Gender
+
+
+```r
+dge_disp1 &lt;- estimateDisp(dge_norm, designMatrix1, robust = TRUE) 
+lfit1 &lt;- glmFit(dge_disp1, designMatrix1)
+lrt1 &lt;- glmLRT(lfit1)
+```
+
+
 
 ---
 

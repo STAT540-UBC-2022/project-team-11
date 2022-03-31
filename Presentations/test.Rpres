@@ -1,0 +1,118 @@
+Host transcriptional response to SARS-Cov2 by Sex and Age
+========================================================
+author: Ekpereka Amutaigwe, Credo Casmil, Dollina Dodani, Aditi Nallan
+date: 30 March 2022
+autosize: true
+
+Background
+========================================================
+
+- SARS-CoV-2 has shown a wide range of clinical manifestations among different population groups.
+- Clinically, COVID-19 cases tend to be more severe for older adults and males
+- [Lieberman et al. (Plos Biology 2020)](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3000849) examined host response gene expression across infection status and viral load from 430 individuals with SARS-CoV-2 and 54 negative controls.
+
+![Figure from Lieberman et al. (Plos Biology 2020) paper](Heatmap_paper.png)
+
+Project Aim
+========================================================
+
+- Examine the statistical difference in gene expression profiles among SARS-CoV-2 infected patients by extending the original research to explore the interactive effects of age and sex.
+
+- Leverage these differences in a Machine Learning model to predict infection state.
+
+
+Dataset
+========================================================
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+# read in data behind the scenes
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(GEOquery))
+suppressPackageStartupMessages(library(limma))
+suppressPackageStartupMessages(library(edgeR))
+suppressPackageStartupMessages(library(pheatmap))
+suppressPackageStartupMessages(library(statmod))
+suppressPackageStartupMessages(library(ggrepel))
+suppressPackageStartupMessages(library(ggbiplot))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(GGally))
+suppressPackageStartupMessages(library(caTools)) ## used for splitting the data into training and validation sets
+suppressPackageStartupMessages(library(caret)) ## used for confusion matrix, accuracy, sensitivity, and specificity
+suppressPackageStartupMessages(library(mice))
+suppressPackageStartupMessages(library(VIM))
+suppressPackageStartupMessages(library(sva))
+suppressPackageStartupMessages(library(missForest))
+suppressPackageStartupMessages(library(RANN))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(goseq))
+suppressPackageStartupMessages(library(GOplot))
+suppressPackageStartupMessages(library(clusterProfiler))
+suppressPackageStartupMessages(library(org.Hs.eg.db))
+suppressPackageStartupMessages(library(viridis))
+suppressPackageStartupMessages(library(naniar))
+
+#set working directory
+setwd(getwd())
+
+#data download
+raw_counts = read.csv("../GSE152075/GSE152075_raw_counts_GEO.txt", sep = "")
+count_mat = as.matrix(raw_counts,row.names="gene_id")
+
+#metadata
+pdata = read.csv("../GSE152075/Metadata.tsv", header = TRUE, sep = "\t")
+m = subset(pdata, select = c(1,39,40,41,42,43))
+
+#Rename metadata columns
+colnames(m) = c("Sample", "Age", "Gender", "Viral_load", "Sars_test", "Batch")
+m <- within(m, Age[Age == "90+"] <- "90")
+
+#Modify the subset data
+m <- m %>%
+  transform(Age = as.numeric(Age))
+convert = c("Gender", "Sars_test", "Batch")
+m[convert] <- lapply(m[convert], factor)
+m$Viral_load[m$Viral_load == "N/A"] <- 0
+m$Viral_load = as.numeric(m$Viral_load)
+levels(m$Gender)[3] <- NA
+```
+
+- Obtained from Lieberman et al. (Plos Biology 2020) paper as:
+  - **Main data file**: expression values - one per gene, per sample
+  - **Metadata file**: several covariates/experimental design variables for each sample. 
+
+```{r}
+# Expression matrix
+dim(count_mat)
+# Metadata
+dim(m)
+``` 
+
+
+Metadata
+========================================================
+
+```{r}
+options(height = 100)
+summary(m)
+```
+
+
+Visualization of missing data
+========================================================
+
+.pull-left[
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+# Plot missing data
+gg_miss_upset(m)
+```
+
+]
+
+.pull-right[
+```{r}
+#Check for percentage of missing data
+pct_miss(m)
+#Check for percent rows that have missing data
+pct_miss_case(m)
+```
+]
